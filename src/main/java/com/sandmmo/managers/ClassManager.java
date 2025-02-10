@@ -45,6 +45,11 @@ public class ClassManager {
             classData.put("description", description);
             classData.put("icon", icon);
 
+            ConfigurationSection statsSection = classSection.getConfigurationSection("stats");
+            if (statsSection != null) {
+                classData.put("stats", statsSection.getValues(false));
+            }
+
             classes.put(className, classData);
         }
 
@@ -68,5 +73,24 @@ public class ClassManager {
 
         plugin.getPlayerManager().setPlayerClass(player, className);
         player.sendMessage("You have selected the " + classData.get("display-name") + " class!");
+    }
+
+    public Map<String, Double> getClassStats(String className, int level) {
+        Map<String, Object> classData = classes.get(className);
+        if (classData == null) {
+            return null;
+        }
+
+        Map<String, Double> stats = new HashMap<>();
+        ConfigurationSection statsSection = (ConfigurationSection) classData.get("stats");
+        if (statsSection != null) {
+            for (String stat : statsSection.getKeys(false)) {
+                double baseValue = statsSection.getDouble(stat);
+                double scaledValue = baseValue * level;
+                stats.put(stat, scaledValue);
+            }
+        }
+
+        return stats;
     }
 }

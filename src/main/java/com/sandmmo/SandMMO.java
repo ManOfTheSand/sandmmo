@@ -4,6 +4,7 @@ import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.listeners.ClassListener;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerManager;
+import com.sandmmo.managers.SkillManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,7 @@ public class SandMMO extends JavaPlugin {
     private static SandMMO instance;
     private ClassManager classManager;
     private PlayerManager playerManager;
+    private SkillManager skillManager;
 
     @Override
     public void onEnable() {
@@ -23,6 +25,7 @@ public class SandMMO extends JavaPlugin {
         classManager.loadClasses();
 
         this.playerManager = new PlayerManager(this);
+        this.skillManager = new SkillManager(this);
 
         PluginCommand classCommand = getCommand("class");
         if (classCommand != null) {
@@ -52,6 +55,10 @@ public class SandMMO extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public SkillManager getSkillManager() {
+        return skillManager;
     }
 
     public void reloadClasses() {

@@ -10,6 +10,7 @@ import java.util.UUID;
 public class PlayerManager {
     private final SandMMO plugin;
     private final Map<UUID, String> playerClasses = new HashMap<>();
+    private final Map<UUID, Integer> playerLevels = new HashMap<>();
 
     public PlayerManager(SandMMO plugin) {
         this.plugin = plugin;
@@ -25,5 +26,13 @@ public class PlayerManager {
 
     public boolean hasSelectedClass(Player player) {
         return playerClasses.containsKey(player.getUniqueId());
+    }
+
+    public void setPlayerLevel(Player player, int level) {
+        playerLevels.put(player.getUniqueId(), level);
+    }
+
+    public int getPlayerLevel(Player player) {
+        return playerLevels.getOrDefault(player.getUniqueId(), 1);
     }
 }

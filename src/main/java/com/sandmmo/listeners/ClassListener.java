@@ -19,6 +19,8 @@ public class ClassListener implements Listener {
         Player player = event.getPlayer();
         if (!plugin.getPlayerManager().hasSelectedClass(player)) {
             new ClassGUI(plugin).open(player);
+        } else {
+            plugin.getSkillManager().applyClassStats(player);
         }
     }
 }
