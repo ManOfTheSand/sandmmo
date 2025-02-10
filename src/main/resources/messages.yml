@@ -1,11 +1,15 @@
-gui:
-  title: "<gradient:#FF0000:#FFA500>Choose Your Class</gradient>"
-  click-to-select: "<gray>Click to select this class!"
-  your-stats: "<aqua>Your Stats</aqua>"
-  class: "<gray>Class"
-  level: "<gray>Level"
-  health: "<red>Health"
-  attack-damage: "<red>Attack Damage"
+guis:
+  class-selection:
+    title: "<gradient:#FF0000:#FFA500>Class Selection</gradient>"
+    items:
+      info:
+        material: BOOK
+        name: "<aqua>Your Stats</aqua>"
+        lore:
+          - "<gray>Class: %class%"
+          - "<gray>Level: %level%"
+          - "<red>Health: %health%"
+          - "<red>Attack: %attack%"
 stats-gui:
   title: "<gradient:#FF0000:#FFA500>Your Stats</gradient>"
   your-stats: "<aqua>Your Stats</aqua>"

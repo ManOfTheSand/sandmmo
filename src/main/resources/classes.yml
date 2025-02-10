@@ -1,13 +1,19 @@
 classes:
   warrior:
-    display-name: "<red>Warrior</red>"
+    display-name: "<#FF6B6B>Warrior"
     description:
       - "<gray>Mighty melee fighter"
       - "<gray>High strength and defense"
     icon: IRON_SWORD
+    stats:
+      health: 25
+      attack-damage: 5
   mage:
-    display-name: "<blue>Mage</blue>"
+    display-name: "<#4B8BF4>Mage"
     description:
       - "<gray>Powerful spellcaster"
       - "<gray>High intelligence and mana"
     icon: STICK
+    stats:
+      health: 15
+      attack-damage: 8

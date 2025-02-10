@@ -3,11 +3,11 @@ package com.sandmmo;
 import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.commands.ReloadCommand;
 import com.sandmmo.commands.StatsCommand;
+import com.sandmmo.config.ClassesConfig;
+import com.sandmmo.config.MessagesConfig;
 import com.sandmmo.gui.ClassGUI;
-import com.sandmmo.gui.SkillsGUI;
-import com.sandmmo.gui.StatsGUI;
-import com.sandmmo.listeners.ClassListener;
 import com.sandmmo.managers.*;
+import com.willfp.eco.core.EcoPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,61 +18,43 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SandMMO extends JavaPlugin implements Listener {
     private static SandMMO instance;
-    private ClassManager classManager;
+
+    // Configurations
+    private ClassesConfig classesConfig;
+    private MessagesConfig messagesConfig;
+
+    // Managers
     private PlayerDataManager playerDataManager;
-    private SkillManager skillManager;
-    private MessagesManager messagesManager;
-    private ClassGUI classGUI;
-    private SkillsGUI skillsGUI;
-    private StatsGUI statsGUI;
     private LevelManager levelManager;
     private StatsManager statsManager;
     private MobManager mobManager;
 
+    // GUIs
+    private ClassGUI classGUI;
+
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
-        reloadConfig();
+
+        // Load configurations
+        this.classesConfig = new ClassesConfig(this);
+        this.messagesConfig = new MessagesConfig(this);
 
         // Initialize managers
-        this.classManager = new ClassManager(this);
         this.playerDataManager = new PlayerDataManager(this);
-        this.skillManager = new SkillManager(this);
-        this.messagesManager = new MessagesManager(this);
         this.levelManager = new LevelManager(this);
         this.statsManager = new StatsManager(this);
         this.mobManager = new MobManager(this);
-        this.classGUI = new ClassGUI(this);
-        this.skillsGUI = new SkillsGUI(this);
-        this.statsGUI = new StatsGUI(this);
 
-        // Register command
-        PluginCommand classCommand = getCommand("class");
-        if (classCommand != null) {
-            classCommand.setExecutor(new ClassCommand(this));
-        } else {
-            getLogger().severe("Failed to register /class command!");
-        }
+        // Initialize GUIs
+        this.classGUI = new ClassGUI(classesConfig);
 
-        // Register stats command
-        PluginCommand statsCommand = getCommand("stats");
-        if (statsCommand != null) {
-            statsCommand.setExecutor(new StatsCommand(this));
-        } else {
-            getLogger().severe("Failed to register /stats command!");
-        }
-
-        // Register reload command
-        PluginCommand reloadCommand = getCommand("sandmmo");
-        if (reloadCommand != null) {
-            reloadCommand.setExecutor(new ReloadCommand(this));
-        } else {
-            getLogger().severe("Failed to register /sandmmo command!");
-        }
+        // Register commands
+        registerCommand("class", new ClassCommand(this));
+        registerCommand("stats", new StatsCommand(this));
+        registerCommand("sandmmo", new ReloadCommand(this));
 
         // Register listeners
-        getServer().getPluginManager().registerEvents(new ClassListener(this), this);
         getServer().getPluginManager().registerEvents(this, this);
 
         getLogger().info("§6§l[SandMMO] §aPlugin enabled!");
@@ -83,17 +65,24 @@ public class SandMMO extends JavaPlugin implements Listener {
         getLogger().info("§6§l[SandMMO] §cPlugin disabled!");
     }
 
+    private void registerCommand(String name, Object executor) {
+        PluginCommand command = getCommand(name);
+        if (command != null) {
+            command.setExecutor((CommandExecutor) executor);
+        } else {
+            getLogger().severe("Failed to register /" + name + " command!");
+        }
+    }
+
     public void reload() {
-        reloadConfig();
-        classManager.loadClasses();
-        messagesManager.reload();
+        classesConfig.reload();
+        messagesConfig.reload();
+        classGUI = new ClassGUI(classesConfig);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         classGUI.handleClick(event);
-        skillsGUI.handleClick(event);
-        statsGUI.handleClick(event);
     }
 
     @EventHandler
@@ -106,36 +95,21 @@ public class SandMMO extends JavaPlugin implements Listener {
         playerDataManager.savePlayerData(event.getPlayer());
     }
 
+    // Getters
     public static SandMMO getInstance() {
         return instance;
     }
 
-    public ClassManager getClassManager() {
-        return classManager;
+    public ClassesConfig getClassesConfig() {
+        return classesConfig;
+    }
+
+    public MessagesConfig getMessagesConfig() {
+        return messagesConfig;
     }
 
     public PlayerDataManager getPlayerDataManager() {
         return playerDataManager;
-    }
-
-    public SkillManager getSkillManager() {
-        return skillManager;
-    }
-
-    public MessagesManager getMessagesManager() {
-        return messagesManager;
-    }
-
-    public ClassGUI getClassGUI() {
-        return classGUI;
-    }
-
-    public SkillsGUI getSkillsGUI() {
-        return skillsGUI;
-    }
-
-    public StatsGUI getStatsGUI() {
-        return statsGUI;
     }
 
     public LevelManager getLevelManager() {
@@ -148,5 +122,9 @@ public class SandMMO extends JavaPlugin implements Listener {
 
     public MobManager getMobManager() {
         return mobManager;
+    }
+
+    public ClassGUI getClassGUI() {
+        return classGUI;
     }
 }
