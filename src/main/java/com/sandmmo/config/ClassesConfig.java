@@ -9,23 +9,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClassesConfig extends ExtendableConfig {
+    private final Map<String, MMOClass> classes = new HashMap<>();
+
     public ClassesConfig(PluginLike plugin) {
         super(
-                "classes",          // configName
-                plugin,             // plugin
-                ConfigType.YAML,    // configType
-                "classes.yml",       // filePath
-                true                // automaticallyAddKeys
+                "classes",
+                plugin,
+                ConfigType.YAML,
+                "classes.yml",
+                true
         );
         loadClasses();
     }
-
 
     private void loadClasses() {
         Config section = this.getSubsection("classes");
         section.getKeys(false).forEach(classId ->
                 classes.put(classId, new MMOClass(
                         section.getString(classId + ".display-name"),
+                        section.getStrings(classId + ".description"),
                         section.getDouble(classId + ".base-health"),
                         section.getDouble(classId + ".health-per-level"),
                         section.getDouble(classId + ".base-damage"),
@@ -40,6 +42,7 @@ public class ClassesConfig extends ExtendableConfig {
 
     public record MMOClass(
             String displayName,
+            List<String> description,
             double baseHealth,
             double healthPerLevel,
             double baseDamage,

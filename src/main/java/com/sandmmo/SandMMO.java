@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 public class SandMMO extends EcoPlugin {
     private static SandMMO instance;
-
     private ClassesConfig classesConfig;
     private MessagesConfig messagesConfig;
     private PlayerDataManager playerDataManager;
@@ -20,7 +19,7 @@ public class SandMMO extends EcoPlugin {
     private ClassGUI classGUI;
 
     @Override
-    public void onPostEnable() {
+    public void onEnable() {
         instance = this;
 
         // Configs
@@ -33,21 +32,18 @@ public class SandMMO extends EcoPlugin {
         this.classGUI = new ClassGUI(classesConfig, classManager);
 
         // Register commands
-        CommandHandler.create(this, "class")
+        new CommandBase(this, "class")
                 .setExecutor((sender, args) -> {
                     if (sender instanceof Player player) {
                         classGUI.open(player);
                         return true;
                     }
                     return false;
-                });
+                })
+                .register();
     }
 
-    public static SandMMO get() {
+    public static SandMMO getInstance() {
         return instance;
     }
-
-    // Getters
-    public ClassesConfig getClassesConfig() { return classesConfig; }
-    public MessagesConfig getMessagesConfig() { return messagesConfig; }
 }
