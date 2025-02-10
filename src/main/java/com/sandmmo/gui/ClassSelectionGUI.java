@@ -11,33 +11,44 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ClassSelectionGUI {
-    public static final MiniMessage mm = MiniMessage.miniMessage();
+public class ClassSelectionGUI implements Listener {
     private final SandMMO plugin;
+    private final MiniMessage mm = MiniMessage.miniMessage();
 
     public ClassSelectionGUI(SandMMO plugin) {
         this.plugin = plugin;
     }
 
     public void open(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 9,
-                mm.deserialize("<gold>Choose Your Class"));
+        Inventory gui = Bukkit.createInventory(null, 27, mm.deserialize("<aqua>Select Your Class"));
 
-        for (String className : plugin.getClassManager().getAvailableClasses()) {
-            PlayerClass pc = plugin.getClassManager().getClass(className);
-            ItemStack item = createClassItem(pc);
-            gui.addItem(item);
+        // Populate the GUI with class selection items
+        String[] classes = plugin.getClassManager().getAvailableClasses();
+        for (int i = 0; i < classes.length; i++) {
+            String className = classes[i];
+            PlayerClass playerClass = plugin.getClassManager().getClass(className);
+            if (playerClass != null) {
+                ItemStack item = new ItemStack(Material.BOOK);
+                ItemMeta meta = item.getItemMeta();
+                meta.displayName(mm.deserialize("<yellow>" + playerClass.getDisplayName()));
+                item.setItemMeta(meta);
+                gui.setItem(i, item);
+            }
         }
 
         player.openInventory(gui);
     }
 
-    private ItemStack createClassItem(PlayerClass pc) {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(mm.deserialize(pc.getDisplayName()));
-        // Add lore with class stats
-        item.setItemMeta(meta);
-        return item;
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getView().title().equals(mm.deserialize("<aqua>Select Your Class"))) {
+            event.setCancelled(true);
+            if (event.getCurrentItem() != null) {
+                String className = event.getCurrentItem().getItemMeta().getDisplayName();
+                // Handle class selection logic here
+                event.getWhoClicked().sendMessage(mm.deserialize("<green>Selected class: " + className));
+                event.getWhoClicked().closeInventory();
+            }
+        }
     }
 }
