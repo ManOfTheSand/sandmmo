@@ -2,38 +2,33 @@ package com.sandmmo.managers;
 
 import com.sandmmo.config.ClassesConfig;
 import com.sandmmo.config.ClassesConfig.MMOClass;
+import com.willfp.eco.core.Eco;
 import org.bukkit.entity.Player;
 
 public class ClassManager {
-    private final ClassesConfig classesConfig;
-    private final PlayerDataManager playerDataManager;
+    private final ClassesConfig config;
+    private final PlayerDataManager dataManager;
 
-    public ClassManager(ClassesConfig classesConfig, PlayerDataManager playerDataManager) {
-        this.classesConfig = classesConfig;
-        this.playerDataManager = playerDataManager;
+    public ClassManager(ClassesConfig config, PlayerDataManager dataManager) {
+        this.config = config;
+        this.dataManager = dataManager;
     }
 
-    public boolean setClass(Player player, String className) {
-        MMOClass mmoClass = classesConfig.getClasses().get(className);
-        if (mmoClass == null) return false;
+    public void setClass(Player player, String className) {
+        MMOClass mmoClass = config.getClasses().get(className);
+        if (mmoClass == null) return;
 
-        PlayerDataManager.PlayerData data = playerDataManager.getData(player);
+        PlayerDataManager.PlayerData data = dataManager.getData(player);
         data.setCurrentClass(className);
-        applyClassAttributes(player, mmoClass);
-        return true;
+        applyAttributes(player, mmoClass);
     }
 
-    private void applyClassAttributes(Player player, MMOClass mmoClass) {
-        // Implement attribute application using Eco's systems
-        double health = mmoClass.baseHealth() + (mmoClass.healthPerLevel() * getPlayerLevel(player));
-        double damage = mmoClass.baseDamage() + (mmoClass.damagePerLevel() * getPlayerLevel(player));
+    private void applyAttributes(Player player, MMOClass mmoClass) {
+        int level = dataManager.getData(player).getLevel();
+        double health = mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level);
+        double damage = mmoClass.baseDamage() + (mmoClass.damagePerLevel() * level);
 
-        // Example using Eco's attribute system
-        Eco.get().getAttributeRegistry().getByID("generic.max_health")
+        Eco.get().getAttributeManager().getAttributeByID("generic.max_health")
                 .ifPresent(attr -> attr.setValue(player, health));
-    }
-
-    private int getPlayerLevel(Player player) {
-        return playerDataManager.getData(player).getLevel();
     }
 }

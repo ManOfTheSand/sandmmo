@@ -10,10 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ClassGUI { // Fixed class name capitalization
+public class ClassGUI {
     private final Inventory inventory;
     private final ClassesConfig config;
     private final ClassManager classManager;
@@ -23,21 +20,19 @@ public class ClassGUI { // Fixed class name capitalization
         this.classManager = classManager;
         this.inventory = Bukkit.createInventory(null, 27,
                 Component.text("Class Selection"));
-
-        initializeItems();
+        populateItems();
     }
 
-    private void initializeItems() {
+    private void populateItems() {
         config.getClasses().forEach((id, mmoClass) -> {
             ItemStack item = new ItemStack(Material.PAPER);
             ItemMeta meta = item.getItemMeta();
 
             meta.displayName(Component.text(mmoClass.displayName()));
-            List<Component> lore = new ArrayList<>();
-            mmoClass.description().forEach(line ->
-                    lore.add(Component.text(line)));
+            meta.lore(mmoClass.description().stream()
+                    .map(Component::text)
+                    .toList());
 
-            meta.lore(lore);
             item.setItemMeta(meta);
             inventory.addItem(item);
         });

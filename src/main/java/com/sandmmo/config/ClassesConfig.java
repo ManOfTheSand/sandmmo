@@ -6,36 +6,32 @@ import com.willfp.eco.core.config.interfaces.Config;
 import com.willfp.eco.core.PluginLike;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClassesConfig extends ExtendableConfig {
-    private final Map<String, MMOClass> classes = new HashMap<>();
-
     public ClassesConfig(PluginLike plugin) {
-        super("classes", true, plugin, ClassesConfig.class, "", ConfigType.YAML, new String[0]);
+        super(
+                "classes",          // configName
+                plugin,             // plugin
+                ConfigType.YAML,    // configType
+                "classes.yml",       // filePath
+                true                // automaticallyAddKeys
+        );
         loadClasses();
     }
 
-    private void loadClasses() {
-        classes.clear();
-        Config section = this.getSubsection("classes");
 
-        for (String classId : section.getKeys(false)) {
-            MMOClass mmoClass = new MMOClass(
-                    section.getFormattedString(classId + ".display-name"),
-                    section.getStrings(classId + ".description"),
-                    section.getString(classId + ".permission"),
-                    section.getInt(classId + ".max-level"),
-                    section.getDouble(classId + ".base-health"),
-                    section.getDouble(classId + ".health-per-level"),
-                    section.getDouble(classId + ".base-damage"),
-                    section.getDouble(classId + ".damage-per-level"),
-                    section.getStringList(classId + ".skills"),
-                    section.getStringList(classId + ".requirements")
-            );
-            classes.put(classId, mmoClass);
-        }
+    private void loadClasses() {
+        Config section = this.getSubsection("classes");
+        section.getKeys(false).forEach(classId ->
+                classes.put(classId, new MMOClass(
+                        section.getString(classId + ".display-name"),
+                        section.getDouble(classId + ".base-health"),
+                        section.getDouble(classId + ".health-per-level"),
+                        section.getDouble(classId + ".base-damage"),
+                        section.getDouble(classId + ".damage-per-level")
+                ))
+        );
     }
 
     public Map<String, MMOClass> getClasses() {
@@ -44,14 +40,9 @@ public class ClassesConfig extends ExtendableConfig {
 
     public record MMOClass(
             String displayName,
-            List<String> description,
-            String permission,
-            int maxLevel,
             double baseHealth,
             double healthPerLevel,
             double baseDamage,
-            double damagePerLevel,
-            List<String> skills,
-            List<String> requirements
+            double damagePerLevel
     ) {}
 }
