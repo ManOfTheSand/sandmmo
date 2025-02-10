@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.willfp</groupId>
             <artifactId>eco</artifactId>
-            <version>6.67.2</version>
+            <version>6.75.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

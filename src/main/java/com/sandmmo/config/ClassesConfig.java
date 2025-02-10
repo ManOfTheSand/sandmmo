@@ -3,7 +3,7 @@ package com.sandmmo.config;
 import com.willfp.eco.core.config.ConfigType;
 import com.willfp.eco.core.config.ExtendableConfig;
 import com.willfp.eco.core.config.interfaces.Config;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.willfp.eco.core.PluginLike;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +12,8 @@ import java.util.Map;
 public class ClassesConfig extends ExtendableConfig {
     private final Map<String, ClassData> classes = new HashMap<>();
 
-    public ClassesConfig(JavaPlugin plugin) {
-        // Use the correct constructor parameters
-        super("classes", true, plugin, ConfigType.YAML);
+    public ClassesConfig(PluginLike plugin) {
+        super("classes", true, plugin, ClassesConfig.class, "", ConfigType.YAML, new String[0]);
         loadClasses();
     }
 
@@ -23,8 +22,8 @@ public class ClassesConfig extends ExtendableConfig {
         Config section = this.getSubsection("classes");
 
         for (String key : section.getKeys(false)) {
-            String displayName = section.getFormattedString(key + ".display-name");
-            List<String> description = section.getFormattedStringList(key + ".description");
+            String displayName = section.getString(key + ".display-name");
+            List<String> description = section.getStringList(key + ".description");
             String icon = section.getString(key + ".icon");
             double health = section.getDouble(key + ".stats.health");
             double attack = section.getDouble(key + ".stats.attack-damage");
