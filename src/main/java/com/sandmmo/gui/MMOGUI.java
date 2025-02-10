@@ -1,16 +1,16 @@
 package com.sandmmo.gui;
 
 import com.sandmmo.SandMMO;
+import com.willfp.eco.core.gui.EcoGui;
+import com.willfp.eco.core.gui.EcoGuiItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.entity.Player;
 
 public class MMOGUI {
+
     private final SandMMO plugin;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
@@ -19,28 +19,36 @@ public class MMOGUI {
     }
 
     public void open(Player player) {
-        // Read settings from config, with defaults if not set
+        // Load GUI settings from config (with defaults)
         String titleStr = plugin.getConfig().getString("menu.title", "<gold>MMO GUI");
-        int size = plugin.getConfig().getInt("menu.size", 9);
-        String itemNameStr = plugin.getConfig().getString("menu.item", "<blue>Click Me!");
+        int rows = plugin.getConfig().getInt("menu.rows", 1); // number of rows (each row has 9 slots)
+        String itemTextStr = plugin.getConfig().getString("menu.item", "<blue>Click Me!");
 
-        // Parse titles and item names using MiniMessage
         Component title = miniMessage.deserialize(titleStr);
-        Component itemName = miniMessage.deserialize(itemNameStr);
+        Component itemText = miniMessage.deserialize(itemTextStr);
 
-        // Create an inventory GUI with the specified title
-        Inventory inv = Bukkit.createInventory(null, size, title);
+        // Build the Eco GUI using Eco's built-in system
+        EcoGui gui = EcoGui.builder()
+                .plugin(plugin)
+                .title(title)
+                .rows(rows)
+                .build();
 
-        // Create a sample item, set its display name with colored text
-        ItemStack item = new ItemStack(Material.DIAMOND);
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(itemName);
-        item.setItemMeta(meta);
+        // Create an item with Eco's GUI item builder
+        ItemStack icon = new ItemStack(Material.DIAMOND);
+        EcoGuiItem guiItem = EcoGuiItem.builder()
+                .icon(icon)
+                .displayText(itemText)
+                .clickAction(event -> {
+                    event.getWhoClicked().sendMessage(miniMessage.deserialize("<green>You clicked the diamond!"));
+                })
+                .build();
 
-        // Place the item in the middle of the inventory
-        inv.setItem(size / 2, item);
+        // Calculate a center slot (for example)
+        int totalSlots = rows * 9;
+        int centerSlot = totalSlots / 2;
+        gui.setItem(centerSlot, guiItem);
 
-        // Open the GUI for the player
-        player.openInventory(inv);
+        gui.open(player);
     }
 }

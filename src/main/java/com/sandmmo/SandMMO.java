@@ -7,9 +7,9 @@ import org.bukkit.command.PluginCommand;
 
 public class SandMMO extends EcoPlugin {
 
-    // Do not annotate with @Override – EcoPlugin does not declare onEcoEnable()
+    // This will be called by EcoPlugin's internal hook
     public void onEcoEnable() {
-        getLogger().info("SandMMO enabled!");
+        getLogger().info("SandMMO enabled using Eco API!");
 
         PluginCommand infoCommand = getCommand("mmoinfo");
         if (infoCommand != null) {

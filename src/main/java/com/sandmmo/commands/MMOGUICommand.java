@@ -18,12 +18,11 @@ public class MMOGUICommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command is for players only!");
+            sender.sendMessage("Only players can use this command!");
             return true;
         }
         Player player = (Player) sender;
-        MMOGUI gui = new MMOGUI(plugin);
-        gui.open(player);
+        new MMOGUI(plugin).open(player);
         return true;
     }
 }
