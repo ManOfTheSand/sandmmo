@@ -1,7 +1,7 @@
-package com.listeners;
+package sandmmo.listeners;
 
-import com.sandmmo.SandMMO;
-import com.managers.PlayerManager;
+import sandmmo.SandMMO;
+import sandmmo.managers.PlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

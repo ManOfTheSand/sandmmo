@@ -1,10 +1,10 @@
-package com.sandmmo;
+package sandmmo;
 
-import com.managers.SkillManager;
-import com.managers.PlayerManager;
-import com.managers.ClassManager;
-import com.commands.ClassCommand;
-import com.listeners.ClassListener;
+import sandmmo.managers.SkillManager;
+import sandmmo.managers.PlayerManager;
+import sandmmo.managers.ClassManager;
+import sandmmo.commands.ClassCommand;
+import sandmmo.listeners.ClassListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SandMMO extends JavaPlugin {

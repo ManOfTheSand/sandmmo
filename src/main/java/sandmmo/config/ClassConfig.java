@@ -1,4 +1,4 @@
-package com.config;
+package sandmmo.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import java.util.List;

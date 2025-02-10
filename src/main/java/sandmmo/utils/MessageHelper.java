@@ -1,4 +1,4 @@
-package com.sandmmo.utils;
+package sandmmo.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
-package com.managers;
+package sandmmo.managers;
 
-import com.sandmmo.SandMMO;
+import sandmmo.SandMMO;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +8,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ClassManager {
     private final SandMMO plugin;
