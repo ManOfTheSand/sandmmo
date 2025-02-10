@@ -1,3 +1,14 @@
+package com.sandmmo.config;
+
+import com.willfp.eco.core.config.ConfigType;
+import com.willfp.eco.core.config.ExtendableConfig;
+import com.willfp.eco.core.config.interfaces.Config;
+import com.willfp.eco.core.PluginLike;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ClassesConfig extends ExtendableConfig {
     private final Map<String, MMOClass> classes = new HashMap<>();
 
