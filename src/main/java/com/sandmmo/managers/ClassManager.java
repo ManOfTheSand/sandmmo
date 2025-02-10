@@ -1,5 +1,6 @@
 package com.sandmmo.managers;
 
+import com.sandmmo.classes.PlayerClass;
 import com.sandmmo.config.ClassConfig;
 
 public class ClassManager {
@@ -9,5 +10,7 @@ public class ClassManager {
         this.classConfig = classConfig;
     }
 
-    // Add class management methods here
+    public PlayerClass getClass(String className) {
+        return classConfig.getClass(className);
+    }
 }

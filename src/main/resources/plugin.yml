@@ -2,8 +2,10 @@ name: SandMMO
 version: 1.0.0
 main: com.sandmmo.SandMMO
 api-version: 1.17
-depend: [eco]
 commands:
-  mmoinfo:
-    description: Displays your MMO information.
-    usage: /mmoinfo
+  class:
+    description: Manage your MMO class
+    usage: /class [list|select]
+  stats:
+    description: View your character stats
+    usage: /stats
