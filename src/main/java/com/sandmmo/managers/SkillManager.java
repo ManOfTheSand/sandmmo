@@ -1,6 +1,6 @@
-package sandmmo.managers;
+package com.sandmmo.managers;
 
-import sandmmo.SandMMO;
+import com.sandmmo.SandMMO;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

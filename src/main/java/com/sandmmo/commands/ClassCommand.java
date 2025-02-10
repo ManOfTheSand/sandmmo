@@ -1,7 +1,7 @@
-package sandmmo.commands;
+package com.sandmmo.commands;
 
-import sandmmo.SandMMO;
-import sandmmo.gui.ClassGUI;
+import com.sandmmo.SandMMO;
+import com.sandmmo.gui.ClassGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

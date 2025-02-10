@@ -1,6 +1,6 @@
-package sandmmo.managers;
+package com.sandmmo.managers;
 
-import sandmmo.SandMMO;
+import com.sandmmo.SandMMO;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

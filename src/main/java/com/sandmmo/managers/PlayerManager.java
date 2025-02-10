@@ -1,7 +1,7 @@
-package sandmmo.managers;
+package com.sandmmo.managers;
 
-import sandmmo.SandMMO;
-import sandmmo.utils.MessageHelper;
+import com.sandmmo.SandMMO;
+import com.sandmmo.utils.MessageHelper;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 

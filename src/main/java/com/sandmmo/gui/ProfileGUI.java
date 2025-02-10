@@ -1,4 +1,4 @@
-package sandmmo.gui;
+package com.sandmmo.gui;
 
 public class ProfileGUI {
 }
