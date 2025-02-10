@@ -1,30 +1,34 @@
 package com.sandmmo.managers;
 
 import com.sandmmo.SandMMO;
+import com.sandmmo.gui.SkillsGUI;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
 
 public class SkillManager {
     private final SandMMO plugin;
+    private final PlayerDataManager playerDataManager;
+    private final SkillsGUI skillsGUI;
 
     public SkillManager(SandMMO plugin) {
         this.plugin = plugin;
+        this.playerDataManager = plugin.getPlayerDataManager();
+        this.skillsGUI = plugin.getSkillsGUI();
     }
 
-    public void applyClassStats(Player player) {
-        String className = plugin.getPlayerManager().getPlayerClass(player);
-        if (className == null) {
-            return;
-        }
+    public void openSkillsGUI(Player player) {
+        skillsGUI.open(player);
+    }
 
-        int level = plugin.getPlayerManager().getPlayerLevel(player);
-        Map<String, Double> stats = plugin.getClassManager().getClassStats(className, level);
-        if (stats == null) {
-            return;
-        }
+    public void addSkillPoints(Player player, int amount) {
+        // TODO: Implement adding skill points to the player
+    }
 
-        // TODO: Apply the stats to the player here
-        player.sendMessage("Applied class stats for level " + level);
+    public void removeSkillPoints(Player player, int amount) {
+        // TODO: Implement removing skill points from the player
+    }
+
+    public int getSkillPoints(Player player) {
+        // TODO: Implement retrieving the player's skill points
+        return 0;
     }
 }

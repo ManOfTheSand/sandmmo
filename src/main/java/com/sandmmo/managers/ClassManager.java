@@ -12,10 +12,14 @@ import java.util.Map;
 public class ClassManager {
     private final SandMMO plugin;
     private final Map<String, ClassData> classes;
+    private final PlayerDataManager playerDataManager;
+    private final MessagesManager messagesManager;
 
     public ClassManager(SandMMO plugin) {
         this.plugin = plugin;
         this.classes = new HashMap<>();
+        this.playerDataManager = plugin.getPlayerDataManager();
+        this.messagesManager = plugin.getMessagesManager();
         loadClasses();
     }
 
@@ -33,7 +37,11 @@ public class ClassManager {
     }
 
     public void selectClass(Player player, String className) {
-        // Implementation for selecting a class
+        if (classes.containsKey(className)) {
+            playerDataManager.setPlayerClass(player, className);
+            messagesManager.sendMessage(player, "class-selected", className);
+            player.closeInventory();
+        }
     }
 
     public Map<String, ClassData> getAllClasses() {

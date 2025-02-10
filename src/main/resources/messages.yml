@@ -4,4 +4,16 @@ gui:
   your-stats: "&bYour Stats"
   class: "&7Class"
   level: "&7Level"
+  health: "&cHealth"
+  attack-damage: "&cAttack Damage"
+
+skills-gui:
+  title: "&6Skills"
+  your-stats: "&bYour Stats"
+  class: "&7Class"
+  level: "&7Level"
+  skill-points: "&7Skill Points"
+
 reload-success: "&aPlugin reloaded successfully!"
+class-selected: "&aYou have selected the &6{0} &aclass!"
+level-up: "&aCongratulations! You have reached level &6{0}&a!"

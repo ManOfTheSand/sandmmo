@@ -2,11 +2,9 @@ package com.sandmmo;
 
 import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.gui.ClassGUI;
+import com.sandmmo.gui.SkillsGUI;
 import com.sandmmo.listeners.ClassListener;
-import com.sandmmo.managers.ClassManager;
-import com.sandmmo.managers.MessagesManager;
-import com.sandmmo.managers.PlayerDataManager;
-import com.sandmmo.managers.SkillManager;
+import com.sandmmo.managers.*;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +20,9 @@ public class SandMMO extends JavaPlugin implements Listener {
     private SkillManager skillManager;
     private MessagesManager messagesManager;
     private ClassGUI classGUI;
+    private SkillsGUI skillsGUI;
+    private LevelManager levelManager;
+    private StatsManager statsManager;
 
     @Override
     public void onEnable() {
@@ -34,7 +35,10 @@ public class SandMMO extends JavaPlugin implements Listener {
         this.playerDataManager = new PlayerDataManager(this);
         this.skillManager = new SkillManager(this);
         this.messagesManager = new MessagesManager(this);
+        this.levelManager = new LevelManager(this);
+        this.statsManager = new StatsManager(this);
         this.classGUI = new ClassGUI(this);
+        this.skillsGUI = new SkillsGUI(this);
 
         // Register command
         PluginCommand classCommand = getCommand("class");
@@ -80,6 +84,7 @@ public class SandMMO extends JavaPlugin implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         classGUI.handleClick(event);
+        skillsGUI.handleClick(event);
     }
 
     @EventHandler
@@ -114,5 +119,17 @@ public class SandMMO extends JavaPlugin implements Listener {
 
     public ClassGUI getClassGUI() {
         return classGUI;
+    }
+
+    public SkillsGUI getSkillsGUI() {
+        return skillsGUI;
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
+
+    public StatsManager getStatsManager() {
+        return statsManager;
     }
 }
