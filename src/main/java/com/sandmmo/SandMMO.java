@@ -1,86 +1,47 @@
 package com.sandmmo;
 
 import com.sandmmo.commands.ClassCommand;
-import com.sandmmo.listeners.ClassListener;
 import com.sandmmo.managers.ClassManager;
-import com.sandmmo.managers.PlayerManager;
-import com.sandmmo.managers.SkillManager;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
 
-public final class SandMMO extends JavaPlugin {
+public class SandMMO extends JavaPlugin {
+    private static SandMMO instance;
     private ClassManager classManager;
-    private PlayerManager playerManager;
-    private SkillManager skillManager;
-    private FileConfiguration classesConfig;
-    private File classesFile;
 
     @Override
     public void onEnable() {
-        // Initialize managers
+        instance = this;
+
+        // Save the default configuration file (config.yml in src/main/resources)
+        saveDefaultConfig();
+
+        // Initialize your class manager (ensure this class exists in your project)
         this.classManager = new ClassManager(this);
-        this.playerManager = new PlayerManager(this);
-        this.skillManager = new SkillManager(this);
 
-        // Load configurations
-        loadClassesConfig();
-
-        // Register commands
-        getCommand("class").setExecutor(new ClassCommand(this));
-
-        // Register listeners
-        getServer().getPluginManager().registerEvents(new ClassListener(this), this);
-    }
-
-    public void loadClassesConfig() {
-        if (classesFile == null) {
-            classesFile = new File(getDataFolder(), "classes.yml");
+        // Register the command 'class'
+        if (getCommand("class") != null) {
+            getCommand("class").setExecutor(new ClassCommand(this));
+        } else {
+            getLogger().severe("Command 'class' not found in plugin.yml");
         }
 
-        if (!classesFile.exists()) {
-            saveResource("classes.yml", false);
-        }
+        // Now that loadClasses is implemented in ClassManager, this call will work:
+        classManager.loadClasses();
 
-        classesConfig = YamlConfiguration.loadConfiguration(classesFile);
-    }
-
-    public FileConfiguration getClassesConfig() {
-        if (classesConfig == null) {
-            loadClassesConfig();
-        }
-        return classesConfig;
-    }
-
-    public void saveClassesConfig() {
-        if (classesConfig == null || classesFile == null) {
-            return;
-        }
-
-        try {
-            getClassesConfig().save(classesFile);
-        } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "Could not save classes.yml!", ex);
-        }
+        getLogger().info("§6§l[SandMMO] §r§7Plugin enabled!");
+        getLogger().info("§eVersion: §b" + getDescription().getVersion());
     }
 
     @Override
     public void onDisable() {
-        saveClassesConfig();
+        getLogger().info("§6§l[SandMMO] §r§7Plugin disabled!");
+    }
+
+    public static SandMMO getInstance() {
+        return instance;
     }
 
     public ClassManager getClassManager() {
         return classManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    public SkillManager getSkillManager() {
-        return skillManager;
     }
 }
