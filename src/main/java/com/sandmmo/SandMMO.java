@@ -1,12 +1,12 @@
 package com.sandmmo;
 
+import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.config.ClassesConfig;
 import com.sandmmo.config.MessagesConfig;
 import com.sandmmo.gui.ClassGUI;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerDataManager;
 import com.willfp.eco.core.EcoPlugin;
-import org.bukkit.entity.Player;
 
 public class SandMMO extends EcoPlugin {
     private static SandMMO instance;
@@ -33,18 +33,14 @@ public class SandMMO extends EcoPlugin {
     }
 
     private void registerCommands() {
-        new ClassCommand(this)
-                .setExecutor((sender, args) -> {
-                    if (sender instanceof Player player) {
-                        classGUI.open(player);
-                        return true;
-                    }
-                    return false;
-                })
-                .register();
+        new ClassCommand(this).register();
     }
 
     public static SandMMO getInstance() {
         return instance;
+    }
+
+    public ClassGUI getClassGUI() {
+        return classGUI;
     }
 }
