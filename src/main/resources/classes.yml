@@ -2,10 +2,6 @@ classes:
   warrior:
     display-name: "Warrior"
     color: "#FF0000"
-    base-health: 25
-    base-mana: 10
   mage:
-    display-name: "Mage"
-    color: "#0000FF"
-    base-health: 15
-    base-mana: 25
+    display-name: "Arcane Mage"
+    color: "#00BFFF"

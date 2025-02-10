@@ -1,45 +1,49 @@
 package com.sandmmo;
 
-import com.sandmmo.commands.ClassCommand;
-import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.config.ClassConfig;
+import com.sandmmo.config.GuiConfig;
+import com.sandmmo.config.MessagesConfig;
+import com.sandmmo.gui.ClassSelectionGUI;
 import com.sandmmo.listeners.PlayerListener;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerDataManager;
-import com.sandmmo.gui.ClassSelectionGUI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SandMMO extends JavaPlugin {
     private ClassManager classManager;
     private PlayerDataManager playerDataManager;
     private ClassSelectionGUI classSelectionGUI;
+    private ClassConfig classConfig;
+    private GuiConfig guiConfig;
+    private MessagesConfig messagesConfig;
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
+        // Load configurations
+        this.classConfig = new ClassConfig(this);
+        this.guiConfig = new GuiConfig(this);
+        this.messagesConfig = new MessagesConfig(this);
 
-        classManager = new ClassManager(new ClassConfig(this));
-        playerDataManager = new PlayerDataManager(this);
-        classSelectionGUI = new ClassSelectionGUI(this);
+        // Initialize managers
+        this.classManager = new ClassManager(classConfig);
+        this.playerDataManager = new PlayerDataManager(this);
+        this.classSelectionGUI = new ClassSelectionGUI(this);
 
         // Register commands
-        getCommand("stats").setExecutor(new StatsCommand(this));
         getCommand("class").setExecutor(new ClassCommand(this));
+        getCommand("stats").setExecutor(new StatsCommand(this));
 
-        // Register event listeners
+        // Register listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(classSelectionGUI, this);
+
+        getLogger().info("SandMMO enabled!");
     }
 
-    public ClassManager getClassManager() {
-        return classManager;
-    }
-
-    public PlayerDataManager getPlayerDataManager() {
-        return playerDataManager;
-    }
-
-    public ClassSelectionGUI getClassSelectionGUI() {
-        return classSelectionGUI;
-    }
+    // Getters
+    public ClassManager getClassManager() { return classManager; }
+    public PlayerDataManager getPlayerDataManager() { return playerDataManager; }
+    public ClassSelectionGUI getClassSelectionGUI() { return classSelectionGUI; }
+    public GuiConfig getGuiConfig() { return guiConfig; }
+    public MessagesConfig getMessagesConfig() { return messagesConfig; }
 }

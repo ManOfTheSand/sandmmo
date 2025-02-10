@@ -13,6 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ClassSelectionGUI implements Listener {
     private final SandMMO plugin;
     private final MiniMessage mm = MiniMessage.miniMessage();
@@ -22,28 +25,21 @@ public class ClassSelectionGUI implements Listener {
     }
 
     public void open(Player player) {
-        FileConfiguration guiConfig = plugin.getGuiConfig().getConfig();
-        String title = guiConfig.getString("classes.title", "<#00BFFF>Class Selection");
-        Inventory gui = Bukkit.createInventory(null,
-                guiConfig.getInt("classes.size", 27),
-                mm.deserialize(title)
-        );
+        String title = plugin.getGuiConfig().get().getString("gui.titles.class-select");
+        int size = plugin.getGuiConfig().get().getInt("gui.sizes.class-select", 27);
+
+        Inventory gui = Bukkit.createInventory(null, size, mm.deserialize(title));
 
         plugin.getClassManager().getClasses().forEach((id, clazz) -> {
-            String path = "classes.items." + id + ".";
             ItemStack item = new ItemStack(Material.matchMaterial(
-                    guiConfig.getString(path + "material", "BOOK")
+                    plugin.getGuiConfig().get().getString("gui.items." + id + ".material", "BOOK")
             ));
 
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(mm.deserialize(
-                    guiConfig.getString(path + "name", clazz.getDisplayName())
-            ));
+            meta.displayName(mm.deserialize(clazz.getColor() + clazz.getDisplayName()));
 
-            List<Component> lore = guiConfig.getStringList(path + "lore").stream()
-                    .map(line -> mm.deserialize(line))
-                    .collect(Collectors.toList());
-            meta.lore(lore);
+            List<String> lore = plugin.getGuiConfig().get().getStringList("gui.items." + id + ".lore");
+            meta.setLore(lore.stream().map(line -> mm.serialize(mm.deserialize(line))).collect(Collectors.toList()));
 
             item.setItemMeta(meta);
             gui.addItem(item);
@@ -51,3 +47,28 @@ public class ClassSelectionGUI implements Listener {
 
         player.openInventory(gui);
     }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        String targetTitle = plugin.getGuiConfig().get().getString("gui.titles.class-select");
+        if (event.getView().title().equals(mm.deserialize(targetTitle))) {
+            event.setCancelled(true);
+
+            if (event.getCurrentItem() != null && event.getWhoClicked() instanceof Player player) {
+                PlayerClass selectedClass = plugin.getClassManager().getClasses().values().stream()
+                        .filter(clazz -> clazz.getDisplayName().equals(event.getCurrentItem().getItemMeta().getDisplayName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (selectedClass != null) {
+                    plugin.getPlayerDataManager().getPlayerData(player).setPlayerClass(selectedClass);
+                    player.sendMessage(mm.deserialize(plugin.getMessagesConfig().get().getString("messages.class-selected")
+                            .replace("{class}", selectedClass.getDisplayName())));
+                } else {
+                    player.sendMessage(mm.deserialize(plugin.getMessagesConfig().get().getString("messages.invalid-class")));
+                }
+                player.closeInventory();
+            }
+        }
+    }
+}

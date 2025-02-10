@@ -1,7 +1,2 @@
-gui:
-  titles:
-    class-select: "<gradient:#00BFFF:#FF1493>Class Selection</gradient>"
-
-messages:
-  class-selected: "<#00FF00>You have selected the {class} class!"
-  invalid-class: "<#FF0000>Invalid class selection!"
+class-selected: "<green>✔ Successfully selected {class} class!"
+invalid-class: "<red>✖ Invalid class selection!"

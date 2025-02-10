@@ -23,14 +23,14 @@ public class ClassConfig {
         if (!file.exists()) plugin.saveResource("classes.yml", false);
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        for (String key : config.getConfigurationSection("classes").getKeys(false)) {
-            String path = "classes." + key + ".";
-            classes.put(key, new PlayerClass(
-                    key,
+        config.getConfigurationSection("classes").getKeys(false).forEach(className -> {
+            String path = "classes." + className + ".";
+            classes.put(className, new PlayerClass(
+                    className,
                     config.getString(path + "display-name"),
-                    config.getString(path + "color", "#FFFFFF")
+                    config.getString(path + "color")
             ));
-        }
+        });
     }
 
     public Map<String, PlayerClass> getClasses() {
