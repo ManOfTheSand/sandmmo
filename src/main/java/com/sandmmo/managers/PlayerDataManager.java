@@ -19,14 +19,15 @@ public class PlayerDataManager {
     }
 
     public void savePlayerData(Player player) {
+        File file = new File(dataFolder, player.getUniqueId() + ".yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        // Save data to config
+        config.set("class", getPlayerClass(player));
+        config.set("level", getPlayerLevel(player));
+        // Save more data as needed
+
         try {
-            File file = new File(dataFolder, player.getUniqueId() + ".yml");
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-            config.set("class", getPlayerClass(player));
-            config.set("level", getPlayerLevel(player));
-            // Add more stats
-
             config.save(file);
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to save player data: " + e.getMessage());
@@ -42,10 +43,12 @@ public class PlayerDataManager {
     }
 
     public String getPlayerClass(Player player) {
-        // Implementation
+        // TODO: Implement this method
+        return ""; // Placeholder return statement
     }
 
     public int getPlayerLevel(Player player) {
-        // Implementation
+        // TODO: Implement this method
+        return 0; // Placeholder return statement
     }
 }
