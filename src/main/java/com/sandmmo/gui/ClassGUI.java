@@ -1,6 +1,7 @@
 package com.sandmmo.gui;
 
 import com.sandmmo.SandMMO;
+import com.sandmmo.data.ClassData;
 import com.sandmmo.managers.MessagesManager;
 import com.sandmmo.managers.PlayerDataManager;
 import org.bukkit.Bukkit;
