@@ -1,4 +1,4 @@
-package com.sandmmo.managers;
+package sandmmo.managers;
 
 import com.sandmmo.SandMMO;
 import io.lumine.mythic.bukkit.MythicBukkit;
