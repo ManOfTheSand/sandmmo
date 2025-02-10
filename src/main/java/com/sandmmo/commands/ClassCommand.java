@@ -1,8 +1,6 @@
 package com.sandmmo.commands;
 
 import com.sandmmo.SandMMO;
-import com.sandmmo.managers.ClassManager;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
