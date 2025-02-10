@@ -6,8 +6,6 @@ import com.sandmmo.gui.ClassGUI;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerDataManager;
 import com.willfp.eco.core.EcoPlugin;
-import com.willfp.eco.core.command.CommandBase;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SandMMO extends EcoPlugin {
@@ -18,8 +16,7 @@ public class SandMMO extends EcoPlugin {
     private ClassManager classManager;
     private ClassGUI classGUI;
 
-    @Override
-    public void onEnable() {
+    public void onPluginEnable() {
         instance = this;
 
         // Configs
@@ -32,7 +29,11 @@ public class SandMMO extends EcoPlugin {
         this.classGUI = new ClassGUI(classesConfig, classManager);
 
         // Register commands
-        new CommandBase(this, "class")
+        registerCommands();
+    }
+
+    private void registerCommands() {
+        new ClassCommand(this)
                 .setExecutor((sender, args) -> {
                     if (sender instanceof Player player) {
                         classGUI.open(player);
