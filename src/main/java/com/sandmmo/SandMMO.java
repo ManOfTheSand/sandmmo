@@ -8,6 +8,8 @@ import com.sandmmo.listeners.PlayerListener;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerDataManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.sandmmo.commands.ClassCommand;
+import com.sandmmo.commands.StatsCommand;
 
 public class SandMMO extends JavaPlugin {
     private ClassManager classManager;
