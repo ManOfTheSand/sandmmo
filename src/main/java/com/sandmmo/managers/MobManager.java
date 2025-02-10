@@ -16,6 +16,7 @@ public class MobManager {
 
     public void spawnMob(Player player, String mobName) {
         Location location = player.getLocation();
+        // Use the spawnMob method that accepts (String mobName, Location location)
         mythicMobs.getMobManager().spawnMob(mobName, location);
     }
 }

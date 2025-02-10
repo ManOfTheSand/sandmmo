@@ -6,8 +6,11 @@ import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.config.ClassesConfig;
 import com.sandmmo.config.MessagesConfig;
 import com.sandmmo.gui.ClassGUI;
-import com.sandmmo.managers.*;
-import com.willfp.eco.core.EcoPlugin;
+import com.sandmmo.managers.LevelManager;
+import com.sandmmo.managers.MobManager;
+import com.sandmmo.managers.PlayerDataManager;
+import com.sandmmo.managers.StatsManager;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,8 +38,10 @@ public class SandMMO extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
+        reloadConfig();
 
-        // Load configurations
+        // Load configurations (Eco-based)
         this.classesConfig = new ClassesConfig(this);
         this.messagesConfig = new MessagesConfig(this);
 
@@ -46,7 +51,7 @@ public class SandMMO extends JavaPlugin implements Listener {
         this.statsManager = new StatsManager(this);
         this.mobManager = new MobManager(this);
 
-        // Initialize GUIs
+        // Initialize GUIs (using Eco's GUI system)
         this.classGUI = new ClassGUI(classesConfig);
 
         // Register commands
@@ -56,6 +61,7 @@ public class SandMMO extends JavaPlugin implements Listener {
 
         // Register listeners
         getServer().getPluginManager().registerEvents(this, this);
+        // (Also register any additional listeners, e.g. new ClassListener if needed)
 
         getLogger().info("§6§l[SandMMO] §aPlugin enabled!");
     }
@@ -75,9 +81,11 @@ public class SandMMO extends JavaPlugin implements Listener {
     }
 
     public void reload() {
+        reloadConfig();
         classesConfig.reload();
         messagesConfig.reload();
-        classGUI = new ClassGUI(classesConfig);
+        // Reinitialize GUIs if needed
+        this.classGUI = new ClassGUI(classesConfig);
     }
 
     @EventHandler
@@ -95,7 +103,6 @@ public class SandMMO extends JavaPlugin implements Listener {
         playerDataManager.savePlayerData(event.getPlayer());
     }
 
-    // Getters
     public static SandMMO getInstance() {
         return instance;
     }
