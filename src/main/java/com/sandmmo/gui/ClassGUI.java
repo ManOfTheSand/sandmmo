@@ -1,78 +1,63 @@
-package com.sandmmo.gui;
+package com.sandmmo.managers;
 
 import com.sandmmo.SandMMO;
-import com.sandmmo.managers.ClassManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashMap;
 import java.util.Map;
 
-public class ClassGUI {
+public class ClassManager {
     private final SandMMO plugin;
-    private final ClassManager classManager;
+    private final Map<String, Map<String, Object>> classes = new HashMap<>();
 
-    public ClassGUI(SandMMO plugin) {
+    public ClassManager(SandMMO plugin) {
         this.plugin = plugin;
-        this.classManager = plugin.getClassManager();
     }
 
-    public void open(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 27,
-                ChatColor.DARK_PURPLE + "Class Selection");
+    public void loadClasses() {
+        plugin.getLogger().info("Loading classes...");
 
-        Map<String, String> classes = classManager.getAllClasses();
-        for (Map.Entry<String, String> entry : classes.entrySet()) {
-            String className = entry.getKey();
-            String displayName = entry.getValue();
-
-            ItemStack item = createClassItem(className, displayName);
-            gui.addItem(item);
+        ConfigurationSection classesSection = plugin.getConfig().getConfigurationSection("classes");
+        if (classesSection == null) {
+            plugin.getLogger().warning("No classes found in config!");
+            return;
         }
 
-        player.openInventory(gui);
-    }
-
-    private ItemStack createClassItem(String className, String displayName) {
-        FileConfiguration config = plugin.getClassesConfig();
-
-        String materialName = config.getString(className + ".icon", "IRON_SWORD");
-        Material material = Material.valueOf(materialName.toUpperCase());
-
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + displayName);
-
-        List<String> lore = new ArrayList<>();
-
-        List<String> description = config.getStringList(className + ".description");
-        for (String line : description) {
-            lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
-        }
-
-        lore.add("");
-        lore.add(ChatColor.YELLOW + "Base Stats:");
-
-        ConfigurationSection statsSection = config.getConfigurationSection(className + ".stats");
-        if (statsSection != null) {
-            for (String stat : statsSection.getKeys(false)) {
-                double value = statsSection.getDouble(stat);
-                lore.add(ChatColor.GRAY + "• " + stat + ": " + ChatColor.WHITE + value);
+        for (String className : classesSection.getKeys(false)) {
+            ConfigurationSection classSection = classesSection.getConfigurationSection(className);
+            if (classSection == null) {
+                plugin.getLogger().warning("Invalid class section: " + className);
+                continue;
             }
+
+            Map<String, Object> classData = new HashMap<>();
+            classData.put("display-name", classSection.getString("display-name"));
+            classData.put("description", classSection.getString("description"));
+            classData.put("icon", classSection.getString("icon"));
+
+            classes.put(className, classData);
         }
 
-        lore.add("");
-        lore.add(ChatColor.GREEN + "Click to select this class!");
+        plugin.getLogger().info("Loaded " + classes.size() + " classes.");
+    }
 
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
+    public Map<String, Object> getClass(String name) {
+        return classes.get(name);
+    }
+
+    public Map<String, Map<String, Object>> getAllClasses() {
+        return classes;
+    }
+
+    public void selectClass(Player player, String className) {
+        Map<String, Object> classData = classes.get(className);
+        if (classData == null) {
+            player.sendMessage("Invalid class: " + className);
+            return;
+        }
+
+        // TODO: Apply class effects, attributes, or permissions to the player here.
+        player.sendMessage("You have selected the " + classData.get("display-name") + " class!");
     }
 }
