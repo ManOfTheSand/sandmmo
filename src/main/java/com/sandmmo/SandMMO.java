@@ -1,5 +1,7 @@
 package com.sandmmo;
 
+import com.sandmmo.commands.ClassCommand;
+import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.config.ClassConfig;
 import com.sandmmo.listeners.PlayerJoinListener;
 import com.sandmmo.player.PlayerDataManager;
