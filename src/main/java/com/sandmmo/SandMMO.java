@@ -1,8 +1,8 @@
 package com.sandmmo;
 
-import sandmmo.managers.SkillManager;
-import sandmmo.managers.PlayerManager;
-import sandmmo.managers.ClassManager;
+import com.sandmmo.managers.SkillManager;
+import com.sandmmo.managers.PlayerManager;
+import com.sandmmo.managers.ClassManager;
 import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.listeners.ClassListener;
 import org.bukkit.plugin.java.JavaPlugin;

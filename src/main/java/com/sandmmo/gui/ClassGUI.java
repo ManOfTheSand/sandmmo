@@ -1,7 +1,7 @@
 package com.sandmmo.gui;
 
 import com.sandmmo.SandMMO;
-import sandmmo.managers.ClassManager;
+import com.sandmmo.managers.ClassManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

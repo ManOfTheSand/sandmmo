@@ -1,4 +1,4 @@
-package sandmmo.managers;
+package com.sandmmo.managers;
 
 import com.sandmmo.SandMMO;
 import com.sandmmo.utils.MessageHelper;
