@@ -24,11 +24,9 @@ public class ClassManager {
     }
 
     private void applyAttributes(Player player, MMOClass mmoClass) {
-        int level = dataManager.getData(player).getLevel();
-        double health = mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level);
-        double damage = mmoClass.baseDamage() + (mmoClass.damagePerLevel() * level);
-
-        Eco.get().getAttributeManager().getAttributeByID("generic.max_health")
-                .ifPresent(attr -> attr.setValue(player, health));
+        Eco.get().getAttributeRegistry().getByID("generic.max_health")
+                .ifPresent(attr -> attr.setValue(player,
+                        mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level)
+                ));
     }
 }

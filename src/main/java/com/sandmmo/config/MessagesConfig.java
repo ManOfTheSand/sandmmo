@@ -8,10 +8,11 @@ public class MessagesConfig extends ExtendableConfig {
     public MessagesConfig(PluginLike plugin) {
         super(
                 "messages",
+                false,
                 plugin,
-                ConfigType.YAML,
+                MessagesConfig.class,
                 "messages.yml",
-                true
+                ConfigType.YAML
         );
     }
 }

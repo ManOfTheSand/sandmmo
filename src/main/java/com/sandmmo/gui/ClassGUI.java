@@ -37,8 +37,4 @@ public class ClassGUI {
             inventory.addItem(item);
         });
     }
-
-    public void open(Player player) {
-        player.openInventory(inventory);
-    }
 }
