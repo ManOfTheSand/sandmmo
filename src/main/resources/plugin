@@ -1,14 +1,22 @@
 name: SandMMO
-version: '1.0-SNAPSHOT'
+version: 1.0
 main: com.sandmmo.SandMMO
-api-version: '1.20'
+api-version: 1.21
 authors: [ManOfTheSand]
-description: A custom MMO plugin
+description: |
+  §6§lSandstorm MMO §r§7- A mystical desert-themed RPG experience
+  with custom classes, skills, and progression systems!
+depend: [MythicMobs]
+softdepend: [Eco, DecentHolograms]
+
 commands:
   class:
-    description: Opens the class selection menu
-    usage: /<command> [select] [className]
-    aliases: [classes]
+    description: Open the class selection menu
+    usage: /class [select|info] [className]
+    aliases: [classes, chooseclass]
+    permission: sandmmo.class.select
 
-depend: [MythicMobs]
-softdepend: [Eco]
+permissions:
+  sandmmo.class.select:
+    description: Allows players to select classes
+    default: true

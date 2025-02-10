@@ -1,20 +1,32 @@
-classes:
-  warrior:
-    displayName: "Warrior"
-    icon: IRON_SWORD
-    description:
-      - "&7A mighty warrior skilled in combat"
-      - "&7Specializes in close-quarter fighting"
+warrior:
+  displayName: "Warrior"
+  icon: IRON_SWORD
+  description:
+    - "&7A mighty warrior skilled in combat"
+    - "&7Specializes in close-quarter fighting"
+  stats:
     strength: 10.0
     defense: 8.0
     health: 20.0
 
-  archer:
-    displayName: "Archer"
-    icon: BOW
-    description:
-      - "&7A skilled ranger with deadly accuracy"
-      - "&7Masters of ranged combat"
+archer:
+  displayName: "Archer"
+  icon: BOW
+  description:
+    - "&7A skilled ranger with deadly accuracy"
+    - "&7Masters of ranged combat"
+  stats:
     strength: 6.0
     agility: 12.0
+    health: 15.0
+
+mage:
+  displayName: "Mage"
+  icon: BLAZE_ROD
+  description:
+    - "&7Master of the arcane arts"
+    - "&7Wields powerful magic"
+  stats:
+    intelligence: 12.0
+    mana: 100.0
     health: 15.0
