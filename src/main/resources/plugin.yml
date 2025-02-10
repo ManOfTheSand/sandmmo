@@ -8,18 +8,3 @@ description: |
   with custom classes, skills, and progression systems!
 depend: [MythicMobs]
 softdepend: [Eco, DecentHolograms]
-
-commands:
-  class:
-    description: Open the class selection menu
-    usage: /class [select|info] [className]
-    aliases: [classes, chooseclass]
-    permission: sandmmo.class.select
-  sandmmo:
-    description: Reload the SandMMO plugin.
-    usage: /sandmmo reload
-
-permissions:
-  sandmmo.class.select:
-    description: Allows players to select classes
-    default: true
