@@ -1,62 +1,91 @@
 package com.sandmmo.gui;
 
 import com.sandmmo.SandMMO;
+import com.sandmmo.managers.MessagesManager;
+import com.sandmmo.managers.PlayerDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ClassGUI {
     private final SandMMO plugin;
+    private final PlayerDataManager dataManager;
+    private final MessagesManager messages;
 
     public ClassGUI(SandMMO plugin) {
         this.plugin = plugin;
+        this.dataManager = plugin.getPlayerDataManager();
+        this.messages = plugin.getMessagesManager();
     }
 
     public void open(Player player) {
-        int size = getInventorySize(plugin.getClassManager().getAllClasses().size());
-        Inventory gui = Bukkit.createInventory(null, size, ChatColor.DARK_PURPLE + "Class Selection");
+        Inventory gui = Bukkit.createInventory(null, 27, messages.getMessage("gui.title"));
 
-        for (Map.Entry<String, Map<String, Object>> entry : plugin.getClassManager().getAllClasses().entrySet()) {
-            String className = entry.getKey();
-            Map<String, Object> classData = entry.getValue();
-            String displayName = (String) classData.get("display-name");
-            String description = (String) classData.get("description");
-            String icon = (String) classData.get("icon");
+        // Add class items
+        plugin.getClassManager().getAllClasses().forEach((className, data) -> {
+            gui.addItem(createClassItem(className, data));
+        });
 
-            ItemStack item = createClassItem(className, displayName, description, icon);
-            gui.addItem(item);
-        }
+        // Add info item
+        gui.setItem(22, createPlayerInfoItem(player));
 
         player.openInventory(gui);
     }
 
-    private ItemStack createClassItem(String className, String displayName, String description, String icon) {
-        Material material = Material.valueOf(icon.toUpperCase());
-        ItemStack item = new ItemStack(material);
+    private ItemStack createClassItem(String className, ClassData data) {
+        ItemStack item = new ItemStack(Material.valueOf(data.getIcon()));
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.GOLD + displayName);
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', data.getDisplayName()));
 
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + description);
+        for(String line : data.getDescription()) {
+            lore.add(ChatColor.GRAY + line);
+        }
         lore.add("");
-        lore.add(ChatColor.GREEN + "Click to select this class!");
+        lore.add(messages.getMessage("gui.click-to-select"));
 
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
     }
 
-    private int getInventorySize(int numClasses) {
-        int size = (int) Math.ceil(numClasses / 9.0) * 9;
-        return Math.min(size, 54);
+    private ItemStack createPlayerInfoItem(Player player) {
+        ItemStack item = new ItemStack(Material.BOOK);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(messages.getMessage("gui.your-stats"));
+
+        List<String> lore = new ArrayList<>();
+        lore.add(messages.getMessage("gui.class") + ": " + dataManager.getPlayerClass(player));
+        lore.add(messages.getMessage("gui.level") + ": " + dataManager.getPlayerLevel(player));
+        // Add more stats here
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public void handleClick(InventoryClickEvent event) {
+        event.setCancelled(true); // Prevent item taking
+
+        if(event.getCurrentItem() == null) return;
+
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item = event.getCurrentItem();
+
+        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+            plugin.getClassManager().selectClass(player, displayName);
+            player.closeInventory();
+        }
     }
 }

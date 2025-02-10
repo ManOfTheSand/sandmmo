@@ -1,3 +1,7 @@
-class-selected: "&aYou've selected the {class} class!"
-class-invalid: "&cInvalid class specified!"
-level-up: "&eLEVEL UP! &7Now level {level}"
+gui:
+  title: "&6Choose Your Class"
+  click-to-select: "&eClick to select this class!"
+  your-stats: "&bYour Stats"
+  class: "&7Class"
+  level: "&7Level"
+reload-success: "&aPlugin reloaded successfully!"

@@ -1,0 +1,10 @@
+classes:
+  warrior:
+    display-name: "&4Warrior"
+    description:
+      - "Mighty melee fighter"
+      - "High strength and defense"
+    icon: IRON_SWORD
+    base-stats:
+      strength: 10
+      defense: 8
