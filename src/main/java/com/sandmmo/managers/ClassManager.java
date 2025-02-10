@@ -2,6 +2,7 @@ package com.sandmmo.managers;
 
 import com.sandmmo.classes.PlayerClass;
 import com.sandmmo.config.ClassConfig;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ClassManager {
     private final ClassConfig classConfig;
@@ -15,8 +16,10 @@ public class ClassManager {
     }
 
     public String[] getAvailableClasses() {
-        // Get class names from configuration
-        return classConfig.getConfig().getConfigurationSection("classes")
+        FileConfiguration config = classConfig.getConfig();
+        if (!config.contains("classes")) return new String[0];
+
+        return config.getConfigurationSection("classes")
                 .getKeys(false)
                 .toArray(new String[0]);
     }

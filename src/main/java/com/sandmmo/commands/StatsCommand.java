@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class StatsCommand implements CommandExecutor {
     private final SandMMO plugin;
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage mm = MiniMessage.miniMessage();
 
     public StatsCommand(SandMMO plugin) {
         this.plugin = plugin;
@@ -20,12 +20,12 @@ public class StatsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command!");
+            sender.sendMessage(mm.deserialize("<red>This command is for players only!"));
             return true;
         }
 
         PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
-        Component stats = miniMessage.deserialize(
+        Component stats = mm.deserialize(
                 "<aqua>Your Stats:\n" +
                         "<gray>Level: <white>" + data.getLevel() + "\n" +
                         "<gray>XP: <white>" + String.format("%.1f", data.getExperience()) + "/" +

@@ -13,9 +13,8 @@ public class ClassConfig {
     }
 
     public PlayerClass getClass(String className) {
-        // Add null check for class configuration section
         if (!config.contains("classes." + className)) {
-            return null; // Explicit return for missing classes
+            return null;
         }
 
         return new PlayerClass(
