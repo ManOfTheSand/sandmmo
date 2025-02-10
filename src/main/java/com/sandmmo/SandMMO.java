@@ -3,6 +3,7 @@ package com.sandmmo;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.willfp.eco.core.PluginLike;
 import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.configuration.ConfigHandler;
 import com.sandmmo.config.ClassesConfig;
 import com.sandmmo.managers.ClassManager;
 import com.sandmmo.managers.PlayerDataManager;
@@ -14,17 +15,18 @@ public class SandMMO extends JavaPlugin implements PluginLike {
     private ClassGUI classGUI;
     private ClassesConfig classesConfig;
     private ClassManager classManager;
+    private final ConfigHandler configHandler = new DummyConfigHandler();
 
     @Override
     public void onEnable() {
         getLogger().info("Initializing SandMMO");
 
-        // Ensure plugin folder exists
+        // Ensure the plugin folder exists
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
 
-        // Check for lang.yml; if not found, save the default resource
+        // Check for lang.yml; if missing, save the default resource.
         File langFile = new File(getDataFolder(), "lang.yml");
         if (!langFile.exists()) {
             saveResource("lang.yml", false);
@@ -42,9 +44,7 @@ public class SandMMO extends JavaPlugin implements PluginLike {
         }
 
         // Initialize dependencies for ClassGUI.
-        // ClassesConfig requires a PluginLike; since this class now implements it, pass 'this'.
         classesConfig = new ClassesConfig(this);
-        // ClassManager now requires ClassesConfig and a PlayerDataManager.
         PlayerDataManager playerDataManager = new PlayerDataManager(this);
         classManager = new ClassManager(classesConfig, playerDataManager);
         classGUI = new ClassGUI(classesConfig, classManager);
@@ -55,14 +55,40 @@ public class SandMMO extends JavaPlugin implements PluginLike {
         getLogger().info("Disabling SandMMO");
     }
 
-    // Used for accessing the ClassGUI from other parts of the plugin.
+    // Used by your commands and other subsystems.
     public ClassGUI getClassGUI() {
-        return this.classGUI;
+        return classGUI;
     }
 
-    // Minimal implementation of PluginLike.
+    // Implement the abstract method from PluginLike.
     @Override
-    public String getName() {
-        return super.getName();
+    public ConfigHandler getConfigHandler() {
+        return configHandler;
+    }
+
+    // Minimal dummy implementation of ConfigHandler for Eco integration.
+    private static class DummyConfigHandler implements com.willfp.eco.core.configuration.ConfigHandler {
+        @Override
+        public String getConfigName() {
+            return "lang.yml";
+        }
+
+        @Override
+        public void reload() {
+            // Add reload logic here if needed.
+        }
+
+        @Override
+        public void save() {
+            // Add save logic here if needed.
+        }
+
+        @Override
+        public boolean isValid() {
+            // Return true to indicate the config is valid.
+            return true;
+        }
+
+        // Implement any other required methods of ConfigHandler here.
     }
 }
