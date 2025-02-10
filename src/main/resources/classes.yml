@@ -1,7 +1,11 @@
 classes:
   warrior:
     display-name: "Warrior"
+    color: "#FF0000"
+    base-health: 25
+    base-mana: 10
   mage:
     display-name: "Mage"
-  archer:
-    display-name: "Archer"
+    color: "#0000FF"
+    base-health: 15
+    base-mana: 25

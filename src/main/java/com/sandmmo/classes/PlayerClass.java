@@ -1,19 +1,18 @@
 package com.sandmmo.classes;
 
 public class PlayerClass {
-    private final String name;
+    private final String id;
     private final String displayName;
+    private final String color;
 
-    public PlayerClass(String name, String displayName) {
-        this.name = name;
+    public PlayerClass(String id, String displayName, String color) {
+        this.id = id;
         this.displayName = displayName;
+        this.color = color;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
+    // Getters
+    public String getId() { return id; }
+    public String getDisplayName() { return displayName; }
+    public String getColor() { return color; }
 }

@@ -1,0 +1,17 @@
+# GUI Configuration
+classes:
+  title: "<gradient:#00BFFF:#FF1493>Class Selection</gradient>"
+  size: 27
+  items:
+    warrior:
+      material: "DIAMOND_SWORD"
+      name: "<#FF0000>Warrior"
+      lore:
+        - "<gray>Class Type: <white>Melee"
+        - "<gray>Health: <red>❤❤❤❤"
+    mage:
+      material: "BLAZE_ROD"
+      name: "<#00BFFF>Mage"
+      lore:
+        - "<gray>Class Type: <white>Magic"
+        - "<gray>Mana: <blue>✦✦✦✦"

@@ -1,37 +1,35 @@
 package com.sandmmo.config;
 
-import com.sandmmo.SandMMO;
 import com.sandmmo.classes.PlayerClass;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ClassConfig {
-    private final SandMMO plugin;
-    private final File file;
-    private final FileConfiguration config;
-    private final Map<String, PlayerClass> classes;
+    private final JavaPlugin plugin;
+    private final Map<String, PlayerClass> classes = new HashMap<>();
 
-    public ClassConfig(SandMMO plugin) {
+    public ClassConfig(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), "classes.yml");
-        this.config = YamlConfiguration.loadConfiguration(file);
-        this.classes = new HashMap<>();
-        loadClasses();
+        reload();
     }
 
-    private void loadClasses() {
-        ConfigurationSection section = config.getConfigurationSection("classes");
-        if (section != null) {
-            for (String className : section.getKeys(false)) {
-                String displayName = section.getString(className + ".display-name");
-                PlayerClass playerClass = new PlayerClass(className, displayName);
-                classes.put(className, playerClass);
-            }
+    public void reload() {
+        File file = new File(plugin.getDataFolder(), "classes.yml");
+        if (!file.exists()) plugin.saveResource("classes.yml", false);
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        for (String key : config.getConfigurationSection("classes").getKeys(false)) {
+            String path = "classes." + key + ".";
+            classes.put(key, new PlayerClass(
+                    key,
+                    config.getString(path + "display-name"),
+                    config.getString(path + "color", "#FFFFFF")
+            ));
         }
     }
 
