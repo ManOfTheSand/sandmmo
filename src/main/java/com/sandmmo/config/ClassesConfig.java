@@ -1,10 +1,12 @@
 package com.sandmmo.config;
 
+import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.config.ConfigType;
 import com.willfp.eco.core.config.ExtendableConfig;
 import com.willfp.eco.core.config.interfaces.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,8 @@ public class ClassesConfig extends ExtendableConfig {
     private final Map<String, ClassData> classes = new HashMap<>();
 
     public ClassesConfig(JavaPlugin plugin) {
-        super("classes", plugin, true, ConfigType.YAML);
+        // Pass EcoPlugin.getInstance() to satisfy the PluginLike parameter expected by ExtendableConfig.
+        super("classes", true, EcoPlugin.getInstance(), ConfigType.YAML);
         this.loadClasses();
     }
 
