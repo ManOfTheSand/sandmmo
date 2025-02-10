@@ -2,25 +2,23 @@ package com.sandmmo.managers;
 
 import com.sandmmo.classes.PlayerClass;
 import com.sandmmo.config.ClassConfig;
-import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.Map;
 
 public class ClassManager {
     private final ClassConfig classConfig;
+    private final Map<String, PlayerClass> classes;
 
     public ClassManager(ClassConfig classConfig) {
         this.classConfig = classConfig;
+        this.classes = classConfig.getClasses();
     }
 
     public PlayerClass getClass(String className) {
-        return classConfig.getClass(className);
+        return classes.get(className);
     }
 
     public String[] getAvailableClasses() {
-        FileConfiguration config = classConfig.getConfig();
-        if (!config.contains("classes")) return new String[0];
-
-        return config.getConfigurationSection("classes")
-                .getKeys(false)
-                .toArray(new String[0]);
+        return classes.keySet().toArray(new String[0]);
     }
 }

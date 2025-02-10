@@ -1,11 +1,7 @@
 classes:
   warrior:
     display-name: "Warrior"
-    base-health: 25
-    base-mana: 10
-    strength-multiplier: 1.2
   mage:
     display-name: "Mage"
-    base-health: 15
-    base-mana: 25
-    strength-multiplier: 0.8
+  archer:
+    display-name: "Archer"

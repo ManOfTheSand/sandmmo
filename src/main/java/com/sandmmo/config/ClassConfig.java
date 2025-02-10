@@ -1,31 +1,41 @@
 package com.sandmmo.config;
 
+import com.sandmmo.SandMMO;
 import com.sandmmo.classes.PlayerClass;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClassConfig {
+    private final SandMMO plugin;
+    private final File file;
     private final FileConfiguration config;
+    private final Map<String, PlayerClass> classes;
 
-    public ClassConfig(JavaPlugin plugin) {
-        plugin.saveResource("classes.yml", false);
-        this.config = plugin.getConfig();
+    public ClassConfig(SandMMO plugin) {
+        this.plugin = plugin;
+        this.file = new File(plugin.getDataFolder(), "classes.yml");
+        this.config = YamlConfiguration.loadConfiguration(file);
+        this.classes = new HashMap<>();
+        loadClasses();
     }
 
-    public PlayerClass getClass(String className) {
-        if (!config.contains("classes." + className)) {
-            return null;
+    private void loadClasses() {
+        ConfigurationSection section = config.getConfigurationSection("classes");
+        if (section != null) {
+            for (String className : section.getKeys(false)) {
+                String displayName = section.getString(className + ".display-name");
+                PlayerClass playerClass = new PlayerClass(className, displayName);
+                classes.put(className, playerClass);
+            }
         }
-
-        return new PlayerClass(
-                config.getString("classes." + className + ".display-name", "Unknown Class"),
-                config.getInt("classes." + className + ".base-health", 20),
-                config.getInt("classes." + className + ".base-mana", 10),
-                config.getDouble("classes." + className + ".strength-multiplier", 1.0)
-        );
     }
 
-    public FileConfiguration getConfig() {
-        return config;
+    public Map<String, PlayerClass> getClasses() {
+        return classes;
     }
 }

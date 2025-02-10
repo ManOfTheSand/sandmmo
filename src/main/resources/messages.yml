@@ -1,0 +1,3 @@
+messages:
+  class-selected: "<#00FF00>You have selected the {class} class!"
+  invalid-class: "<#FF0000>Invalid class selected!"
