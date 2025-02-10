@@ -19,7 +19,7 @@ public class SandMMO extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Load configurations
+        // Load configurations first
         this.classConfig = new ClassConfig(this);
         this.guiConfig = new GuiConfig(this);
         this.messagesConfig = new MessagesConfig(this);
@@ -36,8 +36,6 @@ public class SandMMO extends JavaPlugin {
         // Register listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(classSelectionGUI, this);
-
-        getLogger().info("SandMMO enabled!");
     }
 
     // Getters
