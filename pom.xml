@@ -46,20 +46,6 @@
             <scope>provided</scope>
         </dependency>
         <!-- MythicMobs API -->
-        <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>Mythic-Dist</artifactId>
-            <version>5.3.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Eco -->
-        <dependency>
-            <groupId>com.willfp</groupId>
-            <artifactId>eco</artifactId>
-            <version>6.75.2</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>

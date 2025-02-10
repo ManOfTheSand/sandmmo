@@ -1,0 +1,11 @@
+classes:
+  warrior:
+    display-name: "&4Warrior"
+    base-health: 25
+    base-mana: 10
+    strength-multiplier: 1.2
+  mage:
+    display-name: "&9Archmage"
+    base-health: 15
+    base-mana: 25
+    strength-multiplier: 0.8
