@@ -1,7 +1,6 @@
 package com.sandmmo.config;
 
 import com.sandmmo.classes.PlayerClass;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,14 +13,20 @@ public class ClassConfig {
     }
 
     public PlayerClass getClass(String className) {
+        // Add null check for class configuration section
+        if (!config.contains("classes." + className)) {
+            return null; // Explicit return for missing classes
+        }
+
         return new PlayerClass(
-                config.getString("classes." + className + ".display-name"),
-                config.getInt("classes." + className + ".base-health"),
-                config.getInt("classes." + className + ".base-mana"),
-                config.getDouble("classes." + className + ".strength-multiplier")
+                config.getString("classes." + className + ".display-name", "Unknown Class"),
+                config.getInt("classes." + className + ".base-health", 20),
+                config.getInt("classes." + className + ".base-mana", 10),
+                config.getDouble("classes." + className + ".strength-multiplier", 1.0)
         );
     }
 
-    public ConfigurationSection getConfig() {
+    public FileConfiguration getConfig() {
+        return config;
     }
 }
