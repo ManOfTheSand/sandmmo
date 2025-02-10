@@ -16,7 +16,7 @@ public class ClassManager {
     }
 
     public void loadClasses() {
-        plugin.getLogger().info("Loading classes...");
+        classes.clear();
 
         ConfigurationSection classesSection = plugin.getConfig().getConfigurationSection("classes");
         if (classesSection == null) {
@@ -31,10 +31,19 @@ public class ClassManager {
                 continue;
             }
 
+            String displayName = classSection.getString("display-name");
+            String description = classSection.getString("description");
+            String icon = classSection.getString("icon");
+
+            if (displayName == null || description == null || icon == null) {
+                plugin.getLogger().warning("Missing required fields for class: " + className);
+                continue;
+            }
+
             Map<String, Object> classData = new HashMap<>();
-            classData.put("display-name", classSection.getString("display-name"));
-            classData.put("description", classSection.getString("description"));
-            classData.put("icon", classSection.getString("icon"));
+            classData.put("display-name", displayName);
+            classData.put("description", description);
+            classData.put("icon", icon);
 
             classes.put(className, classData);
         }
@@ -46,8 +55,8 @@ public class ClassManager {
         return classes.get(name);
     }
 
-    public Map<String, Map<String, Object>> getClasses() {
-        return classes;
+    public Map<String, Map<String, Object>> getAllClasses() {
+        return new HashMap<>(classes);
     }
 
     public void selectClass(Player player, String className) {
@@ -57,7 +66,7 @@ public class ClassManager {
             return;
         }
 
-        // TODO: Apply class effects, attributes, or permissions to the player here.
+        plugin.getPlayerManager().setPlayerClass(player, className);
         player.sendMessage("You have selected the " + classData.get("display-name") + " class!");
     }
 }

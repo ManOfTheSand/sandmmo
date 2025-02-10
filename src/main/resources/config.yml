@@ -1,0 +1,13 @@
+classes:
+  warrior:
+    display-name: "Warrior"
+    description: "A mighty melee fighter."
+    icon: "IRON_SWORD"
+  archer:
+    display-name: "Archer"
+    description: "A nimble ranged attacker."
+    icon: "BOW"
+  mage:
+    display-name: "Mage"
+    description: "A powerful spellcaster."
+    icon: "BLAZE_ROD"

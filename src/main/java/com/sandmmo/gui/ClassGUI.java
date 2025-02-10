@@ -1,63 +1,62 @@
-package com.sandmmo.managers;
+package com.sandmmo.gui;
 
 import com.sandmmo.SandMMO;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class ClassManager {
+public class ClassGUI {
     private final SandMMO plugin;
-    private final Map<String, Map<String, Object>> classes = new HashMap<>();
 
-    public ClassManager(SandMMO plugin) {
+    public ClassGUI(SandMMO plugin) {
         this.plugin = plugin;
     }
 
-    public void loadClasses() {
-        plugin.getLogger().info("Loading classes...");
+    public void open(Player player) {
+        int size = getInventorySize(plugin.getClassManager().getAllClasses().size());
+        Inventory gui = Bukkit.createInventory(null, size, ChatColor.DARK_PURPLE + "Class Selection");
 
-        ConfigurationSection classesSection = plugin.getConfig().getConfigurationSection("classes");
-        if (classesSection == null) {
-            plugin.getLogger().warning("No classes found in config!");
-            return;
+        for (Map.Entry<String, Map<String, Object>> entry : plugin.getClassManager().getAllClasses().entrySet()) {
+            String className = entry.getKey();
+            Map<String, Object> classData = entry.getValue();
+            String displayName = (String) classData.get("display-name");
+            String description = (String) classData.get("description");
+            String icon = (String) classData.get("icon");
+
+            ItemStack item = createClassItem(className, displayName, description, icon);
+            gui.addItem(item);
         }
 
-        for (String className : classesSection.getKeys(false)) {
-            ConfigurationSection classSection = classesSection.getConfigurationSection(className);
-            if (classSection == null) {
-                plugin.getLogger().warning("Invalid class section: " + className);
-                continue;
-            }
-
-            Map<String, Object> classData = new HashMap<>();
-            classData.put("display-name", classSection.getString("display-name"));
-            classData.put("description", classSection.getString("description"));
-            classData.put("icon", classSection.getString("icon"));
-
-            classes.put(className, classData);
-        }
-
-        plugin.getLogger().info("Loaded " + classes.size() + " classes.");
+        player.openInventory(gui);
     }
 
-    public Map<String, Object> getClass(String name) {
-        return classes.get(name);
+    private ItemStack createClassItem(String className, String displayName, String description, String icon) {
+        Material material = Material.valueOf(icon.toUpperCase());
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GOLD + displayName);
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + description);
+        lore.add("");
+        lore.add(ChatColor.GREEN + "Click to select this class!");
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
     }
 
-    public Map<String, Map<String, Object>> getAllClasses() {
-        return classes;
-    }
-
-    public void selectClass(Player player, String className) {
-        Map<String, Object> classData = classes.get(className);
-        if (classData == null) {
-            player.sendMessage("Invalid class: " + className);
-            return;
-        }
-
-        // TODO: Apply class effects, attributes, or permissions to the player here.
-        player.sendMessage("You have selected the " + classData.get("display-name") + " class!");
+    private int getInventorySize(int numClasses) {
+        int size = (int) Math.ceil(numClasses / 9.0) * 9;
+        return Math.min(size, 54);
     }
 }

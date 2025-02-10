@@ -1,32 +1,37 @@
 package com.sandmmo;
 
 import com.sandmmo.commands.ClassCommand;
+import com.sandmmo.listeners.ClassListener;
 import com.sandmmo.managers.ClassManager;
+import com.sandmmo.managers.PlayerManager;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SandMMO extends JavaPlugin {
     private static SandMMO instance;
     private ClassManager classManager;
+    private PlayerManager playerManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        // Save the default configuration file (config.yml in src/main/resources)
         saveDefaultConfig();
+        reloadConfig();
 
-        // Initialize your class manager (ensure this class exists in your project)
         this.classManager = new ClassManager(this);
+        classManager.loadClasses();
 
-        // Register the command 'class'
-        if (getCommand("class") != null) {
-            getCommand("class").setExecutor(new ClassCommand(this));
+        this.playerManager = new PlayerManager(this);
+
+        PluginCommand classCommand = getCommand("class");
+        if (classCommand != null) {
+            classCommand.setExecutor(new ClassCommand(this));
         } else {
             getLogger().severe("Command 'class' not found in plugin.yml");
         }
 
-        // Now that loadClasses is implemented in ClassManager, this call will work:
-        classManager.loadClasses();
+        getServer().getPluginManager().registerEvents(new ClassListener(this), this);
 
         getLogger().info("§6§l[SandMMO] §r§7Plugin enabled!");
         getLogger().info("§eVersion: §b" + getDescription().getVersion());
@@ -43,5 +48,14 @@ public class SandMMO extends JavaPlugin {
 
     public ClassManager getClassManager() {
         return classManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public void reloadClasses() {
+        reloadConfig();
+        classManager.loadClasses();
     }
 }
