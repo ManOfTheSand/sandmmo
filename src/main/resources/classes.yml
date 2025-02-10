@@ -1,10 +1,13 @@
 classes:
   warrior:
-    display-name: "&4Warrior"
+    display-name: "<red>Warrior</red>"
     description:
-      - "Mighty melee fighter"
-      - "High strength and defense"
+      - "<gray>Mighty melee fighter"
+      - "<gray>High strength and defense"
     icon: IRON_SWORD
-    base-stats:
-      strength: 10
-      defense: 8
+  mage:
+    display-name: "<blue>Mage</blue>"
+    description:
+      - "<gray>Powerful spellcaster"
+      - "<gray>High intelligence and mana"
+    icon: STICK

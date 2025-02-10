@@ -1,8 +1,11 @@
 package com.sandmmo;
 
 import com.sandmmo.commands.ClassCommand;
+import com.sandmmo.commands.ReloadCommand;
+import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.gui.ClassGUI;
 import com.sandmmo.gui.SkillsGUI;
+import com.sandmmo.gui.StatsGUI;
 import com.sandmmo.listeners.ClassListener;
 import com.sandmmo.managers.*;
 import org.bukkit.command.PluginCommand;
@@ -21,8 +24,10 @@ public class SandMMO extends JavaPlugin implements Listener {
     private MessagesManager messagesManager;
     private ClassGUI classGUI;
     private SkillsGUI skillsGUI;
+    private StatsGUI statsGUI;
     private LevelManager levelManager;
     private StatsManager statsManager;
+    private MobManager mobManager;
 
     @Override
     public void onEnable() {
@@ -37,8 +42,10 @@ public class SandMMO extends JavaPlugin implements Listener {
         this.messagesManager = new MessagesManager(this);
         this.levelManager = new LevelManager(this);
         this.statsManager = new StatsManager(this);
+        this.mobManager = new MobManager(this);
         this.classGUI = new ClassGUI(this);
         this.skillsGUI = new SkillsGUI(this);
+        this.statsGUI = new StatsGUI(this);
 
         // Register command
         PluginCommand classCommand = getCommand("class");
@@ -48,17 +55,18 @@ public class SandMMO extends JavaPlugin implements Listener {
             getLogger().severe("Failed to register /class command!");
         }
 
+        // Register stats command
+        PluginCommand statsCommand = getCommand("stats");
+        if (statsCommand != null) {
+            statsCommand.setExecutor(new StatsCommand(this));
+        } else {
+            getLogger().severe("Failed to register /stats command!");
+        }
+
         // Register reload command
         PluginCommand reloadCommand = getCommand("sandmmo");
         if (reloadCommand != null) {
-            reloadCommand.setExecutor((sender, command, label, args) -> {
-                if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-                    reload();
-                    sender.sendMessage(messagesManager.getMessage("reload-success"));
-                    return true;
-                }
-                return false;
-            });
+            reloadCommand.setExecutor(new ReloadCommand(this));
         } else {
             getLogger().severe("Failed to register /sandmmo command!");
         }
@@ -85,6 +93,7 @@ public class SandMMO extends JavaPlugin implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         classGUI.handleClick(event);
         skillsGUI.handleClick(event);
+        statsGUI.handleClick(event);
     }
 
     @EventHandler
@@ -125,11 +134,19 @@ public class SandMMO extends JavaPlugin implements Listener {
         return skillsGUI;
     }
 
+    public StatsGUI getStatsGUI() {
+        return statsGUI;
+    }
+
     public LevelManager getLevelManager() {
         return levelManager;
     }
 
     public StatsManager getStatsManager() {
         return statsManager;
+    }
+
+    public MobManager getMobManager() {
+        return mobManager;
     }
 }

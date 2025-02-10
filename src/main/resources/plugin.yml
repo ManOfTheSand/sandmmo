@@ -15,6 +15,9 @@ commands:
     usage: /class [select|info] [className]
     aliases: [classes, chooseclass]
     permission: sandmmo.class.select
+  sandmmo:
+    description: Reload the SandMMO plugin.
+    usage: /sandmmo reload
 
 permissions:
   sandmmo.class.select:
