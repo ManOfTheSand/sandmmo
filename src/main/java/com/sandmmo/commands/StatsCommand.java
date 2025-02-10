@@ -30,8 +30,8 @@ public class StatsCommand implements CommandExecutor {
                         "<gray>Level: <white>" + data.getLevel() + "\n" +
                         "<gray>XP: <white>" + String.format("%.1f", data.getExperience()) + "/" +
                         String.format("%.1f", data.getRequiredExperience()) + "\n" +
-                        "<gray>Class: <white>" + (data.getPlayerClass() != null ?
-                        data.getPlayerClass().getDisplayName() : "None")
+                        "<gray>Class: " + (data.getPlayerClass() != null ?
+                        data.getPlayerClass().getDisplayName() : "<gray>None")
         );
 
         player.sendMessage(stats);

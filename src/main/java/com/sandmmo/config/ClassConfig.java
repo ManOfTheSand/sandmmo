@@ -1,6 +1,7 @@
 package com.sandmmo.config;
 
 import com.sandmmo.classes.PlayerClass;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,5 +20,8 @@ public class ClassConfig {
                 config.getInt("classes." + className + ".base-mana"),
                 config.getDouble("classes." + className + ".strength-multiplier")
         );
+    }
+
+    public ConfigurationSection getConfig() {
     }
 }

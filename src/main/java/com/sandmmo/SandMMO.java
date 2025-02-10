@@ -5,6 +5,7 @@ import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.config.ClassConfig;
 import com.sandmmo.listeners.PlayerJoinListener;
 import com.sandmmo.player.PlayerDataManager;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.sandmmo.managers.ClassManager;  // Changed from com.sandmmo.classes
 import com.sandmmo.player.PlayerDataManager;
@@ -15,6 +16,12 @@ public final class SandMMO extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Add this at the start
+        getComponentLogger().info(MiniMessage.miniMessage().deserialize(
+                "<strikethrough>                                            </strikethrough>\n" +
+                        "<gradient:#FFAA00:#FF5500>SandMMO v" + getDescription().getVersion() + "</gradient>\n" +
+                        "<strikethrough>                                            </strikethrough>"
+        ));
         // Load configurations
         saveDefaultConfig();
         ClassConfig classConfig = new ClassConfig(this);

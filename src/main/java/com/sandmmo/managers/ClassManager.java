@@ -13,4 +13,11 @@ public class ClassManager {
     public PlayerClass getClass(String className) {
         return classConfig.getClass(className);
     }
+
+    public String[] getAvailableClasses() {
+        // Get class names from configuration
+        return classConfig.getConfig().getConfigurationSection("classes")
+                .getKeys(false)
+                .toArray(new String[0]);
+    }
 }
