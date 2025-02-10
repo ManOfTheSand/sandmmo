@@ -1,36 +1,20 @@
 classes:
   warrior:
-    display_name: "&4Battle Lord"
-    description:
-      - "Master of melee combat"
-      - "High defense and strength"
+    displayName: "Warrior"
     icon: IRON_SWORD
-    base_stats:
-      health: 100
-      strength: 15
-      defense: 20
-    growth_rates:
-      health: 5
-      strength: 2
-      defense: 1.5
-    skills:
-      - warrior_charge
-      - whirlwind_attack
-
-  mage:
-    display_name: "&9Arcane Scholar"
     description:
-      - "Master of elemental magic"
-      - "High intelligence and mana"
-    icon: BLAZE_ROD
-    base_stats:
-      health: 75
-      intellect: 25
-      mana: 150
-    growth_rates:
-      health: 2
-      intellect: 3
-      mana: 5
-    skills:
-      - fireball
-      - frost_nova
+      - "&7A mighty warrior skilled in combat"
+      - "&7Specializes in close-quarter fighting"
+    strength: 10.0
+    defense: 8.0
+    health: 20.0
+
+  archer:
+    displayName: "Archer"
+    icon: BOW
+    description:
+      - "&7A skilled ranger with deadly accuracy"
+      - "&7Masters of ranged combat"
+    strength: 6.0
+    agility: 12.0
+    health: 15.0

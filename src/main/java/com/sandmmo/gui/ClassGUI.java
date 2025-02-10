@@ -26,33 +26,55 @@ public class ClassGUI {
         Inventory gui = Bukkit.createInventory(null, 27,
                 ChatColor.DARK_PURPLE + "Class Selection");
 
-        for (Map.Entry<String, Map<String, Object>> entry :
-                classManager.getAllClasses().entrySet()) {
+        // Get all classes and create items for each
+        Map<String, String> classes = classManager.getAllClasses();
+        for (Map.Entry<String, String> entry : classes.entrySet()) {
+            String className = entry.getKey();
+            String displayName = entry.getValue();
 
-            ItemStack item = createClassItem(entry.getKey(), entry.getValue());
+            ItemStack item = createClassItem(className, displayName);
             gui.addItem(item);
         }
 
         player.openInventory(gui);
     }
 
-    private ItemStack createClassItem(String className, Map<String, Object> classData) {
-        Material material = Material.valueOf(
-                classData.getOrDefault("icon", "BARRIER").toString());
+    private ItemStack createClassItem(String className, String displayName) {
+        // Get class configuration
+        String materialName = plugin.getConfig().getString("classes." + className + ".icon", "IRON_SWORD");
+        Material material = Material.valueOf(materialName.toUpperCase());
+
+        // Create item
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                classData.get("display_name").toString()));
+        // Set display name
+        meta.setDisplayName(ChatColor.GOLD + displayName);
 
+        // Create lore
         List<String> lore = new ArrayList<>();
-        for (String line : (List<String>) classData.get("description")) {
-            lore.add(ChatColor.GRAY + line);
+
+        // Add description if exists
+        List<String> description = plugin.getConfig().getStringList("classes." + className + ".description");
+        for (String line : description) {
+            lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
         }
+
+        // Add empty line
         lore.add("");
-        lore.add(ChatColor.GOLD + "Base Stats:");
-        ((Map<String, Double>) classData.get("base_stats")).forEach((stat, value) ->
-                lore.add(ChatColor.GRAY + "• " + stat + ": " + ChatColor.WHITE + value));
+
+        // Add stats
+        lore.add(ChatColor.YELLOW + "Base Stats:");
+        Map<String, Double> stats = classManager.getClassStats(className, 1);
+        for (Map.Entry<String, Double> stat : stats.entrySet()) {
+            if (!stat.getKey().equals("displayName") && !stat.getKey().equals("icon")) {
+                lore.add(ChatColor.GRAY + "• " + stat.getKey() + ": " + ChatColor.WHITE + stat.getValue());
+            }
+        }
+
+        // Add instructions
+        lore.add("");
+        lore.add(ChatColor.GREEN + "Click to select this class!");
 
         meta.setLore(lore);
         item.setItemMeta(meta);

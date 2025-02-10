@@ -94,7 +94,11 @@ public class PlayerManager {
     public Map<String, Object> getPlayerData(UUID uuid) {
         return playerData.getOrDefault(uuid, new HashMap<>());
     }
-
+    public void setPlayerClass(UUID uuid, String className) {
+        Map<String, Object> data = getPlayerData(uuid);
+        data.put("selectedClass", className);
+        updatePlayerData(uuid, data);
+    }
     /**
      * Convenience method to save data for a Player using their UUID.
      */

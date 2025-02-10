@@ -1,12 +1,14 @@
 name: SandMMO
-version: 1.0
-main: com.com.sandmmo.SandMMO
-api-version: 1.21
-depend: [MythicMobs, Eco]
+version: '1.0-SNAPSHOT'
+main: com.sandmmo.SandMMO
+api-version: '1.20'
+authors: [ManOfTheSand]
+description: A custom MMO plugin
 commands:
   class:
-    description: Manage your MMO class
-    usage: /class
-permissions:
-  sandmmo.class:
-    default: true
+    description: Opens the class selection menu
+    usage: /<command> [select] [className]
+    aliases: [classes]
+
+depend: [MythicMobs]
+softdepend: [Eco]
