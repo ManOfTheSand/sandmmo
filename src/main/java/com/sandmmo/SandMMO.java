@@ -3,47 +3,32 @@ package com.sandmmo;
 import com.sandmmo.commands.ClassCommand;
 import com.sandmmo.commands.StatsCommand;
 import com.sandmmo.config.ClassConfig;
-import com.sandmmo.listeners.PlayerJoinListener;
-import com.sandmmo.player.PlayerDataManager;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import com.sandmmo.listeners.PlayerListener;
+import com.sandmmo.managers.ClassManager;
+import com.sandmmo.managers.PlayerDataManager;
+import com.sandmmo.gui.ClassSelectionGUI;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.sandmmo.managers.ClassManager;  // Changed from com.sandmmo.classes
-import com.sandmmo.player.PlayerDataManager;
 
-public final class SandMMO extends JavaPlugin {
+public class SandMMO extends JavaPlugin {
     private ClassManager classManager;
     private PlayerDataManager playerDataManager;
+    private ClassSelectionGUI classSelectionGUI;
 
     @Override
     public void onEnable() {
-        // Add this at the start
-        getComponentLogger().info(MiniMessage.miniMessage().deserialize(
-                "<strikethrough>                                            </strikethrough>\n" +
-                        "<gradient:#FFAA00:#FF5500>SandMMO v" + getDescription().getVersion() + "</gradient>\n" +
-                        "<strikethrough>                                            </strikethrough>"
-        ));
-        // Load configurations
         saveDefaultConfig();
-        ClassConfig classConfig = new ClassConfig(this);
 
-        // Initialize managers
-        this.classManager = new ClassManager(classConfig);
-        this.playerDataManager = new PlayerDataManager(this);
-
-        // Register events
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        classManager = new ClassManager(new ClassConfig(this));
+        playerDataManager = new PlayerDataManager(this);
+        classSelectionGUI = new ClassSelectionGUI(this);
 
         // Register commands
-        getCommand("class").setExecutor(new ClassCommand(this));
         getCommand("stats").setExecutor(new StatsCommand(this));
+        getCommand("class").setExecutor(new ClassCommand(this));
 
-        getLogger().info("SandMMO enabled!");
-    }
-
-    @Override
-    public void onDisable() {
-        playerDataManager.saveAllData();
-        getLogger().info("SandMMO disabled!");
+        // Register event listeners
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(classSelectionGUI, this);
     }
 
     public ClassManager getClassManager() {
@@ -52,5 +37,9 @@ public final class SandMMO extends JavaPlugin {
 
     public PlayerDataManager getPlayerDataManager() {
         return playerDataManager;
+    }
+
+    public ClassSelectionGUI getClassSelectionGUI() {
+        return classSelectionGUI;
     }
 }
