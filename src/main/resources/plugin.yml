@@ -1,10 +1,9 @@
 name: SandMMO
-version: 1.1
+version: 1.0.0
 main: com.sandmmo.SandMMO
-api-version: 1.21
-authors: [ManOfTheSand]
-description: |
-  §6§lSandstorm MMO §r§7- A mystical desert-themed RPG experience
-  with custom classes, skills, and progression systems!
+api-version: 1.17
 depend: [eco]
-softdepend: [DecentHolograms]
+commands:
+  mmoinfo:
+    description: Displays your MMO information.
+    usage: /mmoinfo
