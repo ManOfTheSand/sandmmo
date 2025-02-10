@@ -1,25 +1,30 @@
-package com.sandmmo.player;
+package com.sandmmo.managers;
 
 import com.sandmmo.SandMMO;
+import com.sandmmo.player.PlayerData;
 import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class PlayerDataManager {
-    private final Map<UUID, com.sandmmo.player.PlayerData> playerDataMap = new HashMap<>();
-    private final SandMMO plugin; // Add plugin reference
+    private final SandMMO plugin;
+    private final Map<UUID, PlayerData> playerDataMap;
 
-    // Update constructor to accept plugin
     public PlayerDataManager(SandMMO plugin) {
         this.plugin = plugin;
+        this.playerDataMap = new HashMap<>();
     }
 
-    public com.sandmmo.player.PlayerData getPlayerData(Player player) {
-        return playerDataMap.computeIfAbsent(player.getUniqueId(), k -> new com.sandmmo.player.PlayerData(player));
+    public void loadPlayerData(Player player) {
+        UUID playerId = player.getUniqueId();
+        PlayerData playerData = new PlayerData(player);
+        playerDataMap.put(playerId, playerData);
     }
 
-    public void saveAllData() {
-        // Implement data saving logic here
+    public PlayerData getPlayerData(Player player) {
+        UUID playerId = player.getUniqueId();
+        return playerDataMap.get(playerId);
     }
 }
