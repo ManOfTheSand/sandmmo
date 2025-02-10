@@ -16,6 +16,7 @@ public class SandMMO extends EcoPlugin {
     private ClassManager classManager;
     private ClassGUI classGUI;
 
+    // Use EcoPlugin's onPluginEnable (or attach your initialization in an alternative method)
     public void onPluginEnable() {
         instance = this;
 
@@ -28,12 +29,13 @@ public class SandMMO extends EcoPlugin {
         this.classManager = new ClassManager(classesConfig, playerDataManager);
         this.classGUI = new ClassGUI(classesConfig, classManager);
 
-        // Register commands
+        // Register commands using Bukkit's command system.
         registerCommands();
     }
 
     private void registerCommands() {
-        new ClassCommand(this).register();
+        // Ensure your plugin.yml defines the "class" command.
+        getCommand("class").setExecutor(new ClassCommand(this));
     }
 
     public static SandMMO getInstance() {

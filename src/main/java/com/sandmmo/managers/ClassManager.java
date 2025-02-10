@@ -24,7 +24,8 @@ public class ClassManager {
     }
 
     private void applyAttributes(Player player, MMOClass mmoClass, int level) {
-        Eco.get().getAttributeManager().getByID("generic.max_health")
+        // Note: Use getAttributeRegistry() (not getAttributeManager()) as per the current Eco API.
+        Eco.get().getAttributeRegistry().getByID("generic.max_health")
                 .ifPresent(attr -> attr.setValue(player,
                         mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level)
                 ));
