@@ -2,7 +2,6 @@ package com.sandmmo.managers;
 
 import com.sandmmo.config.ClassesConfig;
 import com.sandmmo.config.ClassesConfig.MMOClass;
-import com.willfp.eco.core.Eco;
 import org.bukkit.entity.Player;
 
 public class ClassManager {
@@ -24,10 +23,7 @@ public class ClassManager {
     }
 
     private void applyAttributes(Player player, MMOClass mmoClass, int level) {
-        // Note: Use getAttributeRegistry() (not getAttributeManager()) as per the current Eco API.
-        Eco.get().getAttributeRegistry().getByID("generic.max_health")
-                .ifPresent(attr -> attr.setValue(player,
-                        mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level)
-                ));
+        double maxHealth = mmoClass.baseHealth() + (mmoClass.healthPerLevel() * level);
+        player.setMaxHealth(maxHealth);
     }
 }

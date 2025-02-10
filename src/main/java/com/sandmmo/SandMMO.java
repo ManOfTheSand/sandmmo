@@ -1,48 +1,55 @@
 package com.sandmmo;
 
-import com.sandmmo.commands.ClassCommand;
-import com.sandmmo.config.ClassesConfig;
-import com.sandmmo.config.MessagesConfig;
-import com.sandmmo.gui.ClassGUI;
-import com.sandmmo.managers.ClassManager;
-import com.sandmmo.managers.PlayerDataManager;
-import com.willfp.eco.core.EcoPlugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import com.willfp.eco.core.EcoPlugin; // For optional Eco interactions
+import com.sandmmo.gui.ClassGUI;    // Make sure this class exists
+import java.io.File;
 
-public class SandMMO extends EcoPlugin {
-    private static SandMMO instance;
-    private ClassesConfig classesConfig;
-    private MessagesConfig messagesConfig;
-    private PlayerDataManager playerDataManager;
-    private ClassManager classManager;
+public class SandMMO extends JavaPlugin {
+
     private ClassGUI classGUI;
 
-    // Use EcoPlugin's onPluginEnable (or attach your initialization in an alternative method)
-    public void onPluginEnable() {
-        instance = this;
+    @Override
+    public void onEnable() {
+        getLogger().info("Initializing SandMMO");
 
-        // Configs
-        this.classesConfig = new ClassesConfig(this);
-        this.messagesConfig = new MessagesConfig(this);
+        // Ensure the plugin folder exists
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+        }
 
-        // Managers
-        this.playerDataManager = new PlayerDataManager(this);
-        this.classManager = new ClassManager(classesConfig, playerDataManager);
-        this.classGUI = new ClassGUI(classesConfig, classManager);
+        // Check for lang.yml; if not found, save the default resource.
+        File langFile = new File(getDataFolder(), "lang.yml");
+        if (!langFile.exists()) {
+            saveResource("lang.yml", false);
+            getLogger().info("Default lang.yml saved.");
+        } else {
+            getLogger().info("lang.yml found.");
+        }
 
-        // Register commands using Bukkit's command system.
-        registerCommands();
+        // Optionally, retrieve the Eco plugin instance if needed.
+        EcoPlugin eco = (EcoPlugin) getServer().getPluginManager().getPlugin("eco");
+        if (eco == null) {
+            getLogger().warning("Eco plugin not found! Economy features will be disabled.");
+        } else {
+            getLogger().info("Eco plugin detected.");
+        }
+
+        // Initialize GUI for classes
+        // If your ClassGUI requires a reference to the main plugin instance, pass "this".
+        this.classGUI = new ClassGUI(this);
+
+        // Additional initialization tasks here
     }
 
-    private void registerCommands() {
-        // Ensure your plugin.yml defines the "class" command.
-        getCommand("class").setExecutor(new ClassCommand(this));
+    @Override
+    public void onDisable() {
+        getLogger().info("Disabling SandMMO");
+        // Cleanup if needed
     }
 
-    public static SandMMO getInstance() {
-        return instance;
-    }
-
+    // Added method for use in ClassCommand.
     public ClassGUI getClassGUI() {
-        return classGUI;
+        return this.classGUI;
     }
 }
