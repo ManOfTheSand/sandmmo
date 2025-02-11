@@ -4,7 +4,6 @@ import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.manager.XPManager;
 import com.sandcore.mmo.manager.CurrencyManager;
 import com.sandcore.mmo.manager.PartyManager;
-import com.sandcore.mmo.manager.StatsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ServiceRegistry {
@@ -13,7 +12,6 @@ public final class ServiceRegistry {
     private static volatile XPManager xpManager;
     private static volatile CurrencyManager currencyManager;
     private static volatile PartyManager partyManager;
-    private static volatile StatsManager statsManager;
     private static volatile JavaPlugin plugin;
 
     // Private constructor to prevent instantiation.
@@ -55,20 +53,15 @@ public final class ServiceRegistry {
         return partyManager;
     }
 
-    // Register and retrieval methods for StatsManager.
-    public static void registerStatsManager(StatsManager manager) {
-        statsManager = manager;
-    }
-
-    public static StatsManager getStatsManager() {
-        return statsManager;
-    }
-
     public static void registerPlugin(JavaPlugin pluginInstance) {
         plugin = pluginInstance;
     }
 
     public static JavaPlugin getPlugin() {
         return plugin;
+    }
+
+    public static void initialize(MMOPlugin plugin) {
+        // Initialize core services without Eco dependencies
     }
 } 
