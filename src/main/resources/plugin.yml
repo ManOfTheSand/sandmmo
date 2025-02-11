@@ -1,6 +1,6 @@
 name: SandMMO
 version: 1.0.0
-main: com.sandmmo.SandMMO
+main: com.sandcore.mmo.SandCoreMain
 api-version: 1.21
 commands:
   class:
