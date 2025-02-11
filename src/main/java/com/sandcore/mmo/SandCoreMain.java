@@ -35,8 +35,7 @@ public class SandCoreMain extends JavaPlugin {
          String[] configFiles = {
              "classes.yml",
              "stats.yml",
-             "gui.yml",
-             "skills.yml"
+             "gui.yml"
          };
 
          for (String fileName : configFiles) {
