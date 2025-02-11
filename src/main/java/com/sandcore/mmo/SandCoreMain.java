@@ -14,6 +14,7 @@ import com.sandcore.mmo.util.ServiceRegistry;
 import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.gui.AsyncStatsGUIHandler;
 import org.bukkit.entity.Player;
+import com.sandcore.mmo.command.AdminStatsCommandExecutor;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -54,6 +55,13 @@ public class SandCoreMain extends JavaPlugin {
          }
          if (getCommand("sandmmo") != null) {
              getCommand("sandmmo").setExecutor(new ReloadCommandExecutor(this));
+         }
+         
+         // Register the new admin stats command.
+         if (getCommand("adminstats") != null) {
+             getCommand("adminstats").setExecutor(new AdminStatsCommandExecutor());
+         } else {
+             getLogger().severe("Command /adminstats not defined in plugin.yml");
          }
          
          // Initialize the AsyncStatsGUIHandler and register the /stats command.
