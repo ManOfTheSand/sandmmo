@@ -68,6 +68,11 @@
             <version>3.17.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.8.10</version>
+        </dependency>
     </dependencies>
 
     <build>
