@@ -126,4 +126,28 @@ public class StatsManager {
         statsData.clear();
         // Add any additional reload logic needed
     }
+
+    // Returns the available stat points for a player.
+    public int getAvailablePoints(Player player) {
+        // Dummy logic: Replace with your actual implementation.
+        return 5;
+    }
+    
+    // Returns the computed stat value for a given stat for the player.
+    public double getStatValue(Player player, String stat) {
+        // Dummy logic: Replace with your calculation.
+        return 100.0;
+    }
+    
+    // Returns the base value for the given stat.
+    public double getBaseStat(Player player, String stat) {
+        // Dummy logic: Replace with your calculation.
+        return 50.0;
+    }
+    
+    // Returns the per-level increment for the given stat.
+    public double getPerLevelIncrement(Player player, String stat) {
+        // Dummy logic: Replace with your calculation.
+        return 5.0;
+    }
 } 
