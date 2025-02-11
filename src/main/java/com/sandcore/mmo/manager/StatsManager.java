@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.HashMap;
 
 public class StatsManager {
     private final Logger logger = Logger.getLogger(StatsManager.class.getName());
@@ -41,6 +42,14 @@ public class StatsManager {
     }
 
     private final Map<UUID, StatsData> statsData = new ConcurrentHashMap<>();
+
+    // In-memory stat overrides: key = player's UUID, value = map of <stat, value>
+    private final Map<String, Map<String, Double>> statOverrides = new HashMap<>();
+    
+    // Helper method to get a player's stat overrides.
+    private Map<String, Double> getOverrides(Player player) {
+        return statOverrides.computeIfAbsent(player.getUniqueId().toString(), k -> new HashMap<>());
+    }
 
     // Retrieve or initialize data for a player.
     public StatsData getPlayerStats(UUID uuid) {
@@ -133,9 +142,13 @@ public class StatsManager {
         return 5;
     }
     
-    // Returns the computed stat value for a given stat for the player.
+    // Returns the computed stat value: if an override exists, return it; otherwise, return a default value.
     public double getStatValue(Player player, String stat) {
-        // Dummy logic: Replace with your calculation.
+        Map<String, Double> overrides = getOverrides(player);
+        if (overrides.containsKey(stat)) {
+            return overrides.get(stat);
+        }
+        // Dummy default value (replace with actual calculation if available)
         return 100.0;
     }
     
@@ -160,7 +173,8 @@ public class StatsManager {
      * @param value the new value to set.
      */
     public void setStat(Player player, String stat, double value) {
-        // TODO: update the player's stats storage (e.g., StatsData) accordingly.
+        Map<String, Double> overrides = getOverrides(player);
+        overrides.put(stat, value);
         logger.info("setStat: Setting " + stat + " for player " + player.getName() + " to " + value);
     }
     
@@ -173,7 +187,10 @@ public class StatsManager {
      * @param value the amount to add.
      */
     public void addStat(Player player, String stat, double value) {
-        // TODO: update the player's stats storage accordingly.
-        logger.info("addStat: Adding " + value + " to stat " + stat + " for player " + player.getName());
+        Map<String, Double> overrides = getOverrides(player);
+        double current = overrides.getOrDefault(stat, 100.0);
+        double newValue = current + value;
+        overrides.put(stat, newValue);
+        logger.info("addStat: Adding " + value + " to stat " + stat + " for player " + player.getName() + ". New value: " + newValue);
     }
 } 

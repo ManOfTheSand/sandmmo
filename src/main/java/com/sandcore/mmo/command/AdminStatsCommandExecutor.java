@@ -46,6 +46,12 @@ public class AdminStatsCommandExecutor implements CommandExecutor {
         String action = args[2];
         String targetPlayerName = args[3];
         String attribute = args[4].toLowerCase();
+        // Map certain aliases: if admin uses "health" or "mana", map to "maxHealth" or "maxMana" respectively.
+        if (attribute.equals("health")) {
+            attribute = "maxHealth";
+        } else if (attribute.equals("mana")) {
+            attribute = "maxMana";
+        }
         double valueChange;
         try {
             valueChange = Double.parseDouble(args[5]);
