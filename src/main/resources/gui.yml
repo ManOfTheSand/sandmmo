@@ -15,3 +15,41 @@ items:
     lore:
       - "<gray>Class Type: <blue>Magic"
       - "<gray>Special Ability: <white>Arcane Surge"
+
+gui:
+  class:
+    title: "<#ff0000>Class Selection"
+    size: 9
+    items:
+      warrior:
+        slot: 0
+        material: IRON_SWORD
+        name: "<#00ff00>Warrior Class"
+      mage:
+        slot: 1
+        material: BLAZE_ROD
+        name: "<#0000ff>Mage Class"
+  stats:
+    title: "<#ff00ff>Player Stats"
+    size: 9
+    items:
+      level:
+        slot: 0
+        material: PAPER
+        name: "<#ffff00>Level: %level%"
+      xp:
+        slot: 1
+        material: PAPER
+        name: "<#00ffff>XP: %xp%"
+      hp:
+        slot: 2
+        material: GOLDEN_APPLE
+        name: "<#ff9900>Health: %hp%"
+  reload:
+    title: "<#ff8800>Reload Complete"
+    size: 9
+    items:
+      message:
+        slot: 4
+        material: EMERALD
+        name: "<#ff8800>Configuration Reloaded!"
