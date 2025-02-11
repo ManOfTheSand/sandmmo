@@ -29,10 +29,6 @@
             <id>auxilor</id>
             <url>https://repo.auxilor.io/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>jitpack</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
 
     <dependencies>
