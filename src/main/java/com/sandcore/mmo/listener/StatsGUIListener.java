@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component;
 import com.sandcore.mmo.gui.StatsGUI;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.inventory.InventoryView;
+import org.bukkit.inventory.InventoryView;
 
 public class StatsGUIListener implements Listener {
     @EventHandler
