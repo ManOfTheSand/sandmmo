@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import com.sandcore.mmo.command.ClassCommandExecutor;
 import com.sandcore.mmo.command.StatsCommandExecutor;
 import com.sandcore.mmo.command.ReloadCommandExecutor;
+import java.io.File;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -19,6 +20,25 @@ public class SandCoreMain extends JavaPlugin {
     @Override
     public void onEnable() {
          instance = this;
+         
+         // Ensure the plugin data folder exists.
+         if (!getDataFolder().exists()) {
+             getDataFolder().mkdirs();
+         }
+         
+         // Save the default config.yml if it doesn't exist.
+         saveDefaultConfig();
+         
+         // Check and save external YAMLs (stats.yml, classes.yml, etc.) from your jar.
+         File statsFile = new File(getDataFolder(), "mmoMinecraft/stats.yml");
+         if (!statsFile.exists()) {
+             saveResource("mmoMinecraft/stats.yml", false);
+         }
+         File classesFile = new File(getDataFolder(), "mmoMinecraft/classes.yml");
+         if (!classesFile.exists()) {
+             saveResource("mmoMinecraft/classes.yml", false);
+         }
+         
          // Register the /class command executor.
          if (getCommand("class") != null) {
              getCommand("class").setExecutor(new ClassCommandExecutor(this));
