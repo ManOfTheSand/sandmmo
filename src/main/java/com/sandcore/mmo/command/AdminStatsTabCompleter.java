@@ -1,5 +1,7 @@
 package com.sandcore.mmo.command;
 
+import com.sandcore.mmo.manager.StatsManager;
+import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
