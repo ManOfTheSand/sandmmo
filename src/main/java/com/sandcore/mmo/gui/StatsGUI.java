@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import com.willfp.eco.core.gui.menu.MenuBuilderKt;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,9 +32,10 @@ public class StatsGUI {
         
         // Create menu using Eco's builder pattern (pattern similar to Auxilor's EcoSkills)
         var builder = Menu.builder(27)
-                .setTitle(config.getString("gui.title", "Player Stats"))
-                .preventClicks()
-                .preventItemMove();
+                .setTitle(config.getString("gui.title", "Player Stats"));
+
+        MenuBuilderKt.preventClicks(builder);
+        MenuBuilderKt.preventItemMove(builder);
 
         // Add items from config
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
