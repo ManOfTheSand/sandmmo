@@ -37,9 +37,10 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         // Build the inventory using settings from the YAML config.
         String titleRaw = config.getString("gui.title", "Player Stats");
-        String title = legacySerializer.serialize(miniMessage.deserialize(titleRaw));
+        // Use MiniMessage to parse the title into an Adventure Component.
+        net.kyori.adventure.text.Component titleComponent = miniMessage.deserialize(titleRaw);
         int size = config.getInt("gui.size", 27);
-        this.inventory = Bukkit.createInventory(null, size, title);
+        this.inventory = Bukkit.createInventory(null, size, titleComponent);
         this.statsManager = ServiceRegistry.getStatsManager();
         updateInventory();
     }
