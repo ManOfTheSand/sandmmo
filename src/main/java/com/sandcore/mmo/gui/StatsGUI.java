@@ -12,6 +12,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
+import net.kyori.adventure.text.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -90,5 +91,9 @@ public class StatsGUI {
     public void open() {
         updateInventory();
         player.openInventory(inventory);
+    }
+
+    public Component getTitleComponent() {
+        return miniMessage.deserialize(config.getString("gui.title", "Player Stats"));
     }
 } 

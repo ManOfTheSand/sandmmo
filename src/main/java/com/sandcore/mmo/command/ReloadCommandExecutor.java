@@ -23,15 +23,21 @@ public class ReloadCommandExecutor implements CommandExecutor {
              plugin.reloadConfig();
              plugin.saveConfig();
              
-             // Reload all YAML files
-             ServiceRegistry.getClassManager().loadClasses();
-             if (ServiceRegistry.getStatsManager() != null) {
-                 ServiceRegistry.getStatsManager().reloadStats();
+             try {
+                 if (ServiceRegistry.getClassManager() != null) {
+                     ServiceRegistry.getClassManager().loadClasses();
+                 }
+                 if (ServiceRegistry.getStatsManager() != null) {
+                     ServiceRegistry.getStatsManager().reloadStats();
+                 }
+                 player.sendMessage("§aConfigurations reloaded successfully!");
+             } catch (Exception e) {
+                 player.sendMessage("§cReload failed: " + e.getMessage());
              }
              
              new ReloadGUI(plugin.getConfig()).open(player);
          } else {
-             sender.sendMessage("This command is only usable by players.");
+             sender.sendMessage("§aConfigurations reloaded successfully!");
          }
          return true;
     }

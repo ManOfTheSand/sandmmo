@@ -26,9 +26,9 @@ public class ClassManager {
      * Loads the class configurations from the classes.yml file located in the mmoMinecraft resource folder.
      */
     public void loadClasses() {
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("mmoMinecraft/classes.yml")) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("classes.yml")) {
             if (input == null) {
-                logger.severe("Failed to load mmoMinecraft/classes.yml: file not found.");
+                logger.severe("Failed to load classes.yml: file not found.");
                 return;
             }
             YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));

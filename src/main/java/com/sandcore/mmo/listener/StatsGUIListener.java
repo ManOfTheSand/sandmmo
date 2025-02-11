@@ -16,11 +16,11 @@ import net.kyori.adventure.text.Component;
 public class StatsGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getClickedInventory() == null) return;
-        if (!event.getView().title().contains(Component.text("Player Stats"))) return;
+        // Cancel all interactions regardless of which inventory was clicked
         event.setCancelled(true);
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) event.getWhoClicked();
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!event.getView().title().equals(new StatsGUI(player, 0).getTitleComponent())) return;
+        
         StatsManager statsManager = ServiceRegistry.getStatsManager();
         boolean allocated = false;
         int slot = event.getRawSlot();
