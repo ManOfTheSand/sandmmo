@@ -60,8 +60,4 @@ public final class ServiceRegistry {
     public static JavaPlugin getPlugin() {
         return plugin;
     }
-
-    public static void initialize(MMOPlugin plugin) {
-        // Initialize core services without Eco dependencies
-    }
 } 
