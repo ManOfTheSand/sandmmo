@@ -16,6 +16,7 @@ import com.sandcore.mmo.gui.AsyncStatsGUIHandler;
 import org.bukkit.entity.Player;
 import com.sandcore.mmo.command.AdminStatsCommandExecutor;
 import com.sandcore.mmo.command.MainCommandExecutor;
+import com.sandcore.mmo.command.MainTabCompleter;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -56,6 +57,7 @@ public class SandCoreMain extends JavaPlugin {
          }
          if (getCommand("sandmmo") != null) {
              getCommand("sandmmo").setExecutor(new MainCommandExecutor(this));
+             getCommand("sandmmo").setTabCompleter(new MainTabCompleter());
          } else {
              getLogger().severe("Command /sandmmo not defined in plugin.yml");
          }
