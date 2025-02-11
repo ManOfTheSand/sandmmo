@@ -1,0 +1,38 @@
+gui:
+  title: "<gradient:#00BFFF:#FF1493>Player Stats"
+  size: 27
+  items:
+    maxHealth:
+      slot: 0
+      material: GOLDEN_APPLE
+      name: "Max Health: %maxHealth%"
+      lore:
+        - "Base: 100.0, +Per Level"
+    maxMana:
+      slot: 1
+      material: POTION
+      name: "Max Mana: %maxMana%"
+    healthRegen:
+      slot: 2
+      material: BREAD
+      name: "Health Regen: %healthRegen%"
+    manaRegen:
+      slot: 3
+      material: BOWL
+      name: "Mana Regen: %manaRegen%"
+    strength:
+      slot: 10
+      material: IRON_SWORD
+      name: "Strength: %strength%"
+    dexterity:
+      slot: 11
+      material: FEATHER
+      name: "Dexterity: %dexterity%"
+    intellect:
+      slot: 12
+      material: BOOK
+      name: "Intellect: %intellect%"
+    freePoints:
+      slot: 26
+      material: EMERALD
+      name: "Free Points: %freePoints%"

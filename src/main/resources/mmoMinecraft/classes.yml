@@ -1,8 +1,0 @@
-# Configuration for player classes
-classes:
-  warrior:
-    health: 20
-    attack: 5
-  mage:
-    health: 15
-    attack: 8 
