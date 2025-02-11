@@ -29,6 +29,10 @@
             <id>auxilor</id>
             <url>https://repo.auxilor.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -56,6 +60,12 @@
             <groupId>com.willfp</groupId>
             <artifactId>eco</artifactId>
             <version>6.75.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>ecomponent</artifactId>
+            <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

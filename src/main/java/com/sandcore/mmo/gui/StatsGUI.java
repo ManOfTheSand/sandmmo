@@ -30,8 +30,8 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         
         // Create Eco menu using the static builder from Menu
-        var builder = Menu.builder(config.getInt("gui.size", 27))
-                .setTitle(config.getString("gui.title", "Player Stats"))
+        Menu.Builder builder = Menu.builder(27)
+                .setTitle("Player Stats")
                 .setPreventClicks(true)
                 .setPreventItemMovement(true);
 
