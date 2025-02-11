@@ -16,7 +16,7 @@ public class StatsGUIListener implements Listener {
         Inventory inv = event.getInventory();
         if (inv == null) return;
         // Check if the inventory title contains "Player Stats" (customize this check as needed).
-        if (!inv.getTitle().contains("Player Stats")) return;
+        if (!event.getView().getTitle().contains("Player Stats")) return;
         event.setCancelled(true); // Prevent item movement.
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();

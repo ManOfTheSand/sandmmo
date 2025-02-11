@@ -4,6 +4,7 @@ import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.manager.XPManager;
 import com.sandcore.mmo.manager.CurrencyManager;
 import com.sandcore.mmo.manager.PartyManager;
+import com.sandcore.mmo.manager.StatsManager;
 
 public final class ServiceRegistry {
 
@@ -11,6 +12,7 @@ public final class ServiceRegistry {
     private static volatile XPManager xpManager;
     private static volatile CurrencyManager currencyManager;
     private static volatile PartyManager partyManager;
+    private static volatile StatsManager statsManager;
 
     // Private constructor to prevent instantiation.
     private ServiceRegistry() {}
@@ -49,5 +51,14 @@ public final class ServiceRegistry {
 
     public static PartyManager getPartyManager() {
         return partyManager;
+    }
+
+    // Register and retrieval methods for StatsManager.
+    public static void registerStatsManager(StatsManager manager) {
+        statsManager = manager;
+    }
+
+    public static StatsManager getStatsManager() {
+        return statsManager;
     }
 } 
