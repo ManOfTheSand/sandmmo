@@ -81,4 +81,14 @@ public class ClassManager {
         logger.info("Updated " + player.getName() + "'s class to " + newClass);
         return true;
     }
+
+    /**
+     * Updates the player's level in the class system.
+     *
+     * @param player the player whose level was updated.
+     */
+    public void updateLevel(Player player) {
+        // For now: log the update. Expand this as needed to adjust the player's class data.
+        logger.info("Updated level for player " + player.getName());
+    }
 } 
