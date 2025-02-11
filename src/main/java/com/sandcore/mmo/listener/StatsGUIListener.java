@@ -3,12 +3,14 @@ package com.sandcore.mmo.listener;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
+import org.bukkit.event.inventory.InventoryType;
 
 public class StatsGUIListener implements Listener {
     @EventHandler
@@ -46,5 +48,12 @@ public class StatsGUIListener implements Listener {
         } else {
             player.sendMessage(ChatColor.RED + "No free stat points available!");
         }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (event.getInventory().getType() != InventoryType.CHEST) return;
+        if (!event.getView().getTitle().contains("Player Stats")) return;
+        event.setCancelled(true);
     }
 } 

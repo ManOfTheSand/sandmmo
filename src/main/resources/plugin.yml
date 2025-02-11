@@ -4,12 +4,14 @@ main: com.sandcore.mmo.SandCoreMain
 api-version: 1.21
 commands:
   class:
-    description: Open class selection
+    description: Choose your class
   stats:
     description: View your stats
   sandmmo:
-    description: Reload configurations
+    description: Reload plugin configurations
+    usage: /sandmmo
     permission: sandmmo.reload
 permissions:
   sandmmo.reload:
+    description: Allows reloading configurations
     default: op

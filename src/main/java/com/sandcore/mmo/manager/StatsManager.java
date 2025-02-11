@@ -121,4 +121,9 @@ public class StatsManager {
         logger.info("Allocated 1 point to " + attribute + " for player " + player.getName());
         return true;
     }
+
+    public void reloadStats() {
+        statsData.clear();
+        // Add any additional reload logic needed
+    }
 } 

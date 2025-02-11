@@ -31,10 +31,19 @@ public class SandCoreMain extends JavaPlugin {
          // Save the default config.yml if it doesn't exist.
          saveDefaultConfig();
          
-         // Check and save external YAMLs (stats.yml, classes.yml, etc.) from your jar.
-         File classesFile = new File(getDataFolder(), "classes.yml");
-         if (!classesFile.exists()) {
-             saveResource("classes.yml", false);
+         // List of YAML files to generate
+         String[] configFiles = {
+             "classes.yml",
+             "stats.yml",
+             "gui.yml",
+             "skills.yml"
+         };
+
+         for (String fileName : configFiles) {
+             File configFile = new File(getDataFolder(), fileName);
+             if (!configFile.exists()) {
+                 saveResource(fileName, false);
+             }
          }
          
          // Register the StatsManager

@@ -20,18 +20,16 @@ public class ReloadCommandExecutor implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
          if (sender instanceof Player) {
              Player player = (Player) sender;
-             // Reload the plugin configuration from disk.
              plugin.reloadConfig();
-             FileConfiguration config = plugin.getConfig();
- 
-             // Reload additional configuration files.
-             if (ServiceRegistry.getClassManager() != null) {
-                 ServiceRegistry.getClassManager().loadClasses();
+             plugin.saveConfig();
+             
+             // Reload all YAML files
+             ServiceRegistry.getClassManager().loadClasses();
+             if (ServiceRegistry.getStatsManager() != null) {
+                 ServiceRegistry.getStatsManager().reloadStats();
              }
-             // Add similar calls for other managers if needed.
- 
-             // Open a custom reload GUI to indicate a successful reload.
-             new ReloadGUI(config).open(player);
+             
+             new ReloadGUI(plugin.getConfig()).open(player);
          } else {
              sender.sendMessage("This command is only usable by players.");
          }
