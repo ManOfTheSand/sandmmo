@@ -1,7 +1,6 @@
 package com.sandcore.mmo.gui;
 
-import com.willfp.eco.core.gui.menu.MenuBuilder;
-import com.willfp.eco.core.gui.slot.Slot;
+import com.willfp.eco.core.gui.menu.Menu;
 import com.willfp.eco.core.gui.slot.FillerSlot;
 import org.bukkit.entity.Player;
 import com.sandcore.mmo.manager.StatsManager;
@@ -18,7 +17,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class StatsGUI {
-    private final MenuBuilder.Menu menu;
+    private final Menu menu;
     private final FileConfiguration config;
     private final StatsManager statsManager;
 
@@ -27,20 +26,27 @@ public class StatsGUI {
         
         // Load config
         InputStream input = getClass().getClassLoader().getResourceAsStream("stats.yml");
-        this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
+        this.config = YamlConfiguration.loadConfiguration(
+                new InputStreamReader(input, StandardCharsets.UTF_8));
         
-        // Create Eco menu using the static builder from Menu
-        MenuBuilder builder = MenuBuilder.builder(27)
-                .setTitle("Player Stats")
+        // Create menu using Eco's builder pattern
+        Menu.Builder builder = Menu.builder(27)
+                .setTitle(config.getString("gui.title", "Player Stats"))
                 .setPreventClicks(true)
                 .setPreventItemMovement(true);
 
-        // Add slots during build phase inline
+        // Add items from config
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
-            builder.setSlot(slot, new FillerSlot(createItem(player, playerLevel, path)));
+            
+            // Convert flat slot to row/column
+            int row = slot / 9 + 1;
+            int column = slot % 9 + 1;
+            
+            builder.setSlot(row, column, new FillerSlot(createItem(player, playerLevel, path)));
         }
+
         this.menu = builder.build();
     }
 
