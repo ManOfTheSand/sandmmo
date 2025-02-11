@@ -52,6 +52,16 @@ public class AdminStatsCommandExecutor implements CommandExecutor {
             attribute = "maxMana";
         }
         
+        // Validate the attribute against allowed stat keys.
+        java.util.List<String> validAttributes = java.util.Arrays.asList(
+            "maxHealth", "maxMana", "healthRegen", "manaRegen", "strength", "dexterity", "intellect", "criticalChance", "criticalDamage", "defense"
+        );
+        if (!validAttributes.contains(attribute)) {
+            sender.sendMessage(ChatColor.RED + "Invalid attribute: " + attribute +
+                ". Valid attributes: " + validAttributes);
+            return true;
+        }
+        
         double valueChange;
         try {
             valueChange = Double.parseDouble(args[3]);
