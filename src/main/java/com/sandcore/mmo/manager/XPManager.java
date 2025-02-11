@@ -68,4 +68,8 @@ public class XPManager {
             logger.info("Player " + player.getName() + " did not level up. Current XP: " + newXP);
         }
     }
+
+    public void reload() {
+        // Add reload logic for XP configurations
+    }
 } 

@@ -78,4 +78,8 @@ public class CurrencyManager {
             return true;
         }
     }
+
+    public void reload() {
+        // Add reload logic for currency configurations
+    }
 } 
