@@ -39,7 +39,8 @@ public class AdminStatsCommandExecutor implements CommandExecutor {
         
         String action = args[0].toLowerCase();
         String targetPlayerName = args[1];
-        String attribute = args[2].toLowerCase();
+        // If the attribute argument contains extra info (from tab completion), use only the first word.
+        String attribute = args[2].split("\\s+")[0].toLowerCase();
         // Map attribute aliases.
         if (attribute.equals("health") || attribute.equals("maxhealth")) {
             attribute = "maxHealth";

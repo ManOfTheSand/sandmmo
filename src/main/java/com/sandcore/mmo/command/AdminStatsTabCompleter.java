@@ -34,11 +34,26 @@ public class AdminStatsTabCompleter implements TabCompleter {
             }
             return filterByStart(args[1], playerNames);
         } else if (args.length == 3) {
-            // Suggest attribute names
-            List<String> attributes = Arrays.asList("maxHealth", "maxMana", "healthRegen", "manaRegen", "strength", "dexterity", "intellect", "criticalChance", "criticalDamage");
-            return filterByStart(args[2], attributes);
+            // Suggest attribute names with current stat values if target player is online.
+            List<String> validAttributes = Arrays.asList("maxHealth", "maxMana", "healthRegen", "manaRegen", "strength", "dexterity", "intellect", "defense", "magicDefense");
+            List<String> suggestions = new ArrayList<>();
+            // Attempt to get the target player from the second argument.
+            Player target = Bukkit.getPlayerExact(args[1]);
+            // Retrieve StatsManager instance (if available)
+            StatsManager statsManager = ServiceRegistry.getStatsManager();
+            for (String attr : validAttributes) {
+                if (attr.toLowerCase().startsWith(args[2].toLowerCase())) {
+                    if (target != null && statsManager != null) {
+                        double current = statsManager.getStatValue(target, attr);
+                        suggestions.add(attr + " (current: " + current + ")");
+                    } else {
+                        suggestions.add(attr);
+                    }
+                }
+            }
+            return suggestions;
         } else {
-            // For the numerical value argument, no suggestions.
+            // For numerical value argument, no suggestions.
             return Collections.emptyList();
         }
     }
