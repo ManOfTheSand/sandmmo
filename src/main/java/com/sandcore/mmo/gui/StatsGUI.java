@@ -30,22 +30,19 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         
         // Create Eco menu
-        this.menu = Menu.builder(config.getInt("gui.size", 27))
+        Menu.Builder builder = Menu.builder(config.getInt("gui.size", 27))
                 .setTitle(config.getString("gui.title", "Player Stats"))
-                .setPreventClicks(true)
-                .setPreventDrags(true)
-                .build();
+                .preventClick(true)
+                .preventDrag(true);
 
-        updateMenu(player, playerLevel);
-    }
-
-    private void updateMenu(Player player, int level) {
+        // Add slots during build phase
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
-            
-            menu.getBuilder().setSlot(slot, new FillerSlot(createItem(player, level, path)));
+            builder.setSlot(slot, new FillerSlot(createItem(player, playerLevel, path)));
         }
+
+        this.menu = builder.build();
     }
 
     private ItemStack createItem(Player player, int level, String path) {
