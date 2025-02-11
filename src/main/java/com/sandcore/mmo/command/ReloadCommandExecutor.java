@@ -8,6 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import com.sandcore.mmo.util.ServiceRegistry;
 import java.util.function.Consumer;
+import com.sandcore.mmo.manager.ClassManager;
+import com.sandcore.mmo.manager.StatsManager;
+import com.sandcore.mmo.manager.CurrencyManager;
+import com.sandcore.mmo.manager.XPManager;
 
 public class ReloadCommandExecutor implements CommandExecutor {
     private final JavaPlugin plugin;

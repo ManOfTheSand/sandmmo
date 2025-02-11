@@ -20,7 +20,7 @@ public class StatsCommandExecutor implements CommandExecutor {
          if (sender instanceof Player) {
              Player player = (Player) sender;
              FileConfiguration config = plugin.getConfig();
-             new com.sandcore.mmo.gui.StatsGUI((Player)sender, 10).open();
+             new StatsGUI(player, 10).open(player);
          } else {
              sender.sendMessage("This command is only usable by players.");
          }

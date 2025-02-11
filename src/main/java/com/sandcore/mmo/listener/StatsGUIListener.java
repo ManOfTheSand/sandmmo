@@ -48,7 +48,6 @@ public class StatsGUIListener implements Listener {
     }
 
     private boolean isStatsGUI(InventoryView view) {
-        Component guiTitle = new StatsGUI(null, 0).getTitleComponent(); // Null player is safe here
-        return view.title().equals(guiTitle);
+        return view.title().contains(Component.text("Player Stats"));
     }
 } 
