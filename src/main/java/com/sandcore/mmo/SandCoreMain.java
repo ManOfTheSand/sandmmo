@@ -32,10 +32,6 @@ public class SandCoreMain extends JavaPlugin {
          saveDefaultConfig();
          
          // Check and save external YAMLs (stats.yml, classes.yml, etc.) from your jar.
-         File statsFile = new File(getDataFolder(), "mmoMinecraft/stats.yml");
-         if (!statsFile.exists()) {
-             saveResource("mmoMinecraft/stats.yml", false);
-         }
          File classesFile = new File(getDataFolder(), "mmoMinecraft/classes.yml");
          if (!classesFile.exists()) {
              saveResource("mmoMinecraft/classes.yml", false);

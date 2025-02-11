@@ -30,7 +30,7 @@ public class StatsGUI {
         this.player = player;
         this.playerLevel = playerLevel;
         // Load the external configuration from mmoMinecraft/stats.yml
-        InputStream input = getClass().getClassLoader().getResourceAsStream("mmoMinecraft/stats.yml");
+        InputStream input = getClass().getClassLoader().getResourceAsStream("stats.yml");
         if (input == null) {
             throw new RuntimeException("Failed to load mmoMinecraft/stats.yml");
         }
