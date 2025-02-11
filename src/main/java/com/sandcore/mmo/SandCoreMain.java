@@ -12,12 +12,13 @@ import java.io.File;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import com.sandcore.mmo.manager.ClassManager;
-import com.sandcore.mmo.gui.AsyncGUIHandler;
+import com.sandcore.mmo.gui.AsyncStatsGUIHandler;
+import org.bukkit.entity.Player;
 
 public class SandCoreMain extends JavaPlugin {
 
     private static SandCoreMain instance;
-    private AsyncGUIHandler guiHandler;
+    private AsyncStatsGUIHandler statsGUIHandler;
 
     public static SandCoreMain getInstance() {
          return instance;
@@ -28,21 +29,14 @@ public class SandCoreMain extends JavaPlugin {
          instance = this;
          ServiceRegistry.registerPlugin(this);
          
-         // Ensure the plugin data folder exists.
+         // Ensure data folder exists.
          if (!getDataFolder().exists()) {
              getDataFolder().mkdirs();
          }
          
-         // Save the default config.yml if it doesn't exist.
+         // Save default configuration files if they don't exist.
          saveDefaultConfig();
-         
-         // List of YAML files to generate
-         String[] configFiles = {
-             "classes.yml",
-             "stats.yml",
-             "gui.yml"
-         };
-
+         String[] configFiles = { "classes.yml", "stats.yml", "statsgui.yml", "gui.yml" };
          for (String fileName : configFiles) {
              File configFile = new File(getDataFolder(), fileName);
              if (!configFile.exists()) {
@@ -50,35 +44,32 @@ public class SandCoreMain extends JavaPlugin {
              }
          }
          
-         // Register ClassManager
+         // Register managers.
          ServiceRegistry.registerClassManager(new ClassManager());
-         
-         // Register StatsManager
          ServiceRegistry.registerStatsManager(new StatsManager());
          
-         // Register the /class command executor.
+         // Register command executors.
          if (getCommand("class") != null) {
              getCommand("class").setExecutor(new ClassCommandExecutor(this));
-         } else {
-             getLogger().severe("Command /class not defined in plugin.yml");
          }
-         // Register the /sandmmo command executor (reload config GUI).
          if (getCommand("sandmmo") != null) {
              getCommand("sandmmo").setExecutor(new ReloadCommandExecutor(this));
-         } else {
-             getLogger().severe("Command /sandmmo not defined in plugin.yml");
          }
          
-         // Initialize the AsyncGUIHandler
-         guiHandler = new AsyncGUIHandler(this);
-         // Register the stats command executor
-         getCommand("stats").setExecutor(new StatsCommandExecutor(this, guiHandler));
+         // Initialize the AsyncStatsGUIHandler and register the /stats command.
+         statsGUIHandler = new AsyncStatsGUIHandler(this);
+         if (getCommand("stats") != null) {
+             getCommand("stats").setExecutor(new StatsCommandExecutor(this, statsGUIHandler));
+         } else {
+             getLogger().severe("Command /stats not defined in plugin.yml");
+         }
          
          // Example event: welcome message on join.
          getServer().getPluginManager().registerEvents(new Listener() {
              @EventHandler
              public void onPlayerJoin(PlayerJoinEvent event) {
-                 event.getPlayer().sendMessage(Component.text("Welcome to MMO!"));
+                 Player player = event.getPlayer();
+                 player.sendMessage(Component.text("Welcome to MMO!"));
              }
          }, this);
          

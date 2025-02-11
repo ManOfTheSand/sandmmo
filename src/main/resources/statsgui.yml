@@ -1,0 +1,66 @@
+stats_gui:
+  size: 27
+  title: "&6Player Stats"
+  attributes:
+    maxHealth:
+      slot: 10
+      material: RED_DYE
+      displayName: "&cMax Health: %value%"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    maxMana:
+      slot: 11
+      material: BLUE_DYE
+      displayName: "&bMax Mana: %value%"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    healthRegen:
+      slot: 12
+      material: GOLD_INGOT
+      displayName: "&eHealth Regen: %value%/sec"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    manaRegen:
+      slot: 13
+      material: LAPIS_LAZULI
+      displayName: "&9Mana Regen: %value%/sec"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    strength:
+      slot: 14
+      material: IRON_SWORD
+      displayName: "&cStrength: %value%"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    criticalChance:
+      slot: 15
+      material: ENCHANTED_BOOK
+      displayName: "&dCritical Chance: %value%%"
+      lore:
+        - "Base: %base%%"
+        - "Per Level: %per_level%%"
+    defense:
+      slot: 16
+      material: SHIELD
+      displayName: "&aDefense: %value%"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+    dexterity:
+      slot: 17
+      material: FEATHER
+      displayName: "&bDexterity: %value%"
+      lore:
+        - "Base: %base%"
+        - "Per Level: %per_level%"
+  availablePoints:
+    slot: 22
+    material: EMERALD
+    displayName: "&eAvailable Stat Points: %points%"
+    lore:
+      - "Click to allocate your stat points!" 

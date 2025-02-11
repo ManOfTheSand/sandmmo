@@ -1,6 +1,6 @@
 package com.sandcore.mmo.command;
 
-import com.sandcore.mmo.gui.AsyncGUIHandler;
+import com.sandcore.mmo.gui.AsyncStatsGUIHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,9 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class StatsCommandExecutor implements CommandExecutor {
 
-    private final AsyncGUIHandler guiHandler;
+    private final AsyncStatsGUIHandler guiHandler;
 
-    public StatsCommandExecutor(JavaPlugin plugin, AsyncGUIHandler guiHandler) {
+    public StatsCommandExecutor(JavaPlugin plugin, AsyncStatsGUIHandler guiHandler) {
         this.guiHandler = guiHandler;
     }
 
@@ -22,8 +22,8 @@ public class StatsCommandExecutor implements CommandExecutor {
              return true;
          }
          Player player = (Player) sender;
-         // Open the configured GUI using the async handler with key "main_menu"
-         guiHandler.openGUI(player, "main_menu");
+         // Open the stats GUI showing current attributes and available stat points.
+         guiHandler.openGUI(player);
          return true;
     }
 } 
