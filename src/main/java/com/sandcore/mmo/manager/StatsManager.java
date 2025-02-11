@@ -1,196 +1,264 @@
 package com.sandcore.mmo.manager;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.UUID;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import java.util.HashMap;
 
+/**
+ * StatsManager handles all the player attribute values.
+ *
+ * <p>Attributes:
+ * <ul>
+ *   <li>maxHealth: Total hit points. (Base value + per level increment + allocated bonus)</li>
+ *   <li>maxMana: Total mana available.</li>
+ *   <li>healthRegen: Health regeneration rate.</li>
+ *   <li>manaRegen: Mana regeneration rate.</li>
+ *   <li>strength: Determines physical damage output.</li>
+ *   <li>dexterity: Affects attack speed, critical chance, and evasion.</li>
+ *   <li>intellect: Influences mana capacity and magical damage.</li>
+ *   <li>defense: Reduces incoming physical damage.</li>
+ *   <li>magicDefense: Reduces incoming magical damage.</li>
+ * </ul>
+ *
+ * Attributes are computed as:
+ * <pre>
+ *  effective = base + (perLevel * playerLevel) + allocatedBonus
+ * </pre>
+ *
+ * In addition, admin commands may override individual stat values.
+ */
 public class StatsManager {
-    private final Logger logger = Logger.getLogger(StatsManager.class.getName());
+    private static final Logger logger = Logger.getLogger(StatsManager.class.getName());
 
-    // Base values
-    public static final double BASE_MAX_HEALTH = 100.0;
-    public static final double BASE_MAX_MANA = 50.0;
-    public static final double BASE_HEALTH_REGEN = 2.0;
-    public static final double BASE_MANA_REGEN = 1.0;
-    public static final int BASE_STRENGTH = 10;
-    public static final int BASE_DEXTERITY = 10;
-    public static final int BASE_INTELLECT = 10;
+    // Base values and per-level increments – defaults can be overridden by configuration.
+    public double baseMaxHealth = 100.0;
+    public double perLevelMaxHealth = 10.0;
 
-    // Per-level increments
-    public static final double INCREMENT_MAX_HEALTH = 10.0;
-    public static final double INCREMENT_MAX_MANA = 5.0;
-    public static final double INCREMENT_HEALTH_REGEN = 0.5;
-    public static final double INCREMENT_MANA_REGEN = 0.5;
-    public static final int INCREMENT_STRENGTH = 1;
-    public static final int INCREMENT_DEXTERITY = 1;
-    public static final int INCREMENT_INTELLECT = 1;
+    public double baseMaxMana = 50.0;
+    public double perLevelMaxMana = 5.0;
 
-    // Internal container for a player's allocated bonus and free points
-    public static class StatsData {
+    public double baseHealthRegen = 2.0;
+    public double perLevelHealthRegen = 0.5;
+
+    public double baseManaRegen = 1.0;
+    public double perLevelManaRegen = 0.5;
+
+    public int baseStrength = 10;
+    public int perLevelStrength = 1;
+
+    public int baseDexterity = 10;
+    public int perLevelDexterity = 1;
+
+    public int baseIntellect = 10;
+    public int perLevelIntellect = 1;
+
+    public int baseDefense = 5;
+    public int perLevelDefense = 1;
+
+    public int baseMagicDefense = 5;
+    public int perLevelMagicDefense = 1;
+
+    /**
+     * Inner class representing the bonus stat allocation that a player has earned
+     * (for example, through leveling up or spending stat points).
+     */
+    public static class PlayerStatAllocation {
         public int bonusMaxHealth = 0;
         public int bonusMaxMana = 0;
-        public int bonusHealthRegen = 0;
-        public int bonusManaRegen = 0;
+        public double bonusHealthRegen = 0;
+        public double bonusManaRegen = 0;
         public int bonusStrength = 0;
         public int bonusDexterity = 0;
         public int bonusIntellect = 0;
-        // Starting free points – adjust as necessary.
+        public int bonusDefense = 0;
+        public int bonusMagicDefense = 0;
+        // Starting free stat points (could be increased by leveling up).
         public int freeStatPoints = 5;
     }
 
-    private final Map<UUID, StatsData> statsData = new ConcurrentHashMap<>();
+    // Store each player's allocated stat points.
+    private final Map<UUID, PlayerStatAllocation> allocations = new ConcurrentHashMap<>();
 
-    // In-memory stat overrides: key = player's UUID, value = map of <stat, value>
-    private final Map<String, Map<String, Double>> statOverrides = new HashMap<>();
-    
-    // Helper method to get a player's stat overrides.
+    /**
+     * Returns the player's allocation record, creating it if needed.
+     */
+    public PlayerStatAllocation getAllocation(Player player) {
+        return allocations.computeIfAbsent(player.getUniqueId(), id -> new PlayerStatAllocation());
+    }
+
+    // In-memory overrides set by admin commands: Map of player UUID string to a map of <stat, value>
+    private final Map<String, Map<String, Double>> statOverrides = new ConcurrentHashMap<>();
+
     private Map<String, Double> getOverrides(Player player) {
-        return statOverrides.computeIfAbsent(player.getUniqueId().toString(), k -> new HashMap<>());
-    }
-
-    // Retrieve or initialize data for a player.
-    public StatsData getPlayerStats(UUID uuid) {
-        return statsData.computeIfAbsent(uuid, k -> new StatsData());
-    }
-
-    // Total attribute calculations based on player's level and allocated bonuses.
-    public double getTotalMaxHealth(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_MAX_HEALTH + (INCREMENT_MAX_HEALTH * level) + data.bonusMaxHealth;
-    }
-
-    public double getTotalMaxMana(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_MAX_MANA + (INCREMENT_MAX_MANA * level) + data.bonusMaxMana;
-    }
-
-    public double getTotalHealthRegen(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_HEALTH_REGEN + (INCREMENT_HEALTH_REGEN * level) + data.bonusHealthRegen;
-    }
-
-    public double getTotalManaRegen(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_MANA_REGEN + (INCREMENT_MANA_REGEN * level) + data.bonusManaRegen;
-    }
-
-    public int getTotalStrength(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_STRENGTH + (INCREMENT_STRENGTH * level) + data.bonusStrength;
-    }
-
-    public int getTotalDexterity(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_DEXTERITY + (INCREMENT_DEXTERITY * level) + data.bonusDexterity;
-    }
-
-    public int getTotalIntellect(Player player, int level) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        return BASE_INTELLECT + (INCREMENT_INTELLECT * level) + data.bonusIntellect;
-    }
-
-    // Allocates a free stat point to a specified attribute.
-    // Allowed attribute strings: "maxhealth", "maxmana", "healthregen", "manaregen", "strength", "dexterity", "intellect"
-    public boolean allocateStatPoint(Player player, String attribute) {
-        StatsData data = getPlayerStats(player.getUniqueId());
-        if (data.freeStatPoints <= 0) {
-            logger.warning("Player " + player.getName() + " has no free stat points available.");
-            return false;
-        }
-        switch (attribute.toLowerCase()) {
-            case "maxhealth":
-                data.bonusMaxHealth++;
-                break;
-            case "maxmana":
-                data.bonusMaxMana++;
-                break;
-            case "healthregen":
-                data.bonusHealthRegen++;
-                break;
-            case "manaregen":
-                data.bonusManaRegen++;
-                break;
-            case "strength":
-                data.bonusStrength++;
-                break;
-            case "dexterity":
-                data.bonusDexterity++;
-                break;
-            case "intellect":
-                data.bonusIntellect++;
-                break;
-            default:
-                logger.warning("Unknown attribute: " + attribute);
-                return false;
-        }
-        data.freeStatPoints--;
-        logger.info("Allocated 1 point to " + attribute + " for player " + player.getName());
-        return true;
-    }
-
-    public void reloadStats() {
-        statsData.clear();
-        // Add any additional reload logic needed
-    }
-
-    // Returns the available stat points for a player.
-    public int getAvailablePoints(Player player) {
-        // Dummy logic: Replace with your actual implementation.
-        return 5;
-    }
-    
-    // Returns the computed stat value: if an override exists, return it; otherwise, return a default value.
-    public double getStatValue(Player player, String stat) {
-        Map<String, Double> overrides = getOverrides(player);
-        if (overrides.containsKey(stat)) {
-            return overrides.get(stat);
-        }
-        // Dummy default value (replace with actual calculation if available)
-        return 100.0;
-    }
-    
-    // Returns the base value for the given stat.
-    public double getBaseStat(Player player, String stat) {
-        // Dummy logic: Replace with your calculation.
-        return 50.0;
-    }
-    
-    // Returns the per-level increment for the given stat.
-    public double getPerLevelIncrement(Player player, String stat) {
-        // Dummy logic: Replace with your calculation.
-        return 5.0;
+        return statOverrides.computeIfAbsent(player.getUniqueId().toString(), k -> new ConcurrentHashMap<>());
     }
 
     /**
-     * Sets the specified stat for the given player to the provided value.
-     * Replace this dummy implementation with your actual stat update logic.
-     *
-     * @param player the target player.
-     * @param stat the stat to update (e.g., "maxHealth", "strength").
-     * @param value the new value to set.
+     * If an admin override is set, return that value; otherwise, return NaN.
+     */
+    public double getOverride(Player player, String stat) {
+        Map<String, Double> overrides = getOverrides(player);
+        return overrides.getOrDefault(stat, Double.NaN);
+    }
+
+    /**
+     * Sets an admin override for the given stat.
      */
     public void setStat(Player player, String stat, double value) {
         Map<String, Double> overrides = getOverrides(player);
         overrides.put(stat, value);
-        logger.info("setStat: Setting " + stat + " for player " + player.getName() + " to " + value);
+        logger.info("setStat: Set " + stat + " for " + player.getName() + " to " + value);
     }
-    
+
     /**
-     * Adds the specified value to the given player's stat.
-     * Replace this dummy implementation with your actual stat update logic.
-     *
-     * @param player the target player.
-     * @param stat the stat to update.
-     * @param value the amount to add.
+     * Adds a value to the given stat. If no override exists, the current effective value is computed.
      */
     public void addStat(Player player, String stat, double value) {
         Map<String, Double> overrides = getOverrides(player);
-        double current = overrides.getOrDefault(stat, 100.0);
+        double current = overrides.getOrDefault(stat, Double.NaN);
+        if (Double.isNaN(current)) {
+            current = recalcEffectiveAttribute(player, stat);
+        }
         double newValue = current + value;
         overrides.put(stat, newValue);
-        logger.info("addStat: Adding " + value + " to stat " + stat + " for player " + player.getName() + ". New value: " + newValue);
+        logger.info("addStat: Added " + value + " to " + stat + " for " + player.getName() + ". New value: " + newValue);
+    }
+
+    /**
+     * Recalculates and returns the effective value for a given stat.
+     * The formula is:
+     *   effective = base + (perLevel * level) + allocatedBonus
+     *
+     * <p>For simplicity, this example assumes player level is 1 (replace with actual level retrieval).
+     */
+    public double recalcEffectiveAttribute(Player player, String stat) {
+        // TODO: Replace with proper level retrieval (e.g., from XPManager)
+        int level = 1;
+        PlayerStatAllocation alloc = getAllocation(player);
+        double effective;
+        switch (stat) {
+            case "maxHealth":
+                effective = baseMaxHealth + perLevelMaxHealth * level + alloc.bonusMaxHealth;
+                break;
+            case "maxMana":
+                effective = baseMaxMana + perLevelMaxMana * level + alloc.bonusMaxMana;
+                break;
+            case "healthRegen":
+                effective = baseHealthRegen + perLevelHealthRegen * level + alloc.bonusHealthRegen;
+                break;
+            case "manaRegen":
+                effective = baseManaRegen + perLevelManaRegen * level + alloc.bonusManaRegen;
+                break;
+            case "strength":
+                effective = baseStrength + perLevelStrength * level + alloc.bonusStrength;
+                break;
+            case "dexterity":
+                effective = baseDexterity + perLevelDexterity * level + alloc.bonusDexterity;
+                break;
+            case "intellect":
+                effective = baseIntellect + perLevelIntellect * level + alloc.bonusIntellect;
+                break;
+            case "defense":
+                effective = baseDefense + perLevelDefense * level + alloc.bonusDefense;
+                break;
+            case "magicDefense":
+                effective = baseMagicDefense + perLevelMagicDefense * level + alloc.bonusMagicDefense;
+                break;
+            default:
+                effective = 0;
+        }
+        double overrideValue = getOverride(player, stat);
+        if (!Double.isNaN(overrideValue)) {
+            return overrideValue;
+        }
+        return effective;
+    }
+
+    /**
+     * Recalculates stats for the player. (You may expand this to save calculated values if desired.)
+     */
+    public void recalculateStats(Player player) {
+        // In this implementation, effective values are computed on-demand.
+        logger.info("Recalculating stats for player " + player.getName());
+    }
+
+    /**
+     * Loads configuration values from stats.yml.
+     * The expected structure is:
+     * <pre>
+     * base:
+     *   maxHealth: ...
+     *   maxMana: ...
+     *   healthRegen: ...
+     *   manaRegen: ...
+     *   strength: ...
+     *   dexterity: ...
+     *   intellect: ...
+     *   defense: ...
+     *   magicDefense: ...
+     * increment:
+     *   maxHealth: ...
+     *   maxMana: ...
+     *   healthRegen: ...
+     *   manaRegen: ...
+     *   strength: ...
+     *   dexterity: ...
+     *   intellect: ...
+     *   defense: ...
+     *   magicDefense: ...
+     * </pre>
+     */
+    public void loadConfiguration(JavaPlugin plugin) {
+        try {
+            File file = new File(plugin.getDataFolder(), "stats.yml");
+            YamlConfiguration config;
+            if (file.exists()) {
+                config = YamlConfiguration.loadConfiguration(file);
+            } else {
+                try (InputStream is = plugin.getResource("stats.yml")) {
+                    config = YamlConfiguration.loadConfiguration(new InputStreamReader(is));
+                }
+            }
+            baseMaxHealth = config.getDouble("base.maxHealth", baseMaxHealth);
+            perLevelMaxHealth = config.getDouble("increment.maxHealth", perLevelMaxHealth);
+
+            baseMaxMana = config.getDouble("base.maxMana", baseMaxMana);
+            perLevelMaxMana = config.getDouble("increment.maxMana", perLevelMaxMana);
+
+            baseHealthRegen = config.getDouble("base.healthRegen", baseHealthRegen);
+            perLevelHealthRegen = config.getDouble("increment.healthRegen", perLevelHealthRegen);
+
+            baseManaRegen = config.getDouble("base.manaRegen", baseManaRegen);
+            perLevelManaRegen = config.getDouble("increment.manaRegen", perLevelManaRegen);
+
+            baseStrength = config.getInt("base.strength", baseStrength);
+            perLevelStrength = config.getInt("increment.strength", perLevelStrength);
+
+            baseDexterity = config.getInt("base.dexterity", baseDexterity);
+            perLevelDexterity = config.getInt("increment.dexterity", perLevelDexterity);
+
+            baseIntellect = config.getInt("base.intellect", baseIntellect);
+            perLevelIntellect = config.getInt("increment.intellect", perLevelIntellect);
+
+            baseDefense = config.getInt("base.defense", baseDefense);
+            perLevelDefense = config.getInt("increment.defense", perLevelDefense);
+
+            baseMagicDefense = config.getInt("base.magicDefense", baseMagicDefense);
+            perLevelMagicDefense = config.getInt("increment.magicDefense", perLevelMagicDefense);
+
+            logger.info("StatsManager: Loaded configuration for player attributes.");
+        } catch (Exception e) {
+            Bukkit.getLogger().severe("Error loading stats configuration: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 } 

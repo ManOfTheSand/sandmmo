@@ -12,49 +12,45 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Command executor for admin stat updates.
- * 
- * Command syntax:
- *    /sandmmo admin stats set <player> <attribute> <value>
- *    /sandmmo admin stats add <player> <attribute> <value>
- * 
- * This executor verifies admin permissions ("sandmmo.admin.stats"), parses the command,
- * and:
- *   - For a "set" operation, updates the target player's specified attribute to an exact value.
- *   - For an "add" operation, it increments the current value by the specified amount.
- * Then, it reapplies the player's stats in-game via PlayerStatsApplier which also refreshes the stats GUI.
+ * AdminStatsCommandExecutor allows administrators to update player attributes.
+ *
+ * <p>Usage:
+ *   /sandmmo admin stats set <player> <attribute> <value>
+ *   /sandmmo admin stats add <player> <attribute> <value>
+ *
+ * <p>Valid attributes: maxHealth, maxMana, healthRegen, manaRegen, strength, dexterity, intellect, defense, magicDefense.
+ * The command applies changes immediately in-game and refreshes the stats GUI.
  */
 public class AdminStatsCommandExecutor implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Permission check
+        // Permission check.
         if (!sender.hasPermission("sandmmo.admin.stats")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
         
-        // Validate argument length.
-        // Expected delegated syntax: /sandmmo admin stats <set|add> <player> <attribute> <value>
+        // Validate arguments – expected: <set|add> <player> <attribute> <value>
         if (args.length < 4) {
             sender.sendMessage(ChatColor.RED + "Usage: /sandmmo admin stats <set|add> <player> <attribute> <value>");
             return true;
         }
         
-        // Parse arguments
         String action = args[0].toLowerCase();
         String targetPlayerName = args[1];
         String attribute = args[2].toLowerCase();
-        // Map aliases: "health" or "maxhealth" -> "maxHealth", "mana" or "maxmana" -> "maxMana"
+        // Map attribute aliases.
         if (attribute.equals("health") || attribute.equals("maxhealth")) {
             attribute = "maxHealth";
         } else if (attribute.equals("mana") || attribute.equals("maxmana")) {
             attribute = "maxMana";
         }
         
-        // Validate the attribute against allowed stat keys.
+        // Validate attribute against allowed keys.
         java.util.List<String> validAttributes = java.util.Arrays.asList(
-            "maxHealth", "maxMana", "healthRegen", "manaRegen", "strength", "dexterity", "intellect", "criticalChance", "criticalDamage", "defense"
+            "maxHealth", "maxMana", "healthRegen", "manaRegen",
+            "strength", "dexterity", "intellect", "defense", "magicDefense"
         );
         if (!validAttributes.contains(attribute)) {
             sender.sendMessage(ChatColor.RED + "Invalid attribute: " + attribute +
@@ -77,36 +73,34 @@ public class AdminStatsCommandExecutor implements CommandExecutor {
             return true;
         }
         
-        // Retrieve StatsManager instance from ServiceRegistry.
+        // Retrieve the StatsManager.
         StatsManager statsManager = ServiceRegistry.getStatsManager();
         if (statsManager == null) {
             sender.sendMessage(ChatColor.RED + "Stats system is currently unavailable.");
             return true;
         }
         
-        sender.sendMessage(ChatColor.YELLOW + "Processing " + action + " on " + attribute + " for " + target.getName() + " with value " + valueChange + ".");
+        sender.sendMessage(ChatColor.YELLOW + "Processing " + action + " on " + attribute +
+                " for " + target.getName() + " with value " + valueChange + ".");
         try {
             if (action.equals("set")) {
-                // Set the stat value directly.
                 statsManager.setStat(target, attribute, valueChange);
-                sender.sendMessage(ChatColor.GREEN + "Set " + attribute + " for " + target.getName() + " to " + valueChange + ".");
+                sender.sendMessage(ChatColor.GREEN + "Set " + attribute + " for " +
+                        target.getName() + " to " + valueChange + ".");
             } else if (action.equals("add")) {
-                // Add to the current stat value.
                 statsManager.addStat(target, attribute, valueChange);
-                sender.sendMessage(ChatColor.GREEN + "Added " + valueChange + " to " + attribute + " for " + target.getName() + ".");
+                sender.sendMessage(ChatColor.GREEN + "Added " + valueChange + " to " +
+                        attribute + " for " + target.getName() + ".");
             } else {
                 sender.sendMessage(ChatColor.RED + "Invalid action. Use 'set' or 'add'.");
                 return true;
             }
             
-            // Log the operation.
-            Bukkit.getLogger().info("AdminStatsCommandExecutor: " + action + " " + attribute + " for " +
-                    target.getName() + " by " + valueChange + ".");
-                    
-            // Reapply stats to update in-game attributes and refresh the GUI.
-            PlayerStatsApplier.applyStats(target);
+            Bukkit.getLogger().info("AdminStatsCommandExecutor: " + action + " " + attribute +
+                    " for " + target.getName() + " by " + valueChange + ".");
             
-            // Optionally notify the target as well.
+            // Reapply stats and refresh the GUI.
+            PlayerStatsApplier.applyStats(target);
             target.sendMessage(ChatColor.GREEN + "Your " + attribute + " has been updated by an admin.");
         } catch (Exception ex) {
             sender.sendMessage(ChatColor.RED + "Error updating stats: " + ex.getMessage());
