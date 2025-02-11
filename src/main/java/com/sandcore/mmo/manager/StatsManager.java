@@ -150,4 +150,30 @@ public class StatsManager {
         // Dummy logic: Replace with your calculation.
         return 5.0;
     }
+
+    /**
+     * Sets the specified stat for the given player to the provided value.
+     * Replace this dummy implementation with your actual stat update logic.
+     *
+     * @param player the target player.
+     * @param stat the stat to update (e.g., "maxHealth", "strength").
+     * @param value the new value to set.
+     */
+    public void setStat(Player player, String stat, double value) {
+        // TODO: update the player's stats storage (e.g., StatsData) accordingly.
+        logger.info("setStat: Setting " + stat + " for player " + player.getName() + " to " + value);
+    }
+    
+    /**
+     * Adds the specified value to the given player's stat.
+     * Replace this dummy implementation with your actual stat update logic.
+     *
+     * @param player the target player.
+     * @param stat the stat to update.
+     * @param value the amount to add.
+     */
+    public void addStat(Player player, String stat, double value) {
+        // TODO: update the player's stats storage accordingly.
+        logger.info("addStat: Adding " + value + " to stat " + stat + " for player " + player.getName());
+    }
 } 
