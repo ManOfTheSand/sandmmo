@@ -30,26 +30,16 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         
         // Create Eco menu using the static builder from Menu
-        Menu.Builder builder = Menu.builder(config.getInt("gui.size", 27))
+        var builder = Menu.builder(config.getInt("gui.size", 27))
                 .setTitle(config.getString("gui.title", "Player Stats"))
-                .setPreventClick(true)
+                .setPreventClicks(true)
                 .setPreventItemMovement(true);
 
-        // Add slots during build phase
-        configureSlots(player, playerLevel);
-    }
-
-    private void configureSlots(Player player, int level) {
+        // Add slots during build phase inline
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
-            // Provide an anonymous implementation of CustomSlot (to prevent instantiation errors)
-            builder.setSlot(slot, new CustomSlot(createItem(player, level, path)) {
-                @Override
-                public void onClick(Player clicker) {
-                    // Override onClick with a no-op (or add custom behavior as needed)
-                }
-            });
+            builder.setSlot(slot, CustomSlot.of(createItem(player, playerLevel, path)));
         }
         this.menu = builder.build();
     }
