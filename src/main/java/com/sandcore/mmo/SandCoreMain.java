@@ -23,6 +23,7 @@ public class SandCoreMain extends JavaPlugin {
     @Override
     public void onEnable() {
          instance = this;
+         ServiceRegistry.registerPlugin(this);
          
          // Ensure the plugin data folder exists.
          if (!getDataFolder().exists()) {
