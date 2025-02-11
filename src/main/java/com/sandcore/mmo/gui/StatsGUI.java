@@ -32,7 +32,7 @@ public class StatsGUI {
         // Load the external configuration from mmoMinecraft/stats.yml
         InputStream input = getClass().getClassLoader().getResourceAsStream("stats.yml");
         if (input == null) {
-            throw new RuntimeException("Failed to load mmoMinecraft/stats.yml");
+            throw new RuntimeException("Failed to load stats.yml");
         }
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         // Build the inventory using settings from the YAML config.
