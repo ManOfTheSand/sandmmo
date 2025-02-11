@@ -1,2 +1,7 @@
-class-selected: "<green>✔ Successfully selected {class} class!"
-invalid-class: "<red>✖ Invalid class selection!"
+errors:
+  player-only: "<red>❌ This command is for players only!"
+  no-permission: "<red>❌ You don't have permission!"
+  invalid-class: "<red>❌ Invalid class selected!"
+messages:
+  class-selected: "<green>✅ Selected {class} class!"
+  reload-success: "<green>✅ Configurations reloaded!"
