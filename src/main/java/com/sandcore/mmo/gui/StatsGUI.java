@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import com.willfp.eco.core.gui.menu.MenuBuilderKt;
+import com.willfp.eco.core.gui.GUIHelpersKt;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,8 +34,8 @@ public class StatsGUI {
         var builder = Menu.builder(27)
                 .setTitle(config.getString("gui.title", "Player Stats"));
 
-        MenuBuilderKt.preventClicks(builder);
-        MenuBuilderKt.preventItemMove(builder);
+        GUIHelpersKt.preventClicks(builder);
+        GUIHelpersKt.preventItemMove(builder);
 
         // Add items from config
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
