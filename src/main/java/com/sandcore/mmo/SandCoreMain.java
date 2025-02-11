@@ -9,6 +9,8 @@ import com.sandcore.mmo.command.ClassCommandExecutor;
 import com.sandcore.mmo.command.StatsCommandExecutor;
 import com.sandcore.mmo.command.ReloadCommandExecutor;
 import java.io.File;
+import com.sandcore.mmo.manager.StatsManager;
+import com.sandcore.mmo.util.ServiceRegistry;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -38,6 +40,9 @@ public class SandCoreMain extends JavaPlugin {
          if (!classesFile.exists()) {
              saveResource("mmoMinecraft/classes.yml", false);
          }
+         
+         // Register the StatsManager
+         ServiceRegistry.registerStatsManager(new StatsManager());
          
          // Register the /class command executor.
          if (getCommand("class") != null) {
