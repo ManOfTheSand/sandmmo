@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import com.sandcore.mmo.gui.ReloadGUI;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
-import com.sandcore.mmo.service.ServiceRegistry;
+import com.sandcore.mmo.util.ServiceRegistry;
 
 public class ReloadCommandExecutor implements CommandExecutor {
     private final JavaPlugin plugin;
