@@ -13,16 +13,13 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import net.kyori.adventure.text.Component;
-import com.willfp.eco.core.gui.GUI;
-import com.willfp.eco.core.gui.menu.Menu;
-import com.willfp.eco.core.gui.slot.Slot;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class StatsGUI {
-    private final Menu menu;
+    private final Inventory inventory;
     private final FileConfiguration config;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
@@ -44,10 +41,7 @@ public class StatsGUI {
         // Use MiniMessage to parse the title into an Adventure Component.
         net.kyori.adventure.text.Component titleComponent = miniMessage.deserialize(titleRaw);
         int size = config.getInt("gui.size", 27);
-        this.menu = GUI.create(size)
-            .setTitle(titleComponent)
-            .setCancelClick(true) // This prevents item movement
-            .build();
+        this.inventory = Bukkit.createInventory(null, size, titleComponent);
         this.statsManager = ServiceRegistry.getStatsManager();
         updateInventory();
     }
@@ -87,8 +81,8 @@ public class StatsGUI {
                     }
                     item.setItemMeta(meta);
                 }
-                if (slot >= 0 && slot < menu.getSize()) {
-                    menu.addItem(slot, item);
+                if (slot >= 0 && slot < inventory.getSize()) {
+                    inventory.setItem(slot, item);
                 }
             }
         }
@@ -96,7 +90,7 @@ public class StatsGUI {
 
     public void open() {
         updateInventory();
-        menu.open(player);
+        player.openInventory(inventory);
     }
 
     public Component getTitleComponent() {
