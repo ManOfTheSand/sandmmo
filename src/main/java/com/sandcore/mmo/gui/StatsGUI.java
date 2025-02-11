@@ -29,18 +29,18 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(
                 new InputStreamReader(input, StandardCharsets.UTF_8));
         
-        // Create menu using Eco's builder pattern
-        Menu.Builder builder = Menu.builder(27)
+        // Create menu using Eco's builder pattern (pattern similar to Auxilor's EcoSkills)
+        var builder = Menu.builder(27)
                 .setTitle(config.getString("gui.title", "Player Stats"))
-                .setPreventClicks(true)
-                .setPreventItemMovement(true);
+                .setPreventClick(true)     // note: singular 'Click'
+                .setPreventItemMove(true);  // note: singular 'ItemMove'
 
         // Add items from config
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
             
-            // Convert flat slot to row/column
+            // Convert flat slot index into row & column (Eco uses 1-indexed rows and columns)
             int row = slot / 9 + 1;
             int column = slot % 9 + 1;
             
