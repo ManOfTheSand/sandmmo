@@ -5,31 +5,52 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import net.kyori.adventure.text.Component;
+import com.sandcore.mmo.command.ClassCommandExecutor;
+import com.sandcore.mmo.command.StatsCommandExecutor;
+import com.sandcore.mmo.command.ReloadCommandExecutor;
 
 public class SandCoreMain extends JavaPlugin {
 
+    private static SandCoreMain instance;
+    public static SandCoreMain getInstance() {
+         return instance;
+    }
+    
     @Override
     public void onEnable() {
-        // Register the /mmocore command executor.
-        if (getCommand("mmocore") != null) {
-            getCommand("mmocore").setExecutor(new MMOCoreCommandExecutor());
-        } else {
-            getLogger().severe("Command /mmocore not defined in plugin.yml");
-        }
-
-        // Register an event listener that sends a welcome message when a player joins.
-        getServer().getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onPlayerJoin(PlayerJoinEvent event) {
-                event.getPlayer().sendMessage(Component.text("Welcome to MMO!"));
-            }
-        }, this);
-
-        getLogger().info("SandCoreMain plugin enabled!");
+         instance = this;
+         // Register the /class command executor.
+         if (getCommand("class") != null) {
+             getCommand("class").setExecutor(new ClassCommandExecutor(this));
+         } else {
+             getLogger().severe("Command /class not defined in plugin.yml");
+         }
+         // Register the /stats command executor.
+         if (getCommand("stats") != null) {
+             getCommand("stats").setExecutor(new StatsCommandExecutor(this));
+         } else {
+             getLogger().severe("Command /stats not defined in plugin.yml");
+         }
+         // Register the /sandmmo command executor (reload config GUI).
+         if (getCommand("sandmmo") != null) {
+             getCommand("sandmmo").setExecutor(new ReloadCommandExecutor(this));
+         } else {
+             getLogger().severe("Command /sandmmo not defined in plugin.yml");
+         }
+         
+         // Example event: welcome message on join.
+         getServer().getPluginManager().registerEvents(new Listener() {
+             @EventHandler
+             public void onPlayerJoin(PlayerJoinEvent event) {
+                 event.getPlayer().sendMessage(Component.text("Welcome to MMO!"));
+             }
+         }, this);
+         
+         getLogger().info("SandCoreMain plugin enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("SandCoreMain plugin disabled!");
+         getLogger().info("SandCoreMain plugin disabled!");
     }
 } 

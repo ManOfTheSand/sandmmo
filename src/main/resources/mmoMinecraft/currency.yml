@@ -1,0 +1,4 @@
+# Currency system settings
+currency:
+  startingBalance: 1000
+  transactionFee: 0.05 

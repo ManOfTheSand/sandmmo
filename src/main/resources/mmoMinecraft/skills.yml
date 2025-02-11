@@ -1,0 +1,8 @@
+# Configuration for skills and abilities
+skills:
+  fireball:
+    damage: 10
+    cooldown: 5
+  heal:
+    amount: 8
+    cooldown: 10 
