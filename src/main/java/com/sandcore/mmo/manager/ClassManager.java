@@ -1,8 +1,10 @@
 package com.sandcore.mmo.manager;
 
+import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +50,8 @@ public class ClassManager {
         } catch (Exception e) {
             logger.severe("Error loading classes.yml: " + e.getMessage());
         }
+        FileConfiguration pluginConfig = ServiceRegistry.getPlugin().getConfig();
+        logger.info("Reloaded class configurations");
     }
 
     /**

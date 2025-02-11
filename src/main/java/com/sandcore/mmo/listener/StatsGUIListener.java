@@ -11,15 +11,14 @@ import org.bukkit.ChatColor;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.event.inventory.InventoryType;
+import net.kyori.adventure.text.Component;
 
 public class StatsGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Inventory inv = event.getInventory();
-        if (inv == null) return;
-        // Check if the inventory title contains "Player Stats" (customize this check as needed).
-        if (!event.getView().getTitle().contains("Player Stats")) return;
-        event.setCancelled(true); // Prevent item movement.
+        if (event.getClickedInventory() == null) return;
+        if (!event.getView().title().contains(Component.text("Player Stats"))) return;
+        event.setCancelled(true);
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
         StatsManager statsManager = ServiceRegistry.getStatsManager();
@@ -52,8 +51,7 @@ public class StatsGUIListener implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getInventory().getType() != InventoryType.CHEST) return;
-        if (!event.getView().getTitle().contains("Player Stats")) return;
+        if (!event.getView().title().contains(Component.text("Player Stats"))) return;
         event.setCancelled(true);
     }
 } 

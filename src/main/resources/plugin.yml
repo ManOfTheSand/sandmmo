@@ -9,7 +9,7 @@ commands:
     description: View your stats
   sandmmo:
     description: Reload plugin configurations
-    usage: /sandmmo
+    usage: /sandmmo reload
     permission: sandmmo.reload
 permissions:
   sandmmo.reload:

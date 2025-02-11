@@ -11,6 +11,7 @@ import com.sandcore.mmo.command.ReloadCommandExecutor;
 import java.io.File;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
+import com.sandcore.mmo.manager.ClassManager;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -45,7 +46,10 @@ public class SandCoreMain extends JavaPlugin {
              }
          }
          
-         // Register the StatsManager
+         // Register ClassManager
+         ServiceRegistry.registerClassManager(new ClassManager());
+         
+         // Register StatsManager
          ServiceRegistry.registerStatsManager(new StatsManager());
          
          // Register the /class command executor.
