@@ -261,4 +261,65 @@ public class StatsManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Returns the available free stat points for the given player.
+     */
+    public int getAvailablePoints(Player player) {
+        return getAllocation(player).freeStatPoints;
+    }
+
+    /**
+     * Returns the effective stat value for the given player and attribute.
+     */
+    public double getStatValue(Player player, String stat) {
+        return recalcEffectiveAttribute(player, stat);
+    }
+
+    /**
+     * Returns the base value for the given stat.
+     * For example, for "maxHealth" it returns baseMaxHealth.
+     */
+    public double getBaseStat(Player player, String stat) {
+        switch (stat) {
+            case "maxHealth":    return baseMaxHealth;
+            case "maxMana":      return baseMaxMana;
+            case "healthRegen":  return baseHealthRegen;
+            case "manaRegen":    return baseManaRegen;
+            case "strength":     return baseStrength;
+            case "dexterity":    return baseDexterity;
+            case "intellect":    return baseIntellect;
+            case "defense":      return baseDefense;
+            case "magicDefense": return baseMagicDefense;
+            default:             return 0;
+        }
+    }
+
+    /**
+     * Returns the per-level increment for the given stat.
+     */
+    public double getPerLevelIncrement(Player player, String stat) {
+        switch (stat) {
+            case "maxHealth":    return perLevelMaxHealth;
+            case "maxMana":      return perLevelMaxMana;
+            case "healthRegen":  return perLevelHealthRegen;
+            case "manaRegen":    return perLevelManaRegen;
+            case "strength":     return perLevelStrength;
+            case "dexterity":    return perLevelDexterity;
+            case "intellect":    return perLevelIntellect;
+            case "defense":      return perLevelDefense;
+            case "magicDefense": return perLevelMagicDefense;
+            default:             return 0;
+        }
+    }
+
+    /**
+     * Reloads the stats configuration by re-reading the stats.yml file.
+     */
+    public void reloadStats() {
+        JavaPlugin plugin = ServiceRegistry.getPlugin();
+        if (plugin != null) {
+            loadConfiguration(plugin);
+        }
+    }
 } 
