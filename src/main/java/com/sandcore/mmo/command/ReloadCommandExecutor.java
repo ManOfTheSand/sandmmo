@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import com.sandcore.mmo.util.ServiceRegistry;
+import java.util.function.Consumer;
 
 public class ReloadCommandExecutor implements CommandExecutor {
     private final JavaPlugin plugin;
@@ -22,20 +23,13 @@ public class ReloadCommandExecutor implements CommandExecutor {
              try {
                  // Reload all configurations
                  plugin.reloadConfig();
+                 plugin.saveConfig();
                  
                  // Reload all managers
-                 if (ServiceRegistry.getClassManager() != null) {
-                     ServiceRegistry.getClassManager().loadClasses();
-                 }
-                 if (ServiceRegistry.getStatsManager() != null) {
-                     ServiceRegistry.getStatsManager().reloadStats();
-                 }
-                 if (ServiceRegistry.getCurrencyManager() != null) {
-                     ServiceRegistry.getCurrencyManager().reload();
-                 }
-                 if (ServiceRegistry.getXPManager() != null) {
-                     ServiceRegistry.getXPManager().reload();
-                 }
+                 reloadManager(ServiceRegistry.getClassManager(), ClassManager::loadClasses);
+                 reloadManager(ServiceRegistry.getStatsManager(), StatsManager::reloadStats);
+                 reloadManager(ServiceRegistry.getCurrencyManager(), CurrencyManager::reload);
+                 reloadManager(ServiceRegistry.getXPManager(), XPManager::reload);
                  
                  player.sendMessage("§aConfigurations reloaded successfully!");
              } catch (Exception e) {
@@ -45,5 +39,11 @@ public class ReloadCommandExecutor implements CommandExecutor {
              sender.sendMessage("§aConfigurations reloaded successfully!");
          }
          return true;
+    }
+
+    private <T> void reloadManager(T manager, Consumer<T> reloadMethod) {
+        if (manager != null) {
+            reloadMethod.accept(manager);
+        }
     }
 } 

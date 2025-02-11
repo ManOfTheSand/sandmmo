@@ -14,17 +14,16 @@ import org.bukkit.event.inventory.InventoryType;
 import net.kyori.adventure.text.Component;
 import com.sandcore.mmo.gui.StatsGUI;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryView;
 
 public class StatsGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         
-        // Get the expected title component
-        Component expectedTitle = new StatsGUI(player, 0).getTitleComponent();
-        
-        // Cancel all interactions in the GUI
-        if (event.getView().title().equals(expectedTitle)) {
+        // Cancel all click types in the stats GUI
+        if (isStatsGUI(event.getView())) {
             event.setCancelled(true);
             
             // Only process clicks in the top inventory
@@ -60,22 +59,28 @@ public class StatsGUIListener implements Listener {
     }
 
     @EventHandler
+    public void onInventoryInteract(InventoryInteractEvent event) {
+        if (isStatsGUI(event.getView())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getWhoClicked() instanceof Player player) {
-            Component expectedTitle = new StatsGUI(player, 0).getTitleComponent();
-            if (event.getView().title().equals(expectedTitle)) {
-                event.setCancelled(true);
-            }
+        if (isStatsGUI(event.getView())) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryCreative(InventoryCreativeEvent event) {
-        if (event.getWhoClicked() instanceof Player player) {
-            Component expectedTitle = new StatsGUI(player, 0).getTitleComponent();
-            if (event.getView().title().equals(expectedTitle)) {
-                event.setCancelled(true);
-            }
+        if (isStatsGUI(event.getView())) {
+            event.setCancelled(true);
         }
+    }
+
+    private boolean isStatsGUI(InventoryView view) {
+        Component guiTitle = new StatsGUI(null, 0).getTitleComponent(); // Null player is safe here
+        return view.title().equals(guiTitle);
     }
 } 
