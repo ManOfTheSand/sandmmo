@@ -1,6 +1,6 @@
 package com.sandcore.mmo.gui;
 
-import com.willfp.eco.core.gui.menu.Menu;
+import com.willfp.eco.core.gui.menu.MenuBuilder;
 import com.willfp.eco.core.gui.slot.Slot;
 import com.willfp.eco.core.gui.slot.FillerSlot;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class StatsGUI {
-    private final Menu menu;
+    private final MenuBuilder menu;
     private final FileConfiguration config;
     private final StatsManager statsManager;
 
@@ -30,18 +30,17 @@ public class StatsGUI {
         this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         
         // Create Eco menu using the static builder from Menu
-        Menu.Builder builder = Menu.builder(27)
+        this.menu = MenuBuilder.builder(27)
                 .setTitle("Player Stats")
-                .setPreventClicks(true)
-                .setPreventItemMovement(true);
+                .setPreventClick(true)
+                .setPreventItemMove(true);
 
         // Add slots during build phase inline
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
-            builder.setSlot(slot, FillerSlot.of(createItem(player, playerLevel, path)));
+            menu.setSlot(slot, new FillerSlot(createItem(player, playerLevel, path)));
         }
-        this.menu = builder.build();
     }
 
     private ItemStack createItem(Player player, int level, String path) {
@@ -66,6 +65,6 @@ public class StatsGUI {
     }
 
     public void open(Player player) {
-        menu.open(player);
+        menu.build().open(player);
     }
 } 
