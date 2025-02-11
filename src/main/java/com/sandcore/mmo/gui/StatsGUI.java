@@ -2,7 +2,7 @@ package com.sandcore.mmo.gui;
 
 import com.willfp.eco.core.gui.menu.Menu;
 import com.willfp.eco.core.gui.slot.Slot;
-import com.willfp.eco.core.gui.slot.CustomSlot;
+import com.willfp.ecomponent.gui.slot.FillerSlot;
 import org.bukkit.entity.Player;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
@@ -32,14 +32,14 @@ public class StatsGUI {
         // Create Eco menu using the static builder from Menu
         Menu.Builder builder = Menu.builder(27)
                 .setTitle("Player Stats")
-                .setPreventClicks(true)
-                .setPreventItemMovement(true);
+                .setPreventClick(true)
+                .setPreventItemMove(true);
 
         // Add slots during build phase inline
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
             String path = "gui.items." + key;
             int slot = config.getInt(path + ".slot");
-            builder.setSlot(slot, CustomSlot.of(createItem(player, playerLevel, path)));
+            builder.setSlot(slot, FillerSlot.of(createItem(player, playerLevel, path)));
         }
         this.menu = builder.build();
     }
