@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -45,21 +46,31 @@ public class AsyncStatsGUIHandler implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try (InputStream input = getClass().getResourceAsStream("/statsgui.yml")) {
-                    if (input == null) {
-                        plugin.getLogger().warning("Stats GUI config (statsgui.yml) not found in resources!");
-                        return;
+                try {
+                    // Attempt to load statsgui.yml from the plugin's data folder.
+                    File configFile = new File(plugin.getDataFolder(), "statsgui.yml");
+                    final YamlConfiguration loadedConfig;
+                    if (configFile.exists()) {
+                        loadedConfig = YamlConfiguration.loadConfiguration(configFile);
+                    } else {
+                        // Fallback: load from the jar resources
+                        try (InputStream input = getClass().getResourceAsStream("/statsgui.yml")) {
+                            if (input == null) {
+                                plugin.getLogger().warning("Stats GUI config (statsgui.yml) not found in data folder or resources!");
+                                return;
+                            }
+                            loadedConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(input));
+                        }
                     }
-                    final YamlConfiguration loadedConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(input));
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             config = loadedConfig;
-                            plugin.getLogger().info("Stats GUI configuration loaded successfully.");
+                            plugin.getLogger().info("Stats GUI configuration reloaded successfully.");
                         }
                     }.runTask(plugin);
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.SEVERE, "Error loading statsgui.yml", e);
+                    plugin.getLogger().log(Level.SEVERE, "Error reloading statsgui.yml", e);
                 }
             }
         }.runTaskAsynchronously(plugin);
