@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.sandcore.mmo.util.ServiceRegistry;
 
 import java.io.File;
 import java.io.InputStream;
