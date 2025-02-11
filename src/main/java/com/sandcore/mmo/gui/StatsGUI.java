@@ -32,8 +32,8 @@ public class StatsGUI {
         // Create menu using Eco's builder pattern (pattern similar to Auxilor's EcoSkills)
         var builder = Menu.builder(27)
                 .setTitle(config.getString("gui.title", "Player Stats"))
-                .preventClicks(true)       // EcoSkills style method
-                .preventItemMove(true);
+                .setClickCancelled(true)
+                .setItemMovementCancelled(true);
 
         // Add items from config
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)) {
