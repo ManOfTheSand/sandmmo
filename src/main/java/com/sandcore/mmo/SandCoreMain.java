@@ -12,10 +12,13 @@ import java.io.File;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import com.sandcore.mmo.manager.ClassManager;
+import com.sandcore.mmo.gui.AsyncGUIHandler;
 
 public class SandCoreMain extends JavaPlugin {
 
     private static SandCoreMain instance;
+    private AsyncGUIHandler guiHandler;
+
     public static SandCoreMain getInstance() {
          return instance;
     }
@@ -59,18 +62,17 @@ public class SandCoreMain extends JavaPlugin {
          } else {
              getLogger().severe("Command /class not defined in plugin.yml");
          }
-         // Register the /stats command executor.
-         if (getCommand("stats") != null) {
-             getCommand("stats").setExecutor(new StatsCommandExecutor(this));
-         } else {
-             getLogger().severe("Command /stats not defined in plugin.yml");
-         }
          // Register the /sandmmo command executor (reload config GUI).
          if (getCommand("sandmmo") != null) {
              getCommand("sandmmo").setExecutor(new ReloadCommandExecutor(this));
          } else {
              getLogger().severe("Command /sandmmo not defined in plugin.yml");
          }
+         
+         // Initialize the AsyncGUIHandler
+         guiHandler = new AsyncGUIHandler(this);
+         // Register the stats command executor
+         getCommand("stats").setExecutor(new StatsCommandExecutor(this, guiHandler));
          
          // Example event: welcome message on join.
          getServer().getPluginManager().registerEvents(new Listener() {
