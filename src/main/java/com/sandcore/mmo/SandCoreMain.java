@@ -80,4 +80,8 @@ public class SandCoreMain extends JavaPlugin {
     public void onDisable() {
          getLogger().info("SandCoreMain plugin disabled!");
     }
+
+    public AsyncStatsGUIHandler getStatsGUIHandler() {
+         return statsGUIHandler;
+    }
 } 

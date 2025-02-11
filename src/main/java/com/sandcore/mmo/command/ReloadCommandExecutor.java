@@ -1,5 +1,7 @@
 package com.sandcore.mmo.command;
 
+import com.sandcore.mmo.SandCoreMain;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,6 +36,12 @@ public class ReloadCommandExecutor implements CommandExecutor {
                  reloadManager(ServiceRegistry.getStatsManager(), StatsManager::reloadStats);
                  reloadManager(ServiceRegistry.getCurrencyManager(), CurrencyManager::reload);
                  reloadManager(ServiceRegistry.getXPManager(), XPManager::reload);
+                 
+                 // Reload the statsgui.yml used by your AsyncStatsGUIHandler.
+                 SandCoreMain main = SandCoreMain.getInstance();
+                 if (main.getStatsGUIHandler() != null) {
+                     main.getStatsGUIHandler().reloadConfiguration();
+                 }
                  
                  player.sendMessage("§aConfigurations reloaded successfully!");
              } catch (Exception e) {
