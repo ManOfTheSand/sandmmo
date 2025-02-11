@@ -3,15 +3,17 @@ version: 1.0.0
 main: com.sandcore.mmo.SandCoreMain
 api-version: 1.21
 commands:
-  class:
-    description: Choose your class
-  stats:
-    description: View your stats
   sandmmo:
-    description: Reload plugin configurations
-    usage: /sandmmo reload
+    description: "Main command for SandMMO plugin"
+    usage: "/sandmmo <reload|admin stats ...>"
     permission: sandmmo.reload
+  stats:
+    description: "View your stats"
+    usage: "/stats"
 permissions:
+  sandmmo.admin.stats:
+    description: "Allows the admin to update player stats."
+    default: op
   sandmmo.reload:
-    description: Allows reloading configurations
+    description: "Allows reloading configurations"
     default: op
