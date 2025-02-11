@@ -29,6 +29,11 @@
             <id>auxilor</id>
             <url>https://repo.auxilor.io/repository/maven-public/</url>
         </repository>
+        <!-- EcoSkills Specific Repository -->
+        <repository>
+            <id>auxilor-ecoskills</id>
+            <url>https://repo.auxilor.io/repository/ecoskills/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -59,15 +64,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.8.10</version>
+        </dependency>
+        <!-- EcoSkills dependency -->
+        <dependency>
             <groupId>com.willfp</groupId>
             <artifactId>ecoskills</artifactId>
             <version>3.17.1</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>1.8.10</version>
         </dependency>
     </dependencies>
 
