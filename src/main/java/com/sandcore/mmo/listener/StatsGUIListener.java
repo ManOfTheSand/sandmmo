@@ -12,6 +12,7 @@ import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.event.inventory.InventoryType;
 import net.kyori.adventure.text.Component;
+import com.sandcore.mmo.gui.StatsGUI;
 
 public class StatsGUIListener implements Listener {
     @EventHandler
