@@ -265,4 +265,14 @@ public class ClassManager {
     public Map<String, PlayerClass> getAvailableClasses() {
         return new HashMap<>(classes);
     }
+
+    /**
+     * Dummy updateLevel method to resolve XPManager dependency.
+     * This method can be expanded to update class-specific level logic.
+     *
+     * @param player the player whose level is updated.
+     */
+    public void updateLevel(Player player) {
+        logger.info("ClassManager: updateLevel called for " + player.getName());
+    }
 } 

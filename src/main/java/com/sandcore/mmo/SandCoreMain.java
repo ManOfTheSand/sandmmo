@@ -48,12 +48,12 @@ public class SandCoreMain extends JavaPlugin {
          }
          
          // Register managers.
-         ServiceRegistry.registerClassManager(new ClassManager());
+         ServiceRegistry.registerClassManager(new ClassManager(this));
          ServiceRegistry.registerStatsManager(new StatsManager());
          
          // Register command executors.
          if (getCommand("class") != null) {
-             getCommand("class").setExecutor(new ClassCommandExecutor(this));
+             getCommand("class").setExecutor(new ClassCommandExecutor());
          }
          if (getCommand("sandmmo") != null) {
              getCommand("sandmmo").setExecutor(new MainCommandExecutor(this));
