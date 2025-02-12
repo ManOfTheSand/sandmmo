@@ -1,15 +1,34 @@
-name: SandMMO
-version: 1.0.0
+name: SandMmo
+version: 1.0-SNAPSHOT
 main: com.sandcore.mmo.SandCoreMain
-api-version: 1.21
+api-version: "1.21"
+
 commands:
+  class:
+    description: Display available classes and set your class.
+    usage: /class [classId]
+    permission: sandmmo.class
+    permission-message: You do not have permission to use the class command.
+    tab-completer: com.sandcore.mmo.command.ClassTabCompleter
+
   sandmmo:
-    description: "Main command for SandMMO plugin"
-    usage: "/sandmmo <reload|admin stats ...>"
-    permission: sandmmo.reload
+    description: Main admin command for SandMmo.
+    usage: /sandmmo <subcommand> [args]
+    aliases: [sm]
+    permission: sandmmo.admin
+    permission-message: You do not have permission to perform that command.
+
   stats:
-    description: "View your stats"
-    usage: "/stats"
+    description: Display your current stats.
+    usage: /stats
+    aliases: [stat, statsgui]
+
+  adminclass:
+    description: Forcefully set a player's class.
+    usage: /adminclass <player> <classId>
+    permission: sandmmo.admin.class
+    permission-message: You do not have permission to use the admin class command.
+
 permissions:
   sandmmo.admin.stats:
     description: "Allows the admin to update player stats."
