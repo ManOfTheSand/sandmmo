@@ -21,7 +21,7 @@
         </repository>
         <!-- MythicMobs Repository -->
         <repository>
-            <id>lumine</id>
+            <id>nexus</id>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
         <!-- Eco Repository -->
