@@ -18,6 +18,7 @@ import com.sandcore.mmo.command.MainCommandExecutor;
 import com.sandcore.mmo.command.MainTabCompleter;
 import com.sandcore.mmo.casting.CastingManager;
 import com.sandcore.mmo.casting.CastingListener;
+import com.sandcore.mmo.stats.StatsGUIListener;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -88,6 +89,9 @@ public class SandCoreMain extends JavaPlugin {
          // Register the /resetstats command
          getCommand("resetstats").setExecutor(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
          getCommand("resetstats").setTabCompleter(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
+         
+         // Register the stats GUI protection listener.
+         getServer().getPluginManager().registerEvents(new StatsGUIListener(), this);
          
          getLogger().info("SandCoreMain plugin enabled!");
     }
