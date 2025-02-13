@@ -31,6 +31,11 @@ commands:
     permission: sandmmo.admin.class
     permission-message: You do not have permission to use the admin class command.
 
+  resetstats:
+    description: "Resets your stats to the starting values of your class."
+    usage: "/resetstats"
+    permission: sandmmo.resetstats
+
 permissions:
   sandmmo.admin.stats:
     description: "Allows the admin to update player stats."
