@@ -63,16 +63,9 @@ public class PlayerStatsApplier {
                     ", magicDefense=" + effectiveMagicDefense +
                     ", attackDamage=" + computedAttackDamage);
             
-            // Refresh the stats GUI on the main thread.
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    SandCoreMain main = SandCoreMain.getInstance();
-                    if (main != null && main.getStatsGUIHandler() != null) {
-                        main.getStatsGUIHandler().openGUI(player);
-                    }
-                }
-            }.runTask(SandCoreMain.getInstance());
+            // Removed call to refresh old stats GUI.
+            // The new advanced stats system does not refresh a GUI automatically.
+            // You may opt to call the /stats command to display the updated stats.
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error applying stats for " + player.getName(), e);
         }

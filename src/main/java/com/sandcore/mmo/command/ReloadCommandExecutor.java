@@ -38,12 +38,6 @@ public class ReloadCommandExecutor implements CommandExecutor {
                  reloadManager(ServiceRegistry.getCurrencyManager(), CurrencyManager::reload);
                  reloadManager(ServiceRegistry.getXPManager(), XPManager::reload);
                  
-                 // Reload the statsgui.yml used by your AsyncStatsGUIHandler.
-                 SandCoreMain main = SandCoreMain.getInstance();
-                 if (main.getStatsGUIHandler() != null) {
-                     main.getStatsGUIHandler().reloadConfiguration();
-                 }
-                 
                  // Reload the casting configuration so that updated skills are registered
                  reloadManager(ServiceRegistry.getCastingManager(), CastingManager::loadConfiguration);
                  

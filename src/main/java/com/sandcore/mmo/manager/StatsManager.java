@@ -84,6 +84,21 @@ public class StatsManager {
         public int bonusMagicDefense = 0;
         // Starting free stat points (could be increased by leveling up).
         public int freeStatPoints = 5;
+        public int bonusHealth;
+        public double bonusHealthRegen;
+        public int bonusDefense;
+        public int bonusMagicDefense;
+        public int bonusDamage;
+        public int bonusMagicDamage;
+        public int bonusStamina;
+        public double bonusStaminaRegen;
+        public int bonusMagicRegen;
+        public int bonusMana;
+        public double bonusCritDamage;
+        public double bonusMagicCritDamage;
+        public double bonusCritChance;
+        public double bonusSpeed;
+        public double bonusLuck;
     }
 
     // Store each player's allocated stat points.
