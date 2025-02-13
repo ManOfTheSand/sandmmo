@@ -194,15 +194,34 @@ public class ClassManager {
                 for (String id : config.getConfigurationSection("classes").getKeys(false)) {
                     String displayName = config.getString("classes." + id + ".displayName", id);
                     String description = config.getString("classes." + id + ".description", "");
-                    double bonusMaxHealth = config.getDouble("classes." + id + ".bonusAttributes.maxHealth", 0);
-                    double bonusMaxMana = config.getDouble("classes." + id + ".bonusAttributes.maxMana", 0);
-                    double bonusHealthRegen = config.getDouble("classes." + id + ".bonusAttributes.healthRegen", 0);
-                    double bonusManaRegen = config.getDouble("classes." + id + ".bonusAttributes.manaRegen", 0);
-                    int bonusStrength = config.getInt("classes." + id + ".bonusAttributes.strength", 0);
-                    int bonusDexterity = config.getInt("classes." + id + ".bonusAttributes.dexterity", 0);
-                    int bonusIntellect = config.getInt("classes." + id + ".bonusAttributes.intellect", 0);
-                    int bonusDefense = config.getInt("classes." + id + ".bonusAttributes.defense", 0);
-                    int bonusMagicDefense = config.getInt("classes." + id + ".bonusAttributes.magicDefense", 0);
+                    // Attempt to load bonus attributes from a dedicated section; if not present, fall back to startingStats where applicable.
+                    double bonusMaxHealth = config.contains("classes." + id + ".bonusAttributes.maxHealth")
+                        ? config.getDouble("classes." + id + ".bonusAttributes.maxHealth")
+                        : config.getInt("classes." + id + ".startingStats.maxHealth", 0);
+                    double bonusMaxMana = config.contains("classes." + id + ".bonusAttributes.maxMana")
+                        ? config.getDouble("classes." + id + ".bonusAttributes.maxMana")
+                        : 0;
+                    double bonusHealthRegen = config.contains("classes." + id + ".bonusAttributes.healthRegen")
+                        ? config.getDouble("classes." + id + ".bonusAttributes.healthRegen")
+                        : 0;
+                    double bonusManaRegen = config.contains("classes." + id + ".bonusAttributes.manaRegen")
+                        ? config.getDouble("classes." + id + ".bonusAttributes.manaRegen")
+                        : 0;
+                    int bonusStrength = config.contains("classes." + id + ".bonusAttributes.strength")
+                        ? config.getInt("classes." + id + ".bonusAttributes.strength")
+                        : config.getInt("classes." + id + ".startingStats.strength", 0);
+                    int bonusDexterity = config.contains("classes." + id + ".bonusAttributes.dexterity")
+                        ? config.getInt("classes." + id + ".bonusAttributes.dexterity")
+                        : config.getInt("classes." + id + ".startingStats.dexterity", 0);
+                    int bonusIntellect = config.contains("classes." + id + ".bonusAttributes.intellect")
+                        ? config.getInt("classes." + id + ".bonusAttributes.intellect")
+                        : config.getInt("classes." + id + ".startingStats.intelligence", 0);
+                    int bonusDefense = config.contains("classes." + id + ".bonusAttributes.defense")
+                        ? config.getInt("classes." + id + ".bonusAttributes.defense")
+                        : 0;
+                    int bonusMagicDefense = config.contains("classes." + id + ".bonusAttributes.magicDefense")
+                        ? config.getInt("classes." + id + ".bonusAttributes.magicDefense")
+                        : 0;
                     Map<String, Integer> startingStats = new HashMap<>();
                     if (config.isConfigurationSection("classes." + id + ".startingStats")) {
                         for (String stat : config.getConfigurationSection("classes." + id + ".startingStats").getKeys(false)) {

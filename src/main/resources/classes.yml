@@ -37,3 +37,41 @@ classes:
       name: "ENTITY_EXPERIENCE_ORB_PICKUP"
       volume: 1.0
       pitch: 1.2
+  rogue:
+    display-name: "Rogue"
+    color: "#00FF00"
+    description: "A nimble assassin that relies on agility and stealth."
+    startingStats:
+      maxHealth: 25
+      strength: 10
+      dexterity: 18
+      intelligence: 5
+      agility: 15
+    keyCombos:
+      LLL: "backstab"
+      LLR: "dodge"
+      LRL: "shadow_step"
+      LRR: "poison_blade"
+    castingSound:
+      name: "ENTITY_PLAYER_LEVELUP"
+      volume: 1.0
+      pitch: 1.0
+  cleric:
+    display-name: "Cleric"
+    color: "#FFFFFF"
+    description: "A devoted healer with divine powers."
+    startingStats:
+      maxHealth: 22
+      strength: 5
+      dexterity: 6
+      intelligence: 12
+      agility: 7
+    keyCombos:
+      LLL: "heal"
+      LLR: "blessing"
+      LRL: "purify"
+      LRR: "smite"
+    castingSound:
+      name: "ENTITY_ELDER_GUARDIAN_CURSE"
+      volume: 1.0
+      pitch: 0.8
