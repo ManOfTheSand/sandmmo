@@ -19,6 +19,7 @@ public final class ServiceRegistry {
     private static volatile JavaPlugin plugin;
     private static volatile StatsGUI statsGUI;
     private static volatile AdminStatsCommandExecutor adminStatsCommandExecutor;
+    private static volatile CastingManager castingManager;
 
     // Private constructor to prevent instantiation.
     private ServiceRegistry() {}
@@ -90,5 +91,13 @@ public final class ServiceRegistry {
 
     public static AdminStatsCommandExecutor getAdminStatsCommandExecutor() {
         return adminStatsCommandExecutor;
+    }
+
+    public static void registerCastingManager(CastingManager manager) {
+        castingManager = manager;
+    }
+
+    public static CastingManager getCastingManager() {
+        return castingManager;
     }
 } 

@@ -123,7 +123,7 @@ public class CastingManager {
                 Skill skill = MythicBukkit.inst().getSkillManager().getSkill(skillName).orElse(null);
                 if (skill != null) {
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        skill.execute(skill.getDefaultCaster(), player.getLocation());
+                        MythicBukkit.inst().getAPIHelper().castSkill(player, skillName);
                         player.sendMessage("§aCasted: §e" + skillName);
                     });
                 } else {
