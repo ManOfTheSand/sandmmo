@@ -12,7 +12,6 @@ import java.io.File;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import com.sandcore.mmo.manager.ClassManager;
-import com.sandcore.mmo.gui.AsyncStatsGUIHandler;
 import org.bukkit.entity.Player;
 import com.sandcore.mmo.command.AdminStatsCommandExecutor;
 import com.sandcore.mmo.command.MainCommandExecutor;
@@ -23,8 +22,6 @@ import com.sandcore.mmo.casting.CastingListener;
 public class SandCoreMain extends JavaPlugin {
 
     private static SandCoreMain instance;
-    private AsyncStatsGUIHandler statsGUIHandler;
-    private CastingManager castingManager;
 
     public static SandCoreMain getInstance() {
          return instance;
@@ -82,7 +79,7 @@ public class SandCoreMain extends JavaPlugin {
          }, this);
          
          // Add after other manager initializations
-         castingManager = new CastingManager(this);
+         CastingManager castingManager = new CastingManager(this);
          getServer().getPluginManager().registerEvents(new CastingListener(castingManager), this);
          
          // Add to ServiceRegistry if needed
@@ -98,9 +95,5 @@ public class SandCoreMain extends JavaPlugin {
     @Override
     public void onDisable() {
          getLogger().info("SandCoreMain plugin disabled!");
-    }
-
-    public AsyncStatsGUIHandler getStatsGUIHandler() {
-         return statsGUIHandler;
     }
 } 

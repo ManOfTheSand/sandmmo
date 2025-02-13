@@ -18,7 +18,6 @@ public final class ServiceRegistry {
     private static volatile PartyManager partyManager;
     private static volatile StatsManager statsManager;
     private static volatile JavaPlugin plugin;
-    private static volatile StatsGUI statsGUI;
     private static volatile AdminStatsCommandExecutor adminStatsCommandExecutor;
     private static volatile CastingManager castingManager;
 
@@ -76,14 +75,6 @@ public final class ServiceRegistry {
 
     public static JavaPlugin getPlugin() {
         return plugin;
-    }
-
-    public static void registerStatsGUI(StatsGUI gui) {
-        statsGUI = gui;
-    }
-
-    public static StatsGUI getStatsGUI() {
-        return statsGUI;
     }
 
     public static void registerAdminStatsCommandExecutor(AdminStatsCommandExecutor executor) {
