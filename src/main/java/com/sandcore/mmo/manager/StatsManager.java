@@ -73,32 +73,24 @@ public class StatsManager {
      * (for example, through leveling up or spending stat points).
      */
     public static class PlayerStatAllocation {
-        public int bonusMaxHealth = 0;
-        public int bonusMaxMana = 0;
+        // New advanced stat fields (all default to 0).
+        public int bonusHealth = 0;
+        public int bonusMana = 0;
         public double bonusHealthRegen = 0;
-        public double bonusManaRegen = 0;
-        public int bonusStrength = 0;
-        public int bonusDexterity = 0;
-        public int bonusIntellect = 0;
+        public int bonusDamage = 0;
+        public int bonusMagicDamage = 0;
         public int bonusDefense = 0;
-        public int bonusMagicDefense = 0;
+        public int bonusMagicDefence = 0;
+        public int bonusStamina = 0;
+        public double bonusStaminaRegen = 0;
+        public int bonusMagicRegen = 0;
+        public double bonusCritDamage = 0;
+        public double bonusMagicCritDamage = 0;
+        public double bonusCritChance = 0;
+        public double bonusSpeed = 0;
+        public double bonusLuck = 0;
         // Starting free stat points (could be increased by leveling up).
         public int freeStatPoints = 5;
-        public int bonusHealth;
-        public double bonusHealthRegen;
-        public int bonusDefense;
-        public int bonusMagicDefense;
-        public int bonusDamage;
-        public int bonusMagicDamage;
-        public int bonusStamina;
-        public double bonusStaminaRegen;
-        public int bonusMagicRegen;
-        public int bonusMana;
-        public double bonusCritDamage;
-        public double bonusMagicCritDamage;
-        public double bonusCritChance;
-        public double bonusSpeed;
-        public double bonusLuck;
     }
 
     // Store each player's allocated stat points.
@@ -163,10 +155,10 @@ public class StatsManager {
         double effective;
         switch (stat) {
             case "maxHealth":
-                effective = baseMaxHealth + perLevelMaxHealth * level + alloc.bonusMaxHealth;
+                effective = baseMaxHealth + perLevelMaxHealth * level + alloc.bonusHealth;
                 break;
             case "maxMana":
-                effective = baseMaxMana + perLevelMaxMana * level + alloc.bonusMaxMana;
+                effective = baseMaxMana + perLevelMaxMana * level + alloc.bonusMana;
                 break;
             case "healthRegen":
                 effective = baseHealthRegen + perLevelHealthRegen * level + alloc.bonusHealthRegen;
@@ -187,7 +179,7 @@ public class StatsManager {
                 effective = baseDefense + perLevelDefense * level + alloc.bonusDefense;
                 break;
             case "magicDefense":
-                effective = baseMagicDefense + perLevelMagicDefense * level + alloc.bonusMagicDefense;
+                effective = baseMagicDefense + perLevelMagicDefense * level + alloc.bonusMagicDefence;
                 break;
             default:
                 effective = 0;
