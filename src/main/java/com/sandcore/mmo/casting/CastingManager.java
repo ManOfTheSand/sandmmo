@@ -68,6 +68,10 @@ public class CastingManager {
                     }
                 }
                 logger.info("Loaded casting configurations for " + classCombos.size() + " classes");
+                // Debug: list loaded combos for each class
+                for (Map.Entry<String, Map<String, String>> entry : classCombos.entrySet()) {
+                    logger.fine("loadConfiguration: For class '" + entry.getKey() + "' loaded combos: " + entry.getValue().toString());
+                }
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Failed to load casting configuration", e);
             }
@@ -93,13 +97,15 @@ public class CastingManager {
             state.playerClass = playerClass;
             castingPlayers.put(uuid, state);
             player.sendMessage("§aCasting mode enabled - Perform a 3-click combo!");
-            
+            logger.fine("toggleCastingMode: Enabled casting mode for player " + player.getName() + " (class: " + state.playerClass + ")");
+
             // Play the enter casting sound
             try {
                 player.playSound(player.getLocation(), org.bukkit.Sound.valueOf(enterSoundName), enterSoundVolume, enterSoundPitch);
+                logger.fine("toggleCastingMode: Played enter casting sound (" + enterSoundName + ") for player " + player.getName());
             } catch (Exception ex) {
                 player.sendMessage("§cError playing casting sound.");
-                logger.warning("Error playing casting sound: " + ex.getMessage());
+                logger.warning("toggleCastingMode: Error playing casting sound for player " + player.getName() + ": " + ex.getMessage());
             }
         }
     }
@@ -135,6 +141,8 @@ public class CastingManager {
     private void completeCast(Player player, CastingState state) {
         try {
             String combo = state.combo.toString();
+            logger.fine("completeCast: Player " + player.getName() + " performed combo: " + combo);
+
             Map<String, String> classSkills = classCombos.get(state.playerClass);
             String skillName = classSkills.get(combo);
 
@@ -144,15 +152,19 @@ public class CastingManager {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         MythicBukkit.inst().getAPIHelper().castSkill(player, skillName);
                         player.sendMessage("§aCasted: §e" + skillName);
+                        logger.fine("completeCast: Successfully cast skill: " + skillName + " for player " + player.getName());
                     });
                 } else {
                     player.sendMessage("§cInvalid skill configuration");
+                    logger.warning("completeCast: Skill " + skillName + " not found for player " + player.getName());
                 }
             } else {
                 player.sendMessage("§cInvalid combo for your class");
+                logger.warning("completeCast: Combo " + combo + " not valid for class " + state.playerClass + " (player " + player.getName() + ")");
             }
         } finally {
             cancelCasting(player);
+            logger.fine("completeCast: Casting mode cancelled for player " + player.getName());
         }
     }
 
