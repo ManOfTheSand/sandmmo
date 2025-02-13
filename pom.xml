@@ -47,8 +47,8 @@
         </dependency>
         <!-- MythicMobs Dependency for version 5.8.0 -->
         <dependency>
-            <groupId>io.lumine.mythic</groupId>
-            <artifactId>MythicMobs</artifactId>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
             <version>5.8.0</version>
             <scope>provided</scope>
         </dependency>
