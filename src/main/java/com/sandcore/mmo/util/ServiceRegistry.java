@@ -8,6 +8,7 @@ import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.gui.StatsGUI;
 import com.sandcore.mmo.command.AdminStatsCommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.sandcore.mmo.casting.CastingManager;
 
 public final class ServiceRegistry {
 
