@@ -17,11 +17,14 @@ import org.bukkit.entity.Player;
 import com.sandcore.mmo.command.AdminStatsCommandExecutor;
 import com.sandcore.mmo.command.MainCommandExecutor;
 import com.sandcore.mmo.command.MainTabCompleter;
+import com.sandcore.mmo.casting.CastingManager;
+import com.sandcore.mmo.casting.CastingListener;
 
 public class SandCoreMain extends JavaPlugin {
 
     private static SandCoreMain instance;
     private AsyncStatsGUIHandler statsGUIHandler;
+    private CastingManager castingManager;
 
     public static SandCoreMain getInstance() {
          return instance;
@@ -78,6 +81,13 @@ public class SandCoreMain extends JavaPlugin {
                  player.sendMessage(Component.text("Welcome to MMO!"));
              }
          }, this);
+         
+         // Add after other manager initializations
+         castingManager = new CastingManager(this);
+         getServer().getPluginManager().registerEvents(new CastingListener(castingManager), this);
+         
+         // Add to ServiceRegistry if needed
+         ServiceRegistry.registerCastingManager(castingManager);
          
          getLogger().info("SandCoreMain plugin enabled!");
     }
