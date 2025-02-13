@@ -14,6 +14,7 @@ import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.manager.CurrencyManager;
 import com.sandcore.mmo.manager.XPManager;
+import com.sandcore.mmo.manager.CastingManager;
 
 public class ReloadCommandExecutor implements CommandExecutor {
     private final JavaPlugin plugin;
@@ -42,6 +43,9 @@ public class ReloadCommandExecutor implements CommandExecutor {
                  if (main.getStatsGUIHandler() != null) {
                      main.getStatsGUIHandler().reloadConfiguration();
                  }
+                 
+                 // Reload the casting configuration so that updated skills are registered
+                 reloadManager(ServiceRegistry.getCastingManager(), CastingManager::loadConfiguration);
                  
                  // Reload the classes configuration
                  if (ServiceRegistry.getClassManager() != null) {
