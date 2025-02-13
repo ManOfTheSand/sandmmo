@@ -45,6 +45,13 @@
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- MythicMobs Dependency -->
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>5.2.1</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- MythicMobs API -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
