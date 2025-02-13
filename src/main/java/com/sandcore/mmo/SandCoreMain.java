@@ -65,10 +65,9 @@ public class SandCoreMain extends JavaPlugin {
              getLogger().severe("Command /sandmmo not defined in plugin.yml");
          }
          
-         // Initialize the AsyncStatsGUIHandler and register the /stats command separately.
-         statsGUIHandler = new AsyncStatsGUIHandler(this);
+         // Register the new advanced /stats command using our new asynchronous advanced stats GUI system.
          if (getCommand("stats") != null) {
-             getCommand("stats").setExecutor(new StatsCommandExecutor(this, statsGUIHandler));
+             getCommand("stats").setExecutor(new com.sandcore.mmo.command.StatsCommandExecutor(this));
          } else {
              getLogger().severe("Command /stats not defined in plugin.yml");
          }

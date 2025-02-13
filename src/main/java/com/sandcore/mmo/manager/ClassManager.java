@@ -90,17 +90,22 @@ public class ClassManager {
         private final String id;            // Unique identifier (e.g., "warrior")
         private final String displayName;   // Displayed name (e.g., "Warrior")
         private final String description;   // Description or lore
-        // Bonus attributes provided by this class.
-        private final double bonusMaxHealth;    // Additional max health provided.
-        private final double bonusMaxMana;      // Additional max mana provided.
-        private final double bonusHealthRegen;  // Additional health regeneration.
-        private final double bonusManaRegen;    // Additional mana regeneration.
-        private final int bonusStrength;        // Additional strength.
-        private final int bonusDexterity;       // Additional dexterity.
-        private final int bonusIntellect;       // Additional intellect.
-        private final int bonusDefense;         // Additional defense.
-        private final int bonusMagicDefense;    // Additional magic defense.
-        private final Map<String, Integer> startingStats;
+        // New bonus stats based on the advanced stat system.
+        private final double bonusHealth;
+        private final double bonusHealthRegen;
+        private final double bonusDefense;
+        private final double bonusMagicDefence;
+        private final double bonusDamage;
+        private final double bonusMagicDamage;
+        private final double bonusStamina;
+        private final double bonusStaminaRegen;
+        private final double bonusMagicRegen;
+        private final double bonusMana;
+        private final double bonusCritDamage;
+        private final double bonusMagicCritDamage;
+        private final double bonusCritChance;
+        private final double bonusSpeed;
+        private final double bonusLuck;
         private final java.util.Map<String, String> keyCombos;
         private final String castingSoundName;
         private final float castingSoundVolume;
@@ -119,16 +124,21 @@ public class ClassManager {
          * @param id                the class identifier
          * @param displayName       the display name for GUIs
          * @param description       a short description or lore
-         * @param bonusMaxHealth    additional max health bonus
-         * @param bonusMaxMana      additional max mana bonus
-         * @param bonusHealthRegen  additional health regeneration bonus
-         * @param bonusManaRegen    additional mana regeneration bonus
-         * @param bonusStrength     additional strength bonus
-         * @param bonusDexterity    additional dexterity bonus
-         * @param bonusIntellect    additional intellect bonus
-         * @param bonusDefense      additional defense bonus
-         * @param bonusMagicDefense additional magic defense bonus
-         * @param startingStats     starting stats for the class
+         * @param bonusHealth       bonus health
+         * @param bonusHealthRegen   bonus health regeneration
+         * @param bonusDefense       bonus defense
+         * @param bonusMagicDefence  bonus magic defense
+         * @param bonusDamage       bonus damage
+         * @param bonusMagicDamage  bonus magic damage
+         * @param bonusStamina      bonus stamina
+         * @param bonusStaminaRegen  bonus stamina regeneration
+         * @param bonusMagicRegen    bonus magic regeneration
+         * @param bonusMana          bonus mana
+         * @param bonusCritDamage    bonus critical damage
+         * @param bonusMagicCritDamage bonus magic critical damage
+         * @param bonusCritChance    bonus critical chance
+         * @param bonusSpeed         bonus speed
+         * @param bonusLuck          bonus luck
          * @param keyCombos         key combos for the class
          * @param castingSoundName  casting sound name for the class
          * @param castingSoundVolume casting sound volume for the class
@@ -141,10 +151,10 @@ public class ClassManager {
          * @param comboFailSoundPitch combo fail sound pitch for the class
          */
         public PlayerClass(String id, String displayName, String description,
-                           double bonusMaxHealth, double bonusMaxMana, double bonusHealthRegen,
-                           double bonusManaRegen, int bonusStrength, int bonusDexterity,
-                           int bonusIntellect, int bonusDefense, int bonusMagicDefense,
-                           Map<String, Integer> startingStats,
+                           double bonusHealth, double bonusHealthRegen, double bonusDefense, double bonusMagicDefence,
+                           double bonusDamage, double bonusMagicDamage, double bonusStamina, double bonusStaminaRegen,
+                           double bonusMagicRegen, double bonusMana, double bonusCritDamage, double bonusMagicCritDamage,
+                           double bonusCritChance, double bonusSpeed, double bonusLuck,
                            java.util.Map<String, String> keyCombos,
                            String castingSoundName, float castingSoundVolume, float castingSoundPitch,
                            String comboClickSoundName, float comboClickSoundVolume, float comboClickSoundPitch,
@@ -152,16 +162,21 @@ public class ClassManager {
             this.id = id;
             this.displayName = displayName;
             this.description = description;
-            this.bonusMaxHealth = bonusMaxHealth;
-            this.bonusMaxMana = bonusMaxMana;
+            this.bonusHealth = bonusHealth;
             this.bonusHealthRegen = bonusHealthRegen;
-            this.bonusManaRegen = bonusManaRegen;
-            this.bonusStrength = bonusStrength;
-            this.bonusDexterity = bonusDexterity;
-            this.bonusIntellect = bonusIntellect;
             this.bonusDefense = bonusDefense;
-            this.bonusMagicDefense = bonusMagicDefense;
-            this.startingStats = startingStats;
+            this.bonusMagicDefence = bonusMagicDefence;
+            this.bonusDamage = bonusDamage;
+            this.bonusMagicDamage = bonusMagicDamage;
+            this.bonusStamina = bonusStamina;
+            this.bonusStaminaRegen = bonusStaminaRegen;
+            this.bonusMagicRegen = bonusMagicRegen;
+            this.bonusMana = bonusMana;
+            this.bonusCritDamage = bonusCritDamage;
+            this.bonusMagicCritDamage = bonusMagicCritDamage;
+            this.bonusCritChance = bonusCritChance;
+            this.bonusSpeed = bonusSpeed;
+            this.bonusLuck = bonusLuck;
             this.keyCombos = keyCombos;
             this.castingSoundName = castingSoundName;
             this.castingSoundVolume = castingSoundVolume;
@@ -178,16 +193,21 @@ public class ClassManager {
         public String getId() { return id; }
         public String getDisplayName() { return displayName; }
         public String getDescription() { return description; }
-        public double getBonusMaxHealth() { return bonusMaxHealth; }
-        public double getBonusMaxMana() { return bonusMaxMana; }
+        public double getBonusHealth() { return bonusHealth; }
         public double getBonusHealthRegen() { return bonusHealthRegen; }
-        public double getBonusManaRegen() { return bonusManaRegen; }
-        public int getBonusStrength() { return bonusStrength; }
-        public int getBonusDexterity() { return bonusDexterity; }
-        public int getBonusIntellect() { return bonusIntellect; }
-        public int getBonusDefense() { return bonusDefense; }
-        public int getBonusMagicDefense() { return bonusMagicDefense; }
-        public Map<String, Integer> getStartingStats() { return startingStats; }
+        public double getBonusDefense() { return bonusDefense; }
+        public double getBonusMagicDefence() { return bonusMagicDefence; }
+        public double getBonusDamage() { return bonusDamage; }
+        public double getBonusMagicDamage() { return bonusMagicDamage; }
+        public double getBonusStamina() { return bonusStamina; }
+        public double getBonusStaminaRegen() { return bonusStaminaRegen; }
+        public double getBonusMagicRegen() { return bonusMagicRegen; }
+        public double getBonusMana() { return bonusMana; }
+        public double getBonusCritDamage() { return bonusCritDamage; }
+        public double getBonusMagicCritDamage() { return bonusMagicCritDamage; }
+        public double getBonusCritChance() { return bonusCritChance; }
+        public double getBonusSpeed() { return bonusSpeed; }
+        public double getBonusLuck() { return bonusLuck; }
         public java.util.Map<String, String> getKeyCombos() { return keyCombos; }
         public String getCastingSoundName() { return castingSoundName; }
         public float getCastingSoundVolume() { return castingSoundVolume; }
@@ -221,40 +241,22 @@ public class ClassManager {
                 for (String id : config.getConfigurationSection("classes").getKeys(false)) {
                     String displayName = config.getString("classes." + id + ".displayName", id);
                     String description = config.getString("classes." + id + ".description", "");
-                    // Attempt to load bonus attributes from a dedicated section; if not present, fall back to startingStats where applicable.
-                    double bonusMaxHealth = config.contains("classes." + id + ".bonusAttributes.maxHealth")
-                        ? config.getDouble("classes." + id + ".bonusAttributes.maxHealth")
-                        : config.getInt("classes." + id + ".startingStats.maxHealth", 0);
-                    double bonusMaxMana = config.contains("classes." + id + ".bonusAttributes.maxMana")
-                        ? config.getDouble("classes." + id + ".bonusAttributes.maxMana")
-                        : 0;
-                    double bonusHealthRegen = config.contains("classes." + id + ".bonusAttributes.healthRegen")
-                        ? config.getDouble("classes." + id + ".bonusAttributes.healthRegen")
-                        : 0;
-                    double bonusManaRegen = config.contains("classes." + id + ".bonusAttributes.manaRegen")
-                        ? config.getDouble("classes." + id + ".bonusAttributes.manaRegen")
-                        : 0;
-                    int bonusStrength = config.contains("classes." + id + ".bonusAttributes.strength")
-                        ? config.getInt("classes." + id + ".bonusAttributes.strength")
-                        : config.getInt("classes." + id + ".startingStats.strength", 0);
-                    int bonusDexterity = config.contains("classes." + id + ".bonusAttributes.dexterity")
-                        ? config.getInt("classes." + id + ".bonusAttributes.dexterity")
-                        : config.getInt("classes." + id + ".startingStats.dexterity", 0);
-                    int bonusIntellect = config.contains("classes." + id + ".bonusAttributes.intellect")
-                        ? config.getInt("classes." + id + ".bonusAttributes.intellect")
-                        : config.getInt("classes." + id + ".startingStats.intelligence", 0);
-                    int bonusDefense = config.contains("classes." + id + ".bonusAttributes.defense")
-                        ? config.getInt("classes." + id + ".bonusAttributes.defense")
-                        : 0;
-                    int bonusMagicDefense = config.contains("classes." + id + ".bonusAttributes.magicDefense")
-                        ? config.getInt("classes." + id + ".bonusAttributes.magicDefense")
-                        : 0;
-                    Map<String, Integer> startingStats = new HashMap<>();
-                    if (config.isConfigurationSection("classes." + id + ".startingStats")) {
-                        for (String stat : config.getConfigurationSection("classes." + id + ".startingStats").getKeys(false)) {
-                            startingStats.put(stat, config.getInt("classes." + id + ".startingStats." + stat));
-                        }
-                    }
+                    // Read the new advanced stat values from the "startingStats" section.
+                    double bonusHealth = config.getDouble("classes." + id + ".startingStats.Health", 0);
+                    double bonusHealthRegen = config.getDouble("classes." + id + ".startingStats.HealthRegen", 0);
+                    double bonusDefense = config.getDouble("classes." + id + ".startingStats.Defense", 0);
+                    double bonusMagicDefence = config.getDouble("classes." + id + ".startingStats.MagicDefence", 0);
+                    double bonusDamage = config.getDouble("classes." + id + ".startingStats.Damage", 0);
+                    double bonusMagicDamage = config.getDouble("classes." + id + ".startingStats.MagicDamage", 0);
+                    double bonusStamina = config.getDouble("classes." + id + ".startingStats.Stamina", 0);
+                    double bonusStaminaRegen = config.getDouble("classes." + id + ".startingStats.StaminaRegen", 0);
+                    double bonusMagicRegen = config.getDouble("classes." + id + ".startingStats.MagicRegen", 0);
+                    double bonusMana = config.getDouble("classes." + id + ".startingStats.Mana", 0);
+                    double bonusCritDamage = config.getDouble("classes." + id + ".startingStats.CritDamage", 0);
+                    double bonusMagicCritDamage = config.getDouble("classes." + id + ".startingStats.MagicCritDamage", 0);
+                    double bonusCritChance = config.getDouble("classes." + id + ".startingStats.CritChance", 0);
+                    double bonusSpeed = config.getDouble("classes." + id + ".startingStats.Speed", 0);
+                    double bonusLuck = config.getDouble("classes." + id + ".startingStats.Luck", 0);
                     Map<String, String> keyCombos = new HashMap<>();
                     if (config.isConfigurationSection("classes." + id + ".keyCombos")) {
                         for (String key : config.getConfigurationSection("classes." + id + ".keyCombos").getKeys(false)) {
@@ -275,9 +277,11 @@ public class ClassManager {
                     float comboFailSoundPitch = (float) config.getDouble("classes." + id + ".comboFailSound.pitch", 1.0);
 
                     PlayerClass playerClass = new PlayerClass(id, displayName, description,
-                            bonusMaxHealth, bonusMaxMana, bonusHealthRegen, bonusManaRegen,
-                            bonusStrength, bonusDexterity, bonusIntellect, bonusDefense, bonusMagicDefense,
-                            startingStats, keyCombos, 
+                            bonusHealth, bonusHealthRegen, bonusDefense, bonusMagicDefence,
+                            bonusDamage, bonusMagicDamage, bonusStamina, bonusStaminaRegen,
+                            bonusMagicRegen, bonusMana, bonusCritDamage, bonusMagicCritDamage,
+                            bonusCritChance, bonusSpeed, bonusLuck,
+                            keyCombos, 
                             castingSoundName, castingSoundVolume, castingSoundPitch,
                             comboClickSoundName, comboClickSoundVolume, comboClickSoundPitch,
                             comboFailSoundName, comboFailSoundVolume, comboFailSoundPitch);
@@ -327,15 +331,10 @@ public class ClassManager {
         if (statsManager != null) {
             PlayerStatAllocation alloc = statsManager.getAllocation(player);
             // Update bonus attributes from the selected class.
-            alloc.bonusMaxHealth = (int) chosenClass.getBonusMaxHealth();
-            alloc.bonusMaxMana = (int) chosenClass.getBonusMaxMana();
+            alloc.bonusHealth = (int) chosenClass.getBonusHealth();
             alloc.bonusHealthRegen = chosenClass.getBonusHealthRegen();
-            alloc.bonusManaRegen = chosenClass.getBonusManaRegen();
-            alloc.bonusStrength = chosenClass.getBonusStrength();
-            alloc.bonusDexterity = chosenClass.getBonusDexterity();
-            alloc.bonusIntellect = chosenClass.getBonusIntellect();
-            alloc.bonusDefense = chosenClass.getBonusDefense();
-            alloc.bonusMagicDefense = chosenClass.getBonusMagicDefense();
+            alloc.bonusDefense = (int) chosenClass.getBonusDefense();
+            alloc.bonusMagicDefense = (int) chosenClass.getBonusMagicDefence();
         }
         // Update in-game attributes by re-applying player stats.
         PlayerStatsApplier.applyStats(player);
