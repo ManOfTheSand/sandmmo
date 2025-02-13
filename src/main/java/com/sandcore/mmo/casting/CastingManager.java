@@ -23,6 +23,10 @@ public class CastingManager {
     private final Map<UUID, CastingState> castingPlayers = new HashMap<>();
     private final Map<String, Map<String, String>> classCombos = new HashMap<>();
     private int timeoutSeconds = 5;
+    // Casting sound when entering casting mode.
+    private String enterSoundName = "BLOCK_NOTE_BLOCK_PLING";
+    private float enterSoundVolume = 1.0F;
+    private float enterSoundPitch = 1.0F;
 
     public CastingManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -44,6 +48,13 @@ public class CastingManager {
                 
                 // Load casting timeout
                 timeoutSeconds = config.getInt("casting.timeout", 5);
+                
+                // Load enter sound configuration
+                if (config.isConfigurationSection("casting.enter_sound")) {
+                    enterSoundName = config.getString("casting.enter_sound.name", "BLOCK_NOTE_BLOCK_PLING");
+                    enterSoundVolume = (float) config.getDouble("casting.enter_sound.volume", 1.0);
+                    enterSoundPitch = (float) config.getDouble("casting.enter_sound.pitch", 1.0);
+                }
                 
                 // Load class combos
                 classCombos.clear();
@@ -82,6 +93,14 @@ public class CastingManager {
             state.playerClass = playerClass;
             castingPlayers.put(uuid, state);
             player.sendMessage("§aCasting mode enabled - Perform a 3-click combo!");
+            
+            // Play the enter casting sound
+            try {
+                player.playSound(player.getLocation(), org.bukkit.Sound.valueOf(enterSoundName), enterSoundVolume, enterSoundPitch);
+            } catch (Exception ex) {
+                player.sendMessage("§cError playing casting sound.");
+                logger.warning("Error playing casting sound: " + ex.getMessage());
+            }
         }
     }
 

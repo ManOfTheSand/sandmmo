@@ -7,6 +7,11 @@ menu:
 casting:
   # Timeout (in seconds) allowed for completing the 3-click combo.
   timeout: 5
+  # Sound played when entering casting mode.
+  enter_sound:
+    name: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
   classes:
     # Casting abilities for players with the warrior class
     warrior:
