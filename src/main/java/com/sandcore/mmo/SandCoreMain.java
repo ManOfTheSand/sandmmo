@@ -89,6 +89,10 @@ public class SandCoreMain extends JavaPlugin {
          // Add to ServiceRegistry if needed
          ServiceRegistry.registerCastingManager(castingManager);
          
+         // Register the /resetstats command
+         getCommand("resetstats").setExecutor(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
+         getCommand("resetstats").setTabCompleter(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
+         
          getLogger().info("SandCoreMain plugin enabled!");
     }
 
