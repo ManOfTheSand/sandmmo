@@ -164,16 +164,16 @@ public class StatsManager {
                 effective = baseHealthRegen + perLevelHealthRegen * level + alloc.bonusHealthRegen;
                 break;
             case "manaRegen":
-                effective = baseManaRegen + perLevelManaRegen * level + alloc.bonusManaRegen;
+                effective = baseManaRegen + perLevelManaRegen * level;
                 break;
             case "strength":
-                effective = baseStrength + perLevelStrength * level + alloc.bonusStrength;
+                effective = baseStrength + perLevelStrength * level;
                 break;
             case "dexterity":
-                effective = baseDexterity + perLevelDexterity * level + alloc.bonusDexterity;
+                effective = baseDexterity + perLevelDexterity * level;
                 break;
             case "intellect":
-                effective = baseIntellect + perLevelIntellect * level + alloc.bonusIntellect;
+                effective = baseIntellect + perLevelIntellect * level;
                 break;
             case "defense":
                 effective = baseDefense + perLevelDefense * level + alloc.bonusDefense;

@@ -334,7 +334,7 @@ public class ClassManager {
             alloc.bonusHealth = (int) chosenClass.getBonusHealth();
             alloc.bonusHealthRegen = chosenClass.getBonusHealthRegen();
             alloc.bonusDefense = (int) chosenClass.getBonusDefense();
-            alloc.bonusMagicDefense = (int) chosenClass.getBonusMagicDefence();
+            alloc.bonusMagicDefence = (int) chosenClass.getBonusMagicDefence();
         }
         // Update in-game attributes by re-applying player stats.
         PlayerStatsApplier.applyStats(player);
