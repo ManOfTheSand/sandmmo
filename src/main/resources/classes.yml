@@ -2,6 +2,20 @@ classes:
   warrior:
     display-name: "Warrior"
     color: "#FF0000"
+    description: "A courageous fighter with unmatched melee strength."
+    startingStats:
+      maxHealth: 30
+      strength: 15
+      dexterity: 8
+      intelligence: 3
+      agility: 7
   mage:
     display-name: "Arcane Mage"
     color: "#00BFFF"
+    description: "A master of elemental magic and arcane knowledge."
+    startingStats:
+      maxHealth: 20
+      strength: 2
+      dexterity: 5
+      intelligence: 18
+      agility: 4

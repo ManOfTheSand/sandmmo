@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public class CastingListener implements Listener {
     private final CastingManager castingManager;
@@ -15,10 +16,9 @@ public class CastingListener implements Listener {
     }
 
     @EventHandler
-    public void onSneakToggle(PlayerToggleSneakEvent event) {
-        if (event.isSneaking()) {
-            castingManager.toggleCastingMode(event.getPlayer());
-        }
+    public void onSwapHandItems(PlayerSwapHandItemsEvent event) {
+        event.setCancelled(true);
+        castingManager.toggleCastingMode(event.getPlayer());
     }
 
     @EventHandler

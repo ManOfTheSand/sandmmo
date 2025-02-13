@@ -100,6 +100,7 @@ public class ClassManager {
         private final int bonusIntellect;       // Additional intellect.
         private final int bonusDefense;         // Additional defense.
         private final int bonusMagicDefense;    // Additional magic defense.
+        private final Map<String, Integer> startingStats;
 
         /**
          * Constructs a new PlayerClass.
@@ -116,11 +117,13 @@ public class ClassManager {
          * @param bonusIntellect    additional intellect bonus
          * @param bonusDefense      additional defense bonus
          * @param bonusMagicDefense additional magic defense bonus
+         * @param startingStats     starting stats for the class
          */
         public PlayerClass(String id, String displayName, String description,
                            double bonusMaxHealth, double bonusMaxMana, double bonusHealthRegen,
                            double bonusManaRegen, int bonusStrength, int bonusDexterity,
-                           int bonusIntellect, int bonusDefense, int bonusMagicDefense) {
+                           int bonusIntellect, int bonusDefense, int bonusMagicDefense,
+                           Map<String, Integer> startingStats) {
             this.id = id;
             this.displayName = displayName;
             this.description = description;
@@ -133,6 +136,7 @@ public class ClassManager {
             this.bonusIntellect = bonusIntellect;
             this.bonusDefense = bonusDefense;
             this.bonusMagicDefense = bonusMagicDefense;
+            this.startingStats = startingStats;
         }
 
         // Getters for class properties.
@@ -148,6 +152,7 @@ public class ClassManager {
         public int getBonusIntellect() { return bonusIntellect; }
         public int getBonusDefense() { return bonusDefense; }
         public int getBonusMagicDefense() { return bonusMagicDefense; }
+        public Map<String, Integer> getStartingStats() { return startingStats; }
     }
 
     /**
@@ -180,9 +185,16 @@ public class ClassManager {
                     int bonusIntellect = config.getInt("classes." + id + ".bonusAttributes.intellect", 0);
                     int bonusDefense = config.getInt("classes." + id + ".bonusAttributes.defense", 0);
                     int bonusMagicDefense = config.getInt("classes." + id + ".bonusAttributes.magicDefense", 0);
+                    Map<String, Integer> startingStats = new HashMap<>();
+                    if (config.isConfigurationSection("classes." + id + ".startingStats")) {
+                        for (String stat : config.getConfigurationSection("classes." + id + ".startingStats").getKeys(false)) {
+                            startingStats.put(stat, config.getInt("classes." + id + ".startingStats." + stat));
+                        }
+                    }
                     PlayerClass playerClass = new PlayerClass(id, displayName, description,
                             bonusMaxHealth, bonusMaxMana, bonusHealthRegen, bonusManaRegen,
-                            bonusStrength, bonusDexterity, bonusIntellect, bonusDefense, bonusMagicDefense);
+                            bonusStrength, bonusDexterity, bonusIntellect, bonusDefense, bonusMagicDefense,
+                            startingStats);
                     classes.put(id.toLowerCase(), playerClass);
                 }
                 logger.info("ClassManager: Loaded " + classes.size() + " class definitions.");
@@ -274,5 +286,12 @@ public class ClassManager {
      */
     public void updateLevel(Player player) {
         logger.info("ClassManager: updateLevel called for " + player.getName());
+    }
+
+    /**
+     * This method can be called on plugin reload.
+     */
+    public void reloadClasses() {
+        loadClasses();
     }
 } 

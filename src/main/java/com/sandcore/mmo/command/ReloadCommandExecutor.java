@@ -43,6 +43,11 @@ public class ReloadCommandExecutor implements CommandExecutor {
                      main.getStatsGUIHandler().reloadConfiguration();
                  }
                  
+                 // Reload the classes configuration
+                 if (ServiceRegistry.getClassManager() != null) {
+                     ServiceRegistry.getClassManager().reloadClasses();
+                 }
+                 
                  player.sendMessage("§aConfigurations reloaded successfully!");
              } catch (Exception e) {
                  player.sendMessage("§cReload failed: " + e.getMessage());
