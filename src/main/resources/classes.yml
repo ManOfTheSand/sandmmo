@@ -9,6 +9,15 @@ classes:
       dexterity: 8
       intelligence: 3
       agility: 7
+    keyCombos:
+      LLL: "charge_attack"
+      LLR: "shield_bash"
+      LRL: "battle_cry"
+      LRR: "berserk"
+    castingSound:
+      name: "BLOCK_NOTE_BLOCK_PLING"
+      volume: 1.0
+      pitch: 1.0
   mage:
     display-name: "Arcane Mage"
     color: "#00BFFF"
@@ -19,3 +28,12 @@ classes:
       dexterity: 5
       intelligence: 18
       agility: 4
+    keyCombos:
+      LLL: "fire_blast"
+      LLR: "ice_nova"
+      LRL: "arcane_missile"
+      LRR: "teleport"
+    castingSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.2

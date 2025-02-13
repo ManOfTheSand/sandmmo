@@ -21,7 +21,6 @@ public class CastingManager {
     private final JavaPlugin plugin;
     private final Logger logger;
     private final Map<UUID, CastingState> castingPlayers = new HashMap<>();
-    private final Map<String, Map<String, String>> classCombos = new HashMap<>();
     private int timeoutSeconds = 5;
     // Casting sound when entering casting mode.
     private String enterSoundName = "BLOCK_NOTE_BLOCK_PLING";
@@ -37,7 +36,7 @@ public class CastingManager {
     private class CastingState {
         StringBuilder combo = new StringBuilder();
         BukkitTask timeoutTask;
-        String playerClass;
+        com.sandcore.mmo.manager.ClassManager.PlayerClass playerClass;
     }
 
     public void loadConfiguration() {
@@ -56,22 +55,9 @@ public class CastingManager {
                     enterSoundPitch = (float) config.getDouble("casting.enter_sound.pitch", 1.0);
                 }
                 
-                // Load class combos
-                classCombos.clear();
-                if (config.contains("casting.classes")) {
-                    for (String className : config.getConfigurationSection("casting.classes").getKeys(false)) {
-                        Map<String, String> combos = new HashMap<>();
-                        for (String combo : config.getConfigurationSection("casting.classes." + className).getKeys(false)) {
-                            combos.put(combo.toUpperCase(), config.getString("casting.classes." + className + "." + combo));
-                        }
-                        classCombos.put(className.toLowerCase(), combos);
-                    }
-                }
-                logger.info("Loaded casting configurations for " + classCombos.size() + " classes");
-                // Debug: list loaded combos for each class
-                for (Map.Entry<String, Map<String, String>> entry : classCombos.entrySet()) {
-                    logger.fine("loadConfiguration: For class '" + entry.getKey() + "' loaded combos: " + entry.getValue().toString());
-                }
+                // (Key combos are now defined per class in classes.yml – see ClassManager)
+                logger.info("Casting timeout: " + timeoutSeconds + " seconds, "
+                    + "enter sound: " + enterSoundName + " (" + enterSoundVolume + "/" + enterSoundPitch + ")");
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Failed to load casting configuration", e);
             }
@@ -85,24 +71,25 @@ public class CastingManager {
             player.sendMessage("§cCasting mode disabled");
         } else {
             ClassManager classManager = ServiceRegistry.getClassManager();
-            String playerClass = classManager.getPlayerClass(player) != null ? 
-                classManager.getPlayerClass(player).getId().toLowerCase() : null;
-            
-            if (playerClass == null || !classCombos.containsKey(playerClass)) {
+            com.sandcore.mmo.manager.ClassManager.PlayerClass pClass = classManager.getPlayerClass(player);
+            if (pClass == null || pClass.getKeyCombos().isEmpty()) {
                 player.sendMessage("§cNo casting abilities available for your class");
                 return;
             }
 
             CastingState state = new CastingState();
-            state.playerClass = playerClass;
+            state.playerClass = pClass;
             castingPlayers.put(uuid, state);
             player.sendMessage("§aCasting mode enabled - Perform a 3-click combo!");
-            logger.fine("toggleCastingMode: Enabled casting mode for player " + player.getName() + " (class: " + state.playerClass + ")");
+            logger.fine("toggleCastingMode: Enabled casting mode for player " + player.getName() + " (class: " + state.playerClass.getId() + ")");
 
-            // Play the enter casting sound
+            // Play class-specific casting sound from player's class config.
             try {
-                player.playSound(player.getLocation(), org.bukkit.Sound.valueOf(enterSoundName), enterSoundVolume, enterSoundPitch);
-                logger.fine("toggleCastingMode: Played enter casting sound (" + enterSoundName + ") for player " + player.getName());
+                String classSound = pClass.getCastingSoundName();
+                float classSoundVol = pClass.getCastingSoundVolume();
+                float classSoundPitch = pClass.getCastingSoundPitch();
+                player.playSound(player.getLocation(), org.bukkit.Sound.valueOf(classSound), classSoundVol, classSoundPitch);
+                logger.fine("toggleCastingMode: Played class-specific casting sound (" + classSound + ") for player " + player.getName());
             } catch (Exception ex) {
                 player.sendMessage("§cError playing casting sound.");
                 logger.warning("toggleCastingMode: Error playing casting sound for player " + player.getName() + ": " + ex.getMessage());
@@ -130,8 +117,9 @@ public class CastingManager {
             }, timeoutSeconds * 20L);
         }
 
-        // Record click
+        // Record click and update action bar with current combo keys
         state.combo.append(clickType == ClickType.LEFT ? "L" : "R");
+        player.sendActionBar(net.kyori.adventure.text.Component.text("Combo: " + state.combo.toString()));
         
         if (state.combo.length() == 3) {
             completeCast(player, state);
@@ -143,8 +131,9 @@ public class CastingManager {
             String combo = state.combo.toString();
             logger.fine("completeCast: Player " + player.getName() + " performed combo: " + combo);
 
-            Map<String, String> classSkills = classCombos.get(state.playerClass);
-            String skillName = classSkills.get(combo);
+            // Retrieve key combos from the player's class (loaded from classes.yml)
+            java.util.Map<String, String> keyCombos = state.playerClass.getKeyCombos();
+            String skillName = keyCombos.get(combo);
 
             if (skillName != null) {
                 Skill skill = MythicBukkit.inst().getSkillManager().getSkill(skillName).orElse(null);
@@ -160,11 +149,20 @@ public class CastingManager {
                 }
             } else {
                 player.sendMessage("§cInvalid combo for your class");
-                logger.warning("completeCast: Combo " + combo + " not valid for class " + state.playerClass + " (player " + player.getName() + ")");
+                logger.warning("completeCast: Combo " + combo + " not valid for class " + state.playerClass.getId() + " (player " + player.getName() + ")");
             }
         } finally {
-            cancelCasting(player);
-            logger.fine("completeCast: Casting mode cancelled for player " + player.getName());
+            // Instead of canceling casting mode, reset the combo and reschedule timeout.
+            if (state.timeoutTask != null) {
+                state.timeoutTask.cancel();
+            }
+            state.combo.setLength(0); // reset combo
+            state.timeoutTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                cancelCasting(player);
+                player.sendMessage("§cCasting mode timed out!");
+            }, timeoutSeconds * 20L);
+            player.sendActionBar(net.kyori.adventure.text.Component.text("Combo: "));
+            logger.fine("completeCast: Combo reset for player " + player.getName());
         }
     }
 

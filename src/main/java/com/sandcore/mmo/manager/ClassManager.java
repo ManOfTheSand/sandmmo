@@ -101,6 +101,10 @@ public class ClassManager {
         private final int bonusDefense;         // Additional defense.
         private final int bonusMagicDefense;    // Additional magic defense.
         private final Map<String, Integer> startingStats;
+        private final java.util.Map<String, String> keyCombos;
+        private final String castingSoundName;
+        private final float castingSoundVolume;
+        private final float castingSoundPitch;
 
         /**
          * Constructs a new PlayerClass.
@@ -118,12 +122,18 @@ public class ClassManager {
          * @param bonusDefense      additional defense bonus
          * @param bonusMagicDefense additional magic defense bonus
          * @param startingStats     starting stats for the class
+         * @param keyCombos         key combos for the class
+         * @param castingSoundName  casting sound name for the class
+         * @param castingSoundVolume casting sound volume for the class
+         * @param castingSoundPitch casting sound pitch for the class
          */
         public PlayerClass(String id, String displayName, String description,
                            double bonusMaxHealth, double bonusMaxMana, double bonusHealthRegen,
                            double bonusManaRegen, int bonusStrength, int bonusDexterity,
                            int bonusIntellect, int bonusDefense, int bonusMagicDefense,
-                           Map<String, Integer> startingStats) {
+                           Map<String, Integer> startingStats,
+                           java.util.Map<String, String> keyCombos,
+                           String castingSoundName, float castingSoundVolume, float castingSoundPitch) {
             this.id = id;
             this.displayName = displayName;
             this.description = description;
@@ -137,6 +147,10 @@ public class ClassManager {
             this.bonusDefense = bonusDefense;
             this.bonusMagicDefense = bonusMagicDefense;
             this.startingStats = startingStats;
+            this.keyCombos = keyCombos;
+            this.castingSoundName = castingSoundName;
+            this.castingSoundVolume = castingSoundVolume;
+            this.castingSoundPitch = castingSoundPitch;
         }
 
         // Getters for class properties.
@@ -153,6 +167,10 @@ public class ClassManager {
         public int getBonusDefense() { return bonusDefense; }
         public int getBonusMagicDefense() { return bonusMagicDefense; }
         public Map<String, Integer> getStartingStats() { return startingStats; }
+        public java.util.Map<String, String> getKeyCombos() { return keyCombos; }
+        public String getCastingSoundName() { return castingSoundName; }
+        public float getCastingSoundVolume() { return castingSoundVolume; }
+        public float getCastingSoundPitch() { return castingSoundPitch; }
     }
 
     /**
@@ -191,10 +209,21 @@ public class ClassManager {
                             startingStats.put(stat, config.getInt("classes." + id + ".startingStats." + stat));
                         }
                     }
+                    Map<String, String> keyCombos = new HashMap<>();
+                    if (config.isConfigurationSection("classes." + id + ".keyCombos")) {
+                        for (String key : config.getConfigurationSection("classes." + id + ".keyCombos").getKeys(false)) {
+                            keyCombos.put(key.toUpperCase(), config.getString("classes." + id + ".keyCombos." + key));
+                        }
+                    }
+
+                    String castingSoundName = config.getString("classes." + id + ".castingSound.name", "BLOCK_NOTE_BLOCK_PLING");
+                    float castingSoundVolume = (float) config.getDouble("classes." + id + ".castingSound.volume", 1.0);
+                    float castingSoundPitch = (float) config.getDouble("classes." + id + ".castingSound.pitch", 1.0);
+
                     PlayerClass playerClass = new PlayerClass(id, displayName, description,
                             bonusMaxHealth, bonusMaxMana, bonusHealthRegen, bonusManaRegen,
                             bonusStrength, bonusDexterity, bonusIntellect, bonusDefense, bonusMagicDefense,
-                            startingStats);
+                            startingStats, keyCombos, castingSoundName, castingSoundVolume, castingSoundPitch);
                     classes.put(id.toLowerCase(), playerClass);
                 }
                 logger.info("ClassManager: Loaded " + classes.size() + " class definitions.");
@@ -234,6 +263,8 @@ public class ClassManager {
         PlayerClass chosenClass = classes.get(classId);
         playerClasses.put(player.getUniqueId(), chosenClass);
         logger.info("ClassManager: Set " + player.getName() + "'s class to " + chosenClass.getDisplayName());
+        // Save player's class selection to persistent storage.
+        savePlayerClass(player, classId);
         // Integrate with StatsManager: update player's bonus attributes.
         StatsManager statsManager = ServiceRegistry.getStatsManager();
         if (statsManager != null) {
@@ -293,5 +324,17 @@ public class ClassManager {
      */
     public void reloadClasses() {
         loadClasses();
+    }
+
+    private void savePlayerClass(Player player, String classId) {
+        try {
+            File file = new File(plugin.getDataFolder(), "players.yml");
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+            config.set("players." + player.getUniqueId().toString(), classId);
+            config.save(file);
+            logger.info("ClassManager: Saved class " + classId + " for player " + player.getName());
+        } catch (Exception e) {
+            logger.severe("ClassManager: Could not save class for player " + player.getName() + ": " + e.getMessage());
+        }
     }
 } 
