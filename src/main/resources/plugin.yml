@@ -2,6 +2,8 @@ name: SandMmo
 version: 1.0-SNAPSHOT
 main: com.sandcore.mmo.SandCoreMain
 api-version: "1.21"
+softdepend:
+  - MythicMobs
 
 commands:
   class:
