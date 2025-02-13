@@ -2,3 +2,21 @@ menu:
   title: "<gold>MMO GUI"
   size: 9
   item: "<blue>Click Me!"
+
+# Casting system configuration
+casting:
+  # Timeout (in seconds) allowed for completing the 3-click combo.
+  timeout: 5
+  classes:
+    # Casting abilities for players with the warrior class
+    warrior:
+      LLL: "charge_attack"
+      LLR: "shield_bash"
+      LRL: "battle_cry"
+      LRR: "berserk"
+    # Casting abilities for players with the mage class
+    mage:
+      LLL: "fire_blast"
+      LLR: "ice_nova"
+      LRL: "arcane_missile"
+      LRR: "teleport"
