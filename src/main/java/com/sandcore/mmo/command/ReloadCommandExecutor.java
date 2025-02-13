@@ -14,7 +14,7 @@ import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.manager.CurrencyManager;
 import com.sandcore.mmo.manager.XPManager;
-import com.sandcore.mmo.manager.CastingManager;
+import com.sandcore.mmo.casting.CastingManager;
 
 public class ReloadCommandExecutor implements CommandExecutor {
     private final JavaPlugin plugin;
