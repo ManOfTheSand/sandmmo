@@ -45,10 +45,10 @@
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- MythicMobs Dependency -->
+        <!-- MythicMobs Dependency for version 5.8.0 -->
         <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>Mythic-Dist</artifactId>
+            <groupId>io.lumine.mythic</groupId>
+            <artifactId>MythicMobs</artifactId>
             <version>5.8.0</version>
             <scope>provided</scope>
         </dependency>
