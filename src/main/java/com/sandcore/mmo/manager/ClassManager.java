@@ -105,6 +105,13 @@ public class ClassManager {
         private final String castingSoundName;
         private final float castingSoundVolume;
         private final float castingSoundPitch;
+        // New fields for additional sounds
+        private final String comboClickSoundName;
+        private final float comboClickSoundVolume;
+        private final float comboClickSoundPitch;
+        private final String comboFailSoundName;
+        private final float comboFailSoundVolume;
+        private final float comboFailSoundPitch;
 
         /**
          * Constructs a new PlayerClass.
@@ -126,6 +133,12 @@ public class ClassManager {
          * @param castingSoundName  casting sound name for the class
          * @param castingSoundVolume casting sound volume for the class
          * @param castingSoundPitch casting sound pitch for the class
+         * @param comboClickSoundName combo click sound name for the class
+         * @param comboClickSoundVolume combo click sound volume for the class
+         * @param comboClickSoundPitch combo click sound pitch for the class
+         * @param comboFailSoundName combo fail sound name for the class
+         * @param comboFailSoundVolume combo fail sound volume for the class
+         * @param comboFailSoundPitch combo fail sound pitch for the class
          */
         public PlayerClass(String id, String displayName, String description,
                            double bonusMaxHealth, double bonusMaxMana, double bonusHealthRegen,
@@ -133,7 +146,9 @@ public class ClassManager {
                            int bonusIntellect, int bonusDefense, int bonusMagicDefense,
                            Map<String, Integer> startingStats,
                            java.util.Map<String, String> keyCombos,
-                           String castingSoundName, float castingSoundVolume, float castingSoundPitch) {
+                           String castingSoundName, float castingSoundVolume, float castingSoundPitch,
+                           String comboClickSoundName, float comboClickSoundVolume, float comboClickSoundPitch,
+                           String comboFailSoundName, float comboFailSoundVolume, float comboFailSoundPitch) {
             this.id = id;
             this.displayName = displayName;
             this.description = description;
@@ -151,6 +166,12 @@ public class ClassManager {
             this.castingSoundName = castingSoundName;
             this.castingSoundVolume = castingSoundVolume;
             this.castingSoundPitch = castingSoundPitch;
+            this.comboClickSoundName = comboClickSoundName;
+            this.comboClickSoundVolume = comboClickSoundVolume;
+            this.comboClickSoundPitch = comboClickSoundPitch;
+            this.comboFailSoundName = comboFailSoundName;
+            this.comboFailSoundVolume = comboFailSoundVolume;
+            this.comboFailSoundPitch = comboFailSoundPitch;
         }
 
         // Getters for class properties.
@@ -171,6 +192,12 @@ public class ClassManager {
         public String getCastingSoundName() { return castingSoundName; }
         public float getCastingSoundVolume() { return castingSoundVolume; }
         public float getCastingSoundPitch() { return castingSoundPitch; }
+        public String getComboClickSoundName() { return comboClickSoundName; }
+        public float getComboClickSoundVolume() { return comboClickSoundVolume; }
+        public float getComboClickSoundPitch() { return comboClickSoundPitch; }
+        public String getComboFailSoundName() { return comboFailSoundName; }
+        public float getComboFailSoundVolume() { return comboFailSoundVolume; }
+        public float getComboFailSoundPitch() { return comboFailSoundPitch; }
     }
 
     /**
@@ -239,10 +266,21 @@ public class ClassManager {
                     float castingSoundVolume = (float) config.getDouble("classes." + id + ".castingSound.volume", 1.0);
                     float castingSoundPitch = (float) config.getDouble("classes." + id + ".castingSound.pitch", 1.0);
 
+                    String comboClickSoundName = config.getString("classes." + id + ".comboClickSound.name", "ENTITY_EXPERIENCE_ORB_PICKUP");
+                    float comboClickSoundVolume = (float) config.getDouble("classes." + id + ".comboClickSound.volume", 1.0);
+                    float comboClickSoundPitch = (float) config.getDouble("classes." + id + ".comboClickSound.pitch", 1.0);
+
+                    String comboFailSoundName = config.getString("classes." + id + ".comboFailSound.name", "ENTITY_VILLAGER_NO");
+                    float comboFailSoundVolume = (float) config.getDouble("classes." + id + ".comboFailSound.volume", 1.0);
+                    float comboFailSoundPitch = (float) config.getDouble("classes." + id + ".comboFailSound.pitch", 1.0);
+
                     PlayerClass playerClass = new PlayerClass(id, displayName, description,
                             bonusMaxHealth, bonusMaxMana, bonusHealthRegen, bonusManaRegen,
                             bonusStrength, bonusDexterity, bonusIntellect, bonusDefense, bonusMagicDefense,
-                            startingStats, keyCombos, castingSoundName, castingSoundVolume, castingSoundPitch);
+                            startingStats, keyCombos, 
+                            castingSoundName, castingSoundVolume, castingSoundPitch,
+                            comboClickSoundName, comboClickSoundVolume, comboClickSoundPitch,
+                            comboFailSoundName, comboFailSoundVolume, comboFailSoundPitch);
                     classes.put(id.toLowerCase(), playerClass);
                 }
                 logger.info("ClassManager: Loaded " + classes.size() + " class definitions.");

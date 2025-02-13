@@ -18,6 +18,14 @@ classes:
       name: "BLOCK_NOTE_BLOCK_PLING"
       volume: 1.0
       pitch: 1.0
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
+      volume: 1.0
+      pitch: 1.0
   mage:
     display-name: "Arcane Mage"
     color: "#00BFFF"
@@ -37,6 +45,14 @@ classes:
       name: "ENTITY_EXPERIENCE_ORB_PICKUP"
       volume: 1.0
       pitch: 1.2
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
+      volume: 1.0
+      pitch: 1.0
   rogue:
     display-name: "Rogue"
     color: "#00FF00"
@@ -54,6 +70,14 @@ classes:
       LRR: "poison_blade"
     castingSound:
       name: "ENTITY_PLAYER_LEVELUP"
+      volume: 1.0
+      pitch: 1.0
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
       volume: 1.0
       pitch: 1.0
   cleric:
@@ -75,3 +99,11 @@ classes:
       name: "ENTITY_ELDER_GUARDIAN_CURSE"
       volume: 1.0
       pitch: 0.8
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
+      volume: 1.0
+      pitch: 1.0
