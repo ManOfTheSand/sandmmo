@@ -1,6 +1,8 @@
 package com.sandcore.mmo.casting;
 
+import com.sandcore.mmo.manager.PlayerClassDataManager;
 import com.sandcore.mmo.manager.ClassManager;
+import com.sandcore.mmo.classes.ClassDefinition;
 import com.sandcore.mmo.util.ServiceRegistry;
 import io.lumine.mythic.api.skills.Skill;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -26,10 +28,12 @@ public class CastingManager {
     private String enterSoundName = "BLOCK_NOTE_BLOCK_PLING";
     private float enterSoundVolume = 1.0F;
     private float enterSoundPitch = 1.0F;
+    private final ClassManager classManager;
 
-    public CastingManager(JavaPlugin plugin) {
+    public CastingManager(JavaPlugin plugin, ClassManager classManager) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
+        this.classManager = classManager;
         loadConfiguration();
     }
 
@@ -70,7 +74,6 @@ public class CastingManager {
             cancelCasting(player);
             player.sendMessage("§cCasting mode disabled");
         } else {
-            ClassManager classManager = ServiceRegistry.getClassManager();
             com.sandcore.mmo.manager.ClassManager.PlayerClass pClass = classManager.getPlayerClass(player);
             if (pClass == null || pClass.getKeyCombos().isEmpty()) {
                 player.sendMessage("§cNo casting abilities available for your class");
@@ -175,5 +178,21 @@ public class CastingManager {
      */
     public boolean isCasting(Player player) {
          return castingPlayers.containsKey(player.getUniqueId());
+    }
+
+    /**
+     * Checks if the skill with the given id is unlocked for the player's class.
+     *
+     * @param player the player attempting to cast.
+     * @param skillId the skill id to check.
+     * @return true if the player's class has unlocked this skill, false otherwise.
+     */
+    public boolean isSkillUnlocked(Player player, String skillId) {
+        // Retrieve player's chosen class (set via /class)
+        String classId = PlayerClassDataManager.getPlayerClass(player);
+        if (classId == null) return false;
+        ClassDefinition def = classManager.getClassDefinition(classId);
+        if (def == null) return false;
+        return def.getSkills().stream().anyMatch(skill -> skill.getId().equalsIgnoreCase(skillId));
     }
 } 

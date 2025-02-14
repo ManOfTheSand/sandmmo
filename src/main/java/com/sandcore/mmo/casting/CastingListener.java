@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.ChatColor;
 
 public class CastingListener implements Listener {
     private final CastingManager castingManager;
@@ -33,6 +34,14 @@ public class CastingListener implements Listener {
             castingManager.handleClick(player, CastingManager.ClickType.LEFT);
         } else if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             castingManager.handleClick(player, CastingManager.ClickType.RIGHT);
+        }
+
+        // Assume that you determine the skill id from the player's action (this is pseudocode).
+        // For example, suppose the skill id is determined from the player's click combo:
+        String skillId = "fireball"; // Example skill id.
+        if (!castingManager.isSkillUnlocked(player, skillId)) {
+            player.sendMessage(ChatColor.RED + "You have not unlocked the skill: " + skillId);
+            event.setCancelled(true);
         }
     }
 

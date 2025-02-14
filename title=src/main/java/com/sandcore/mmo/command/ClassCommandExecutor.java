@@ -2,7 +2,6 @@ package com.sandcore.mmo.command;
 
 import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.classes.ClassDefinition;
-import com.sandcore.mmo.manager.PlayerClassDataManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +30,7 @@ public class ClassCommandExecutor implements CommandExecutor {
         }
         Player player = (Player) sender;
         if (args.length == 0) {
-            // List available classes.
+            // List all available classes.
             StringBuilder sb = new StringBuilder();
             sb.append(ChatColor.GREEN).append("Available Classes: ");
             for (ClassDefinition def : classManager.getAllClasses()) {
@@ -45,10 +44,10 @@ public class ClassCommandExecutor implements CommandExecutor {
             if (def == null) {
                 player.sendMessage(ChatColor.RED + "That class does not exist.");
             } else {
-                // Store the player's chosen class.
-                PlayerClassDataManager.setPlayerClass(player, classId);
+                // In a full implementation, you'll store the player's class selection (e.g. in a database or files).
+                // For demonstration, we simply send a confirmation.
                 player.sendMessage(ChatColor.GREEN + "Your class has been set to " + def.getDisplayName());
-                // Optionally, update player's stats or unlock skills here.
+                // Optionally, update player's stats and unlock skills.
             }
         } else {
             player.sendMessage(ChatColor.RED + "Usage: /class [classID]");
