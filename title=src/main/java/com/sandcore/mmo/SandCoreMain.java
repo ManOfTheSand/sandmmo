@@ -1,7 +1,7 @@
 package com.sandcore.mmo;
 
 import com.sandcore.mmo.stats.StatsCommands;
-import com.sandcore.mmo.stats.ReloadCommand;
+import com.sandcore.mmo.ReloadCommand;
 import com.sandcore.mmo.stats.StatsManager;
 import com.sandcore.mmo.stats.ClassesConfig;
 import com.sandcore.mmo.util.ServiceRegistry;
