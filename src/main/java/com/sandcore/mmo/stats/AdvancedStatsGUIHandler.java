@@ -52,10 +52,11 @@ public class AdvancedStatsGUIHandler {
                 String displayName = guiConfig.getString(path + ".displayName", statKey);
                 java.util.List<String> loreList = guiConfig.getStringList(path + ".lore");
 
-                // Replace tokens: %value%, %base%, %per_level%
-                double value = statsManager.getStatValue(player, statKey);
-                double baseVal = statsManager.getBaseStat(player, statKey);
-                double perLevel = statsManager.getPerLevelIncrement(player, statKey);
+                // Replace tokens using the advanced stat formula
+                double value = statsManager.calculateStat(statKey, level);
+                AdvancedStatsManager.StatFormula formula = statsManager.getAllFormulas().get(statKey);
+                double baseVal = formula != null ? formula.getBase() : 0;
+                double perLevel = formula != null ? formula.getGrowth() : 0;
                 displayName = displayName.replace("%value%", String.format("%.1f", value))
                                          .replace("%base%", String.format("%.1f", baseVal))
                                          .replace("%per_level%", String.format("%.1f", perLevel));
@@ -86,7 +87,7 @@ public class AdvancedStatsGUIHandler {
             if (mat == null) { mat = Material.EMERALD; }
             String displayName = guiConfig.getString(apath + ".displayName", "Available Stat Points: %points%");
             java.util.List<String> loreList = guiConfig.getStringList(apath + ".lore");
-            int freePoints = statsManager.getAllocation(player).freeStatPoints;
+            int freePoints = ServiceRegistry.getStatsManager().getAllocation(player).freeStatPoints;
             displayName = displayName.replace("%points%", String.valueOf(freePoints));
             java.util.List<String> replacedLore = new java.util.ArrayList<>();
             for(String line : loreList) {
