@@ -34,20 +34,16 @@ public class StatsCommands implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 || args[0].equalsIgnoreCase("stats")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
-                return true;
-            }
-            Player player = (Player) sender;
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                StatsGUI gui = new StatsGUI(guiConfig, statsManager, classesConfig);
-                player.openInventory(gui.build(player));
-            });
-            sender.sendMessage(ChatColor.GREEN + "Opening your Stats GUI...");
-        } else {
-            sender.sendMessage(ChatColor.RED + "Usage: /" + label);
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
+            return true;
         }
+        Player player = (Player) sender;
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            StatsGUI gui = new StatsGUI(guiConfig, statsManager, classesConfig);
+            player.openInventory(gui.build(player));
+        });
+        sender.sendMessage(ChatColor.GREEN + "Opening your Stats GUI...");
         return true;
     }
 } 
