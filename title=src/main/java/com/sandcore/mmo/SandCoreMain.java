@@ -17,11 +17,19 @@ public class SandCoreMain extends JavaPlugin {
         
         // Register the /stats command to open the Stats GUI.
         // Ensure your plugin.yml defines the "stats" command.
-        getCommand("stats").setExecutor(new StatsCommands(this, statsManager, classesConfig));
+        if (getCommand("stats") != null) {
+            getCommand("stats").setExecutor(new StatsCommands(this, statsManager, classesConfig));
+        } else {
+            getLogger().severe("Command /stats not defined in plugin.yml");
+        }
         
         // Register the universal /reload command.
         // Ensure your plugin.yml defines the "reload" command.
-        getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
+        if (getCommand("reload") != null) {
+            getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
+        } else {
+            getLogger().severe("Command /reload not defined in plugin.yml");
+        }
         
         // Register the Stats GUI listener.
         getServer().getPluginManager().registerEvents(new com.sandcore.mmo.stats.StatsGUIListener(), this);
