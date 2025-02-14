@@ -19,6 +19,9 @@ import com.sandcore.mmo.command.MainTabCompleter;
 import com.sandcore.mmo.casting.CastingManager;
 import com.sandcore.mmo.casting.CastingListener;
 import com.sandcore.mmo.stats.StatsGUIListener;
+import com.sandcore.mmo.stats.StatsCommands;
+import com.sandcore.mmo.stats.ReloadCommand;
+import com.sandcore.mmo.stats.ClassesConfig;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -50,7 +53,8 @@ public class SandCoreMain extends JavaPlugin {
          
          // Register managers.
          ServiceRegistry.registerClassManager(new ClassManager(this));
-         ServiceRegistry.registerStatsManager(new StatsManager());
+         StatsManager statsManager = new StatsManager();
+         ClassesConfig classesConfig = new ClassesConfig(getDataFolder());
          
          // Register command executors.
          if (getCommand("class") != null) {
@@ -65,7 +69,7 @@ public class SandCoreMain extends JavaPlugin {
          
          // Register the new advanced /stats command using our new asynchronous advanced stats GUI system.
          if (getCommand("stats") != null) {
-             getCommand("stats").setExecutor(new com.sandcore.mmo.command.StatsCommandExecutor(this));
+             getCommand("stats").setExecutor(new StatsCommands(this, statsManager, classesConfig));
          } else {
              getLogger().severe("Command /stats not defined in plugin.yml");
          }
@@ -92,6 +96,14 @@ public class SandCoreMain extends JavaPlugin {
          
          // Register the stats GUI protection listener.
          getServer().getPluginManager().registerEvents(new StatsGUIListener(), this);
+         
+         // Register the universal /reload command.
+         // Ensure your plugin.yml defines the "reload" command.
+         getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
+         
+         // Optionally, register these managers into your ServiceRegistry so they are accessible elsewhere.
+         ServiceRegistry.registerStatsManager(statsManager);
+         // Also ensure that ServiceRegistry.getClassManager() returns a valid ClassManager instance.
          
          getLogger().info("SandCoreMain plugin enabled!");
     }
