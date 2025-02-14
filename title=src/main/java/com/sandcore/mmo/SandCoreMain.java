@@ -2,7 +2,6 @@ package com.sandcore.mmo;
 
 import com.sandcore.mmo.command.ClassCommandExecutor;
 import com.sandcore.mmo.manager.ClassManager;
-import com.sandcore.mmo.manager.PlayerClassDataManager;
 import com.sandcore.mmo.stats.StatsCommands;
 import com.sandcore.mmo.ReloadCommand;
 import com.sandcore.mmo.stats.StatsManager;
@@ -16,7 +15,7 @@ public class SandCoreMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Ensure data folder exists.
+        // Ensure the data folder exists.
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
@@ -25,11 +24,10 @@ public class SandCoreMain extends JavaPlugin {
         StatsManager statsManager = new StatsManager();
         ClassesConfig classesConfig = new ClassesConfig(getDataFolder());
 
-        // Create and register ClassManager (for class system).
+        // Create and register the ClassManager (for the classes system).
         ClassManager classManager = new ClassManager(getDataFolder());
         // Register the /class command for choosing classes.
-        getCommand("class").setExecutor(new com.sandcore.mmo.command.ClassCommandExecutor(classManager));
-        // Register the ClassManager into your ServiceRegistry if needed.
+        getCommand("class").setExecutor(new ClassCommandExecutor(classManager));
         ServiceRegistry.registerClassManager(classManager);
 
         // Register the /stats command to open the Stats GUI.
@@ -38,30 +36,28 @@ public class SandCoreMain extends JavaPlugin {
         } else {
             getLogger().severe("Command /stats not defined in plugin.yml");
         }
-        
+
         // Register the universal /reload command.
-        // Ensure your plugin.yml defines the "reload" command.
         if (getCommand("reload") != null) {
             getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
         } else {
             getLogger().severe("Command /reload not defined in plugin.yml");
         }
-        
-        // Create CastingManager with ClassManager integration.
+
+        // Initialize and register the casting system.
         CastingManager castingManager = new CastingManager(classManager);
-        // Register CastingListener to check skill casting against player's class unlocks.
+        // Register CastingListener (which checks class-based skill unlocks during casting).
         getServer().getPluginManager().registerEvents(new CastingListener(castingManager), this);
-        
-        // Register the Stats GUI listener.
+
+        // Register the Stats GUI protection listener (if applicable).
         getServer().getPluginManager().registerEvents(new com.sandcore.mmo.stats.StatsGUIListener(), this);
-        
+
         // Register the StatsManager in the ServiceRegistry.
         ServiceRegistry.registerStatsManager(statsManager);
-        // Also ensure that ServiceRegistry.getClassManager() returns a valid ClassManager instance.
-        
+
         getLogger().info("SandMMO Enabled!");
     }
-    
+
     @Override
     public void onDisable() {
         getLogger().info("SandMMO Disabled!");
