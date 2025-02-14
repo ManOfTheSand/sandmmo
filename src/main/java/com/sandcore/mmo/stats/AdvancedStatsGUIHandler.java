@@ -1,5 +1,7 @@
 package com.sandcore.mmo.stats;
 
+import com.sandcore.mmo.util.ServiceRegistry;
+
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
