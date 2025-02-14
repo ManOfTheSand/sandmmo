@@ -1,6 +1,5 @@
 package com.sandcore.mmo.classes;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,21 +9,25 @@ public class ClassDefinition {
 
     private final String id;
     private final String displayName;
-    private final String description;
+    private final String lore;
     private final Map<String, Double> startingStats;
-    private final Map<String, Double> perLevelStats;
-    private final List<SkillUnlock> skills;
+    // Mapping from a key-combo (e.g., "LLL") to a skill id.
+    private final Map<String, String> keyCombos;
+    private final SoundSettings castingSound;
+    private final SoundSettings comboClickSound;
+    private final SoundSettings comboFailSound;
 
-    public ClassDefinition(String id, String displayName, String description,
-                           Map<String, Double> startingStats,
-                           Map<String, Double> perLevelStats,
-                           List<SkillUnlock> skills) {
+    public ClassDefinition(String id, String displayName, String lore, Map<String, Double> startingStats,
+                           Map<String, String> keyCombos, SoundSettings castingSound,
+                           SoundSettings comboClickSound, SoundSettings comboFailSound) {
         this.id = id;
         this.displayName = displayName;
-        this.description = description;
+        this.lore = lore;
         this.startingStats = startingStats;
-        this.perLevelStats = perLevelStats;
-        this.skills = skills;
+        this.keyCombos = keyCombos;
+        this.castingSound = castingSound;
+        this.comboClickSound = comboClickSound;
+        this.comboFailSound = comboFailSound;
     }
 
     public String getId() {
@@ -35,19 +38,27 @@ public class ClassDefinition {
         return displayName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLore() {
+        return lore;
     }
 
     public Map<String, Double> getStartingStats() {
         return startingStats;
     }
 
-    public Map<String, Double> getPerLevelStats() {
-        return perLevelStats;
+    public Map<String, String> getKeyCombos() {
+        return keyCombos;
     }
 
-    public List<SkillUnlock> getSkills() {
-        return skills;
+    public SoundSettings getCastingSound() {
+        return castingSound;
+    }
+
+    public SoundSettings getComboClickSound() {
+        return comboClickSound;
+    }
+
+    public SoundSettings getComboFailSound() {
+        return comboFailSound;
     }
 } 

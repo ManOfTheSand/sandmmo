@@ -1,0 +1,15 @@
+name: SandMmo
+version: 1.0-SNAPSHOT
+main: com.sandcore.mmo.SandCoreMain
+api-version: "1.21"
+
+commands:
+  class:
+    description: "Set or view available classes."
+    usage: "/class [classId]"
+  stats:
+    description: "Display your current stats."
+    usage: "/stats"
+  reload:
+    description: "Reload all plugin configurations."
+    usage: "/reload" 

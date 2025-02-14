@@ -9,41 +9,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Consolidated command handler for SandMMO.
- *
- * Usage:
- *   /sandmmo           - Opens the stats GUI.
- *   /sandmmo stats     - Opens the stats GUI.
- *   /sandmmo reload    - Reloads the GUI configuration (from gui.yml)
- *                        and refreshes the stats GUI for all players.
+ * A stub implementation for the /stats command.
  */
 public class StatsCommands implements CommandExecutor {
 
     private final JavaPlugin plugin;
-    private final StatsManager statsManager;
-    private final ClassesConfig classesConfig;
-    private StatsGUIConfig guiConfig;
-
-    public StatsCommands(JavaPlugin plugin, StatsManager statsManager, ClassesConfig classesConfig) {
+    // In a full implementation, you would inject a proper stats manager and classes config.
+    public StatsCommands(JavaPlugin plugin, Object statsManager, Object classesConfig) {
         this.plugin = plugin;
-        this.statsManager = statsManager;
-        this.classesConfig = classesConfig;
-        // Load GUI configuration from gui.yml
-        this.guiConfig = new StatsGUIConfig(plugin);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
-            return true;
-        }
-        Player player = (Player) sender;
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            StatsGUI gui = new StatsGUI(guiConfig, statsManager, classesConfig);
-            player.openInventory(gui.build(player));
-        });
-        sender.sendMessage(ChatColor.GREEN + "Opening your Stats GUI...");
-        return true;
+         if (!(sender instanceof Player)) {
+             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
+             return true;
+         }
+         Player player = (Player) sender;
+         // Open the Stats GUI (stub).
+         Bukkit.getScheduler().runTask(plugin, () -> {
+             player.sendMessage(ChatColor.GREEN + "Opening your Stats GUI...");
+         });
+         return true;
     }
 } 

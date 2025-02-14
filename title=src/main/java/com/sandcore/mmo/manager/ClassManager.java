@@ -1,13 +1,15 @@
 package com.sandcore.mmo.manager;
 
 import com.sandcore.mmo.classes.ClassDefinition;
-import com.sandcore.mmo.classes.SkillUnlock;
+import com.sandcore.mmo.classes.SoundSettings;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collection;
 
 /**
  * Loads all class definitions from classes.yml and provides lookup methods.
@@ -32,43 +34,47 @@ public class ClassManager {
             if (sec == null) continue;
 
             String displayName = sec.getString("displayName", key);
-            String description = sec.getString("description", "");
+            String lore = sec.getString("lore", "");
 
-            // Load startingStats from config.
+            // Load startingStats.
             Map<String, Double> startingStats = new HashMap<>();
-            ConfigurationSection startSec = sec.getConfigurationSection("startingStats");
-            if (startSec != null) {
-                for (String statKey : startSec.getKeys(false)) {
-                    startingStats.put(statKey, startSec.getDouble(statKey, 0));
+            ConfigurationSection statsSec = sec.getConfigurationSection("startingStats");
+            if (statsSec != null) {
+                for (String statKey : statsSec.getKeys(false)) {
+                    startingStats.put(statKey, statsSec.getDouble(statKey, 0));
                 }
             }
 
-            // Load perLevelStats from config.
-            Map<String, Double> perLevelStats = new HashMap<>();
-            ConfigurationSection perLevelSec = sec.getConfigurationSection("perLevelStats");
-            if (perLevelSec != null) {
-                for (String statKey : perLevelSec.getKeys(false)) {
-                    perLevelStats.put(statKey, perLevelSec.getDouble(statKey, 0));
+            // Load keyCombos.
+            Map<String, String> keyCombos = new HashMap<>();
+            ConfigurationSection combosSec = sec.getConfigurationSection("keyCombos");
+            if (combosSec != null) {
+                for (String comboKey : combosSec.getKeys(false)) {
+                    String skillId = combosSec.getString(comboKey, "");
+                    keyCombos.put(comboKey, skillId);
                 }
             }
 
-            // Load skills from config.
-            List<SkillUnlock> skills = new ArrayList<>();
-            ConfigurationSection skillsSec = sec.getConfigurationSection("skills");
-            if (skillsSec != null) {
-                for (String skillKey : skillsSec.getKeys(false)) {
-                    ConfigurationSection skillSec = skillsSec.getConfigurationSection(skillKey);
-                    if (skillSec != null) {
-                        String skillId = skillSec.getString("id", skillKey);
-                        int levelRequired = skillSec.getInt("levelRequired", 1);
-                        skills.add(new SkillUnlock(skillId, levelRequired));
-                    }
-                }
-            }
+            // Load sound settings.
+            SoundSettings castingSound = loadSoundSettings(sec, "castingSound");
+            SoundSettings comboClickSound = loadSoundSettings(sec, "comboClickSound");
+            SoundSettings comboFailSound = loadSoundSettings(sec, "comboFailSound");
 
-            ClassDefinition cd = new ClassDefinition(key, displayName, description, startingStats, perLevelStats, skills);
-            classes.put(key.toLowerCase(), cd);
+            ClassDefinition def = new ClassDefinition(key, displayName, lore, startingStats, keyCombos,
+                                                        castingSound, comboClickSound, comboFailSound);
+            classes.put(key.toLowerCase(), def);
         }
+    }
+
+    private SoundSettings loadSoundSettings(ConfigurationSection sec, String path) {
+        if (sec.isConfigurationSection(path)) {
+            ConfigurationSection soundSec = sec.getConfigurationSection(path);
+            String name = soundSec.getString("name", "BLOCK_NOTE_BLOCK_PLING");
+            float volume = (float) soundSec.getDouble("volume", 1.0);
+            float pitch = (float) soundSec.getDouble("pitch", 1.0);
+            return new SoundSettings(name, volume, pitch);
+        }
+        return new SoundSettings("BLOCK_NOTE_BLOCK_PLING", 1.0f, 1.0f);
     }
 
     public ClassDefinition getClassDefinition(String id) {

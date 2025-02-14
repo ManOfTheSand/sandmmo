@@ -2,6 +2,7 @@ package com.sandcore.mmo.command;
 
 import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.classes.ClassDefinition;
+import com.sandcore.mmo.manager.PlayerClassDataManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +26,7 @@ public class ClassCommandExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be run by a player.");
+            sender.sendMessage(ChatColor.RED + "Command can only be used by a player.");
             return true;
         }
         Player player = (Player) sender;
@@ -39,18 +40,16 @@ public class ClassCommandExecutor implements CommandExecutor {
             player.sendMessage(sb.toString());
         } else if (args.length == 1) {
             // Set player's class.
-            String classId = args[0];
-            ClassDefinition def = classManager.getClassDefinition(classId);
+            String id = args[0];
+            ClassDefinition def = classManager.getClassDefinition(id);
             if (def == null) {
                 player.sendMessage(ChatColor.RED + "That class does not exist.");
             } else {
-                // In a full implementation, you'll store the player's class selection (e.g. in a database or files).
-                // For demonstration, we simply send a confirmation.
+                PlayerClassDataManager.setPlayerClass(player, id);
                 player.sendMessage(ChatColor.GREEN + "Your class has been set to " + def.getDisplayName());
-                // Optionally, update player's stats and unlock skills.
             }
         } else {
-            player.sendMessage(ChatColor.RED + "Usage: /class [classID]");
+            player.sendMessage(ChatColor.RED + "Usage: /class [classId]");
         }
         return true;
     }

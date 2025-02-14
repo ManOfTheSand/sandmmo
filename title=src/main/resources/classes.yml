@@ -11,19 +11,53 @@ classes:
       dexterity: 2
       defense: 3
       magicDamage: 0
+    keyCombos:
+      LLL: "charge_attack"
+      LLR: "shield_bash"
+      LRL: "battle_cry"
+      LRR: "berserk"
+    castingSound:
+      name: "BLOCK_NOTE_BLOCK_PLING"
+      volume: 1.0
+      pitch: 1.0
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
+      volume: 1.0
+      pitch: 1.0
 
   mage:
     displayName: "&9Mage"
     lore: "Master of arcane arts, excels in magic damage."
     startingStats:
-      maxHealth: 0
+      maxHealth: 10
       maxMana: 30
       healthRegen: 0.2
-      manaRegen: 1
+      manaRegen: 1.0
       strength: 0
-      dexterity: 0
-      defense: 0
+      dexterity: 1
+      defense: 1
       magicDamage: 10
+    keyCombos:
+      LLL: "fire_blast"
+      LLR: "ice_nova"
+      LRL: "arcane_missile"
+      LRR: "teleport"
+    castingSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.2
+    comboClickSound:
+      name: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+    comboFailSound:
+      name: "ENTITY_VILLAGER_NO"
+      volume: 1.0
+      pitch: 1.0
 
   archer:
     displayName: "&2Archer"
