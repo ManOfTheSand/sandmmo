@@ -169,4 +169,11 @@ public class CastingManager {
     public enum ClickType {
         LEFT, RIGHT
     }
+
+    /**
+     * Returns true if the player is currently in casting mode.
+     */
+    public boolean isCasting(Player player) {
+         return castingPlayers.containsKey(player.getUniqueId());
+    }
 } 

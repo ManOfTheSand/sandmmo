@@ -20,39 +20,87 @@ public class AdvancedStatsGUIHandler {
     private final JavaPlugin plugin;
     private final AdvancedStatsManager statsManager;
     private final String title;
-    private final List<String> loreTemplate;
+    private final int size;
+    private final FileConfiguration guiConfig;
 
     public AdvancedStatsGUIHandler(JavaPlugin plugin) {
         this.plugin = plugin;
-        File statsFile = new File(plugin.getDataFolder(), "stats.yml");
-        if (!statsFile.exists()) {
-            plugin.saveResource("stats.yml", false);
+        File guiFile = new File(plugin.getDataFolder(), "statsgui.yml");
+        if (!guiFile.exists()) {
+            plugin.saveResource("statsgui.yml", false);
         }
+        this.guiConfig = YamlConfiguration.loadConfiguration(guiFile);
+        String basePath = "stats_gui";
+        this.title = guiConfig.getString(basePath + ".title", "Player Stats");
+        this.size = guiConfig.getInt(basePath + ".size", 27);
         this.statsManager = new AdvancedStatsManager(plugin.getDataFolder());
-        FileConfiguration config = YamlConfiguration.loadConfiguration(statsFile);
-        this.title = config.getString("ui.title", "Player Stats");
-        this.loreTemplate = config.getStringList("ui.lore");
     }
 
     // Creates an inventory GUI showing the player's computed stats.
     public Inventory createStatsGUI(Player player, int level) {
-        Inventory inv = Bukkit.createInventory(null, 9, Component.text(title));
-        List<String> replacedLore = new ArrayList<>();
-        for (String line : loreTemplate) {
-            // Replace tokens of the format {StatName} with the calculated values.
-            for (String statKey : statsManager.getAllFormulas().keySet()) {
-                double value = statsManager.calculateStat(statKey, level);
-                line = line.replace("{" + statKey + "}", String.format("%.1f", value));
+        // Create inventory with custom holder so the GUI is locked.
+        Inventory inv = Bukkit.createInventory(new AdvancedStatsGUIHolder(), size, Component.text(title));
+        String basePath = "stats_gui";
+        // Populate attribute items
+        if (guiConfig.isConfigurationSection(basePath + ".attributes")) {
+            for (String statKey : guiConfig.getConfigurationSection(basePath + ".attributes").getKeys(false)) {
+                String path = basePath + ".attributes." + statKey;
+                int slot = guiConfig.getInt(path + ".slot", -1);
+                String materialStr = guiConfig.getString(path + ".material", "STONE");
+                Material mat = Material.matchMaterial(materialStr);
+                if (mat == null) { mat = Material.STONE; }
+                String displayName = guiConfig.getString(path + ".displayName", statKey);
+                java.util.List<String> loreList = guiConfig.getStringList(path + ".lore");
+
+                // Replace tokens: %value%, %base%, %per_level%
+                double value = statsManager.getStatValue(player, statKey);
+                double baseVal = statsManager.getBaseStat(player, statKey);
+                double perLevel = statsManager.getPerLevelIncrement(player, statKey);
+                displayName = displayName.replace("%value%", String.format("%.1f", value))
+                                         .replace("%base%", String.format("%.1f", baseVal))
+                                         .replace("%per_level%", String.format("%.1f", perLevel));
+
+                java.util.List<String> replacedLore = new java.util.ArrayList<>();
+                for(String line : loreList) {
+                    replacedLore.add(line.replace("%value%", String.format("%.1f", value))
+                                         .replace("%base%", String.format("%.1f", baseVal))
+                                         .replace("%per_level%", String.format("%.1f", perLevel)));
+                }
+
+                ItemStack item = new ItemStack(mat);
+                ItemMeta meta = item.getItemMeta();
+                meta.setDisplayName(displayName);
+                meta.setLore(replacedLore);
+                item.setItemMeta(meta);
+                if (slot >= 0 && slot < size) {
+                    inv.setItem(slot, item);
+                }
             }
-            replacedLore.add(line);
         }
-        // Create an item (using PAPER) to present the stats.
-        ItemStack item = new ItemStack(Material.PAPER);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(title);
-        meta.setLore(replacedLore);
-        item.setItemMeta(meta);
-        inv.setItem(4, item);
+        // Populate available stat points item
+        if (guiConfig.isConfigurationSection(basePath + ".availablePoints")) {
+            String apath = basePath + ".availablePoints";
+            int slot = guiConfig.getInt(apath + ".slot", -1);
+            String materialStr = guiConfig.getString(apath + ".material", "EMERALD");
+            Material mat = Material.matchMaterial(materialStr);
+            if (mat == null) { mat = Material.EMERALD; }
+            String displayName = guiConfig.getString(apath + ".displayName", "Available Stat Points: %points%");
+            java.util.List<String> loreList = guiConfig.getStringList(apath + ".lore");
+            int freePoints = statsManager.getAllocation(player).freeStatPoints;
+            displayName = displayName.replace("%points%", String.valueOf(freePoints));
+            java.util.List<String> replacedLore = new java.util.ArrayList<>();
+            for(String line : loreList) {
+                replacedLore.add(line.replace("%points%", String.valueOf(freePoints)));
+            }
+            ItemStack item = new ItemStack(mat);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(displayName);
+            meta.setLore(replacedLore);
+            item.setItemMeta(meta);
+            if (slot >= 0 && slot < size) {
+                inv.setItem(slot, item);
+            }
+        }
         return inv;
     }
 } 

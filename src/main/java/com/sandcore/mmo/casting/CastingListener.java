@@ -39,9 +39,16 @@ public class CastingListener implements Listener {
     @EventHandler
     public void onComboClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        // Insert your combo-detection logic here.
-        // For demonstration, we'll react to any right-click action.
-        if (event.getAction().toString().contains("RIGHT_CLICK")) {
+        // Only proceed if player is in casting mode.
+        CastingManager castingManager = ServiceRegistry.getCastingManager();
+        if (castingManager == null || !castingManager.isCasting(player)) {
+            return;
+        }
+        // Check if action is a valid click type (left or right) for a combo click.
+        if (event.getAction() == Action.LEFT_CLICK_AIR ||
+            event.getAction() == Action.LEFT_CLICK_BLOCK ||
+            event.getAction() == Action.RIGHT_CLICK_AIR ||
+            event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ClassManager.PlayerClass playerClass = ServiceRegistry.getClassManager().getPlayerClass(player);
             if (playerClass != null) {
                 String soundName = playerClass.getComboClickSoundName();
