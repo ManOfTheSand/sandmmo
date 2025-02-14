@@ -1,0 +1,18 @@
+stats_gui:
+  title: "<#FFD700>Player Stats"
+  size: 27
+  background:
+    material: "BLACK_STAINED_GLASS_PANE"
+  mainItem:
+    slot: 13
+    material: "PAPER"
+    display_name: "<#00FF00>Your Stats Overview"
+    lore:
+      - "<#FF0000>Max Health: %maxHealth%"
+      - "<#0000FF>Max Mana: %maxMana%"
+      - "<#00FF00>Health Regen: %healthRegen%"
+      - "<#FFFF00>Mana Regen: %manaRegen%"
+      - "<#FF00FF>Strength: %strength%"
+      - "<#00FFFF>Dexterity: %dexterity%"
+      - "<#FFA500>Defense: %defense%"
+      - "<#800080>Magic Damage: %magicDamage%" 

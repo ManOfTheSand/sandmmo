@@ -1,0 +1,39 @@
+classes:
+  warrior:
+    displayName: "&cWarrior"
+    lore: "Tough and strong, excels in melee combat."
+    startingStats:
+      maxHealth: 20
+      maxMana: 0
+      healthRegen: 0.5
+      manaRegen: 0.2
+      strength: 5
+      dexterity: 2
+      defense: 3
+      magicDamage: 0
+
+  mage:
+    displayName: "&9Mage"
+    lore: "Master of arcane arts, excels in magic damage."
+    startingStats:
+      maxHealth: 0
+      maxMana: 30
+      healthRegen: 0.2
+      manaRegen: 1
+      strength: 0
+      dexterity: 0
+      defense: 0
+      magicDamage: 10
+
+  archer:
+    displayName: "&2Archer"
+    lore: "Quick and precise, excels at ranged combat."
+    startingStats:
+      maxHealth: 10
+      maxMana: 10
+      healthRegen: 0.3
+      manaRegen: 0.3
+      strength: 3
+      dexterity: 5
+      defense: 2
+      magicDamage: 0 

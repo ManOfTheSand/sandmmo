@@ -52,3 +52,244 @@ Document Plan for Creating a Minecraft MMO Plugin (SandMMO)
    - Maintain detailed Javadoc and developer guides.
    - Use Maven for dependency management and build processes.
 */
+
+
+
+
+
+SandMMO Plugin Design Document
+1. Overview
+1.1. Introduction
+The SandMMO plugin is an advanced MMORPG plugin designed for Minecraft servers. Its purpose is to create a rich, RPG-like experience by providing features such as player classes, dynamic stats, skill systems, and interactive casting mechanics. Inspired by popular plugins like MMOCore, SandMMO aims to deliver deep customization and immersive gameplay for both physical and magical classes.
+
+1.2. Goals and Objectives
+Immersive Gameplay: Offer an engaging RPG experience with dynamic player progression, custom classes, and unique abilities.
+High Customization: Allow server administrators to tweak every aspect of the plugin—from stat formulas and class bonuses to GUI layouts—via easily editable configuration files.
+Performance and Stability: Ensure all operations, including heavy I/O (like config file parsing) and in-game attribute updates, are handled asynchronously when possible to prevent server lag.
+Ease of Integration: Seamlessly integrate with other popular plugins such as MythicMobs, MMOItems, Vault, and PlaceholderAPI.
+User-Friendly Interface: Provide intuitive commands and GUIs for both players and administrators, ensuring an accessible yet deep experience.
+2. Key Features
+2.1. Dynamic Stats and Attributes
+Core Attributes:
+maxHealth: Total hit points.
+maxMana: Total mana for spellcasting.
+healthRegen: Rate of health regeneration.
+manaRegen: Rate of mana regeneration.
+Offensive and Defensive Stats:
+strength: Influences physical damage.
+dexterity: Affects attack speed, evasion, and critical chance.
+defense: Reduces incoming physical damage.
+magicDamage: Determines the damage dealt by magical attacks.
+Additional Attributes:
+magicDefense is omitted in favor of focusing on the above stats.
+Stat Calculations:
+Use base values, per-level increments, and bonus modifiers (from class and equipment) to calculate final effective stats.
+Formulas are fully configurable via YAML, enabling custom balancing.
+2.2. Player Classes System
+Class Definitions:
+Define multiple classes (e.g., Warrior, Mage, Archer) via a classes.yml file.
+Each class has unique bonuses (e.g., extra maxHealth, bonus strength, increased magicDamage).
+Class Selection and Switching:
+Players can select a class using an in-game GUI.
+Admin commands allow forced class changes and adjustments.
+Integration with Stats:
+Class bonuses are applied on top of base stats and recalculated every time a player levels up or changes class.
+2.3. Casting and Skill System
+Casting Mode:
+Activated by pressing the F key.
+While in casting mode, players execute a specific three-click combo (any combination of left/right clicks) within a short timeout (e.g., 5 seconds) to cast an ability.
+Failure to complete the combo cancels the casting attempt.
+Skill Mapping:
+Map casting click combinations to MythicMob skills via configuration in the main config.yml.
+Abilities are class-specific—each class has its own set of spells and abilities.
+Real-Time Feedback:
+Visual/auditory cues notify players when they enter casting mode, successfully cast a skill, or have a cast canceled.
+2.4. Graphical User Interfaces (GUIs)
+Stats GUI:
+A fully customizable interface displaying all player stats (maxHealth, maxMana, etc.).
+Configured via a config.yml file that defines layout, item icons, display names, and lore (with hex color support).
+Built asynchronously to prevent lag, with dynamic refreshes upon stat updates.
+Class Selection GUI:
+A separate interface for players to choose or switch classes.
+Displays class names, descriptions, and bonus attributes.
+Casting GUI (Optional):
+Provides additional visual feedback during casting mode, showing the current combo progress.
+2.5. Command and Administration
+Player Commands:
+/stats to view the stats GUI.
+/cast (if needed) for additional casting options.
+Admin Commands:
+/sandmmo admin stats set <player> <attribute> <value> to directly set a stat.
+/sandmmo admin stats add <player> <attribute> <value> to add to a stat.
+/reload to reload configuration files and refresh GUIs.
+Feedback and Logging:
+All commands provide detailed feedback and log important actions and errors for debugging.
+3. System Architecture
+3.1. Modular Design
+Core Modules:
+StatsManager: Handles stat calculations and loading from YAML.
+PlayerStatsApplier: Applies calculated stats to in-game attributes.
+ClassManager: Manages player class definitions and updates.
+CastingSystem: Detects click combos, manages casting mode, and executes abilities.
+GUI Modules: Handle the construction and dynamic update of GUIs.
+Service Registry:
+A central ServiceRegistry provides access to all core modules, ensuring decoupled and maintainable code.
+3.2. Asynchronous Operations
+Config Loading:
+Configuration files (e.g., config.yml, classes.yml) are loaded asynchronously to prevent main thread blocking.
+GUI Updates:
+Use asynchronous tasks for loading and parsing configurations, then schedule GUI creation and updates on the main thread.
+Event Handling:
+Ensure that all event listeners, especially those related to GUI and casting, execute efficiently without causing server lag.
+3.3. Data Flow and Integration
+Player Data:
+Player stats, class, and casting state are managed by their respective modules and stored in memory or configuration files.
+Inter-Module Communication:
+The StatsManager computes values which are then applied by PlayerStatsApplier.
+ClassManager adds class-specific bonuses and triggers recalculations.
+CastingSystem accesses player class data to determine available abilities.
+GUIs retrieve current stat values and configurations from the relevant managers via ServiceRegistry.
+4. Module Breakdown
+4.1. StatsManager
+Responsibilities:
+Load stat base values, per-level increments, and bonus modifiers from config.yml.
+Provide methods such as calculateMaxHealth(Player), calculateMaxMana(Player), etc.
+Support methods for updating and recalculating stats when players level up or receive stat adjustments.
+Example Function:
+java
+Copy
+public double calculateMaxHealth(Player player) {
+    int level = getPlayerLevel(player);
+    double base = config.getDouble("stats.maxHealth.base");
+    double perLevel = config.getDouble("stats.maxHealth.perLevel");
+    double bonus = getBonusFromClass(player, "maxHealth");
+    return base + (perLevel * level) + bonus;
+}
+4.2. PlayerStatsApplier
+Responsibilities:
+Apply calculated stats to the player in real time.
+Update in-game attributes (e.g., max health via Player#setMaxHealth(double)).
+Hook into events (e.g., level-up, stat allocation) to trigger re-application.
+Integration:
+Calls methods from StatsManager and then notifies the GUI module to refresh.
+4.3. ClassManager
+Responsibilities:
+Load class definitions from classes.yml.
+Provide methods to get and set player classes.
+Merge class-specific bonuses with base stats.
+Configuration:
+Class definitions include display name, lore, and bonus modifiers (e.g., extra maxHealth, strength).
+Example:
+yaml
+Copy
+Warrior:
+  displayName: "&cWarrior"
+  lore: "Tough and strong, excels in melee combat."
+  bonuses:
+    maxHealth: 20
+    strength: 5
+Mage:
+  displayName: "&9Mage"
+  lore: "Master of arcane arts, excels in magic damage."
+  bonuses:
+    maxMana: 30
+    magicDamage: 8
+4.4. CastingSystem
+Responsibilities:
+Manage casting mode toggling (F key) and track click combos.
+Require a three-click combo within 5 seconds; if not, cancel the cast.
+Retrieve the appropriate ability from the configuration in config.yml based on the player’s class and combo.
+Feedback:
+Provide visual and auditory cues for entering casting mode, successful casts, and cancellations.
+Integration:
+Interfaces with ClassManager to filter abilities based on the player’s class.
+4.5. GUI Modules (StatsGUI, ClassSelectionGUI)
+StatsGUI:
+Constructs a GUI displaying player stats using Bukkit Inventory API.
+Fully customizable via config.yml (defines slot positions, icons, hex color display names, and lore).
+Locked to prevent manipulation by players.
+ClassSelectionGUI:
+Similar customization for class selection.
+Asynchronous Loading:
+Configuration is loaded asynchronously and applied on the main thread for smooth performance.
+4.6. Command Executors
+Player Commands:
+/stats to open the StatsGUI.
+/cast or the default F key for casting mode.
+Admin Commands:
+/sandmmo admin stats set <player> <attribute> <value>
+/sandmmo admin stats add <player> <attribute> <value>
+/reload to reload configuration and refresh all GUIs.
+Validation:
+Each command checks permissions, validates input, updates the relevant managers, and provides feedback.
+4.7. ServiceRegistry
+Responsibilities:
+Maintain and provide centralized access to instances of StatsManager, PlayerStatsApplier, ClassManager, CastingSystem, and GUI modules.
+Facilitate communication and decoupling between modules.
+5. Configuration Files
+5.1. config.yml (Main Configuration)
+GUI Settings:
+Define layout details for the StatsGUI (slot positions, icons, display names, lore, hex colors).
+Stat Formulas:
+Base values, per-level increments, and multipliers for each stat.
+Casting Settings:
+Define the three-click combos mapped to MythicMob skills, organized by class.
+General Plugin Settings:
+Miscellaneous settings such as casting timeouts, debug logging options, and update intervals.
+5.2. classes.yml (Class Definitions)
+Format:
+Define each class with attributes such as displayName, lore, and bonus stat modifiers.
+Usage:
+Used by ClassManager to determine which bonuses apply to a player’s stats.
+6. Integration Flow
+Player Joins:
+
+Plugin loads configuration asynchronously.
+StatsManager and ClassManager load their respective configurations.
+ServiceRegistry registers all modules.
+PlayerStatsApplier applies initial stats to the player.
+GUI modules are ready for display.
+Player Issues /stats:
+
+StatsGUI is opened, displaying current stat values from StatsManager.
+GUI is constructed using settings from config.yml with hex colors and locked items.
+Admin Changes a Stat:
+
+Admin executes /sandmmo admin stats set/add <player> <attribute> <value>.
+AdminStatsCommandExecutor updates StatsManager, then calls PlayerStatsApplier.applyStats(player).
+StatsGUI is refreshed to reflect the updated values.
+Casting Mode:
+
+Player presses F to toggle casting mode.
+CastingSystem begins tracking a three-click combo.
+If completed within the timeout, the corresponding ability (from config.yml mapping for the player’s class) is executed.
+Feedback is given to the player; otherwise, the cast is canceled.
+7. Error Handling and Logging
+Centralized Logging:
+Each module logs key actions, errors, and warnings to help with debugging.
+Robust Exception Handling:
+Try-catch blocks in configuration loading, stat calculations, and command processing ensure that errors do not crash the plugin.
+Feedback to Users:
+Both players and admins receive clear, formatted messages in case of errors or successful actions.
+8. Testing and Deployment
+8.1. Unit Testing
+Write JUnit tests for each method in StatsManager, PlayerStatsApplier, and ClassManager.
+Simulate various levels, stat allocations, and class changes to ensure correct calculations.
+8.2. Integration Testing
+Deploy the plugin on a local Spigot/Paper test server.
+Test all commands (/stats, /reload, admin stat commands) and in-game interactions (casting mode, GUI operations).
+8.3. Performance Testing
+Validate that asynchronous loading does not introduce lag.
+Monitor server performance when multiple players access the GUI or update stats simultaneously.
+9. Future Enhancements
+Extended Casting Options:
+Support additional click combinations or alternative casting triggers.
+Advanced Class Mechanics:
+Implement more nuanced class abilities, passive bonuses, and unique skill trees.
+Graphical Enhancements:
+Further customize GUI animations and visual feedback using advanced Bukkit APIs.
+Integration with External Plugins:
+Expand compatibility with additional RPG plugins, or integrate with third-party APIs for more dynamic gameplay.
+10. Conclusion
+The SandMMO plugin is designed to bring a robust MMORPG experience to Minecraft servers by combining a dynamic stats system, class-based bonuses, a detailed casting system, and highly customizable GUIs. This document provides a comprehensive guide covering the architecture, module design, configuration, integration, and testing strategy for the plugin. By following this blueprint, developers can build a scalable and engaging plugin that rivals popular solutions like MMOCore, while offering flexibility and high performance.
+
