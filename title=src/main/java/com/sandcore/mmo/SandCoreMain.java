@@ -5,21 +5,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import net.kyori.adventure.text.Component;
-import com.sandcore.mmo.command.ClassCommandExecutor;
-import com.sandcore.mmo.manager.ClassManager;
-import com.sandcore.mmo.stats.StatsCommands;
-import com.sandcore.mmo.ReloadCommand;
-import com.sandcore.mmo.stats.StatsManager;
-import com.sandcore.mmo.stats.ClassesConfig;
+import java.io.File;
 import com.sandcore.mmo.util.ServiceRegistry;
+import org.bukkit.entity.Player;
 import com.sandcore.mmo.casting.CastingManager;
 import com.sandcore.mmo.casting.CastingListener;
-import com.sandcore.mmo.stats.StatsGUIListener;
-import org.bukkit.entity.Player;
-import java.io.File;
 import com.sandcore.mmo.manager.ClassesConfigLoader;
 import com.sandcore.mmo.manager.ClassesManager;
+import com.sandcore.mmo.command.ClassCommandExecutor;
 
+/**
+ * Main plugin class for SandCore.
+ * 
+ * Responsibilities:
+ * - Ensure the data folder exists and default config files (classes.yml and gui.yml) are generated.
+ * - Load the classes configuration using ClassesConfigLoader and ClassesManager.
+ * - Register the command for class selection.
+ * - Initialize the casting system and register related event listeners.
+ * - Register a simple welcome listener.
+ */
 public class SandCoreMain extends JavaPlugin {
 
     private static SandCoreMain instance;
@@ -33,14 +37,12 @@ public class SandCoreMain extends JavaPlugin {
          instance = this;
          ServiceRegistry.registerPlugin(this);
          
-         // Ensure the data folder exists.
+         // Ensure data folder exists and save default configuration files.
          if (!getDataFolder().exists()) {
              getDataFolder().mkdirs();
          }
-         
-         // Save default configuration files if they don't exist.
          saveDefaultConfig();
-         String[] configFiles = { "classes.yml", "stats.yml", "statsgui.yml", "gui.yml" };
+         String[] configFiles = { "classes.yml", "gui.yml" };
          for (String fileName : configFiles) {
              File configFile = new File(getDataFolder(), fileName);
              if (!configFile.exists()) {
@@ -48,32 +50,26 @@ public class SandCoreMain extends JavaPlugin {
              }
          }
          
-         // Initialize and register managers.
-         ClassManager classManager = new ClassManager(getDataFolder());
-         ServiceRegistry.registerClassManager(classManager);
-         StatsManager statsManager = new StatsManager();
-         ClassesConfig classesConfig = new ClassesConfig(getDataFolder());
+         // Generate or load classes.yml using our config loader.
+         new ClassesConfigLoader(this);
          
-         // Register the /class command for choosing classes.
+         // Initialize and load the classes configuration.
+         ClassesManager classesManager = new ClassesManager();
+         classesManager.loadClasses(this);
+         
+         // Initialize the casting system.
+         CastingManager castingManager = new CastingManager(this);
+         ServiceRegistry.registerCastingManager(castingManager);
+         getServer().getPluginManager().registerEvents(new CastingListener(castingManager), this);
+         
+         // Register the /class command for class selection.
          if (getCommand("class") != null) {
-             getCommand("class").setExecutor(new ClassCommandExecutor(classManager));
-         }
-         
-         // Register the /stats command to open the Stats GUI.
-         if (getCommand("stats") != null) {
-             getCommand("stats").setExecutor(new StatsCommands(this, statsManager, classesConfig));
+             getCommand("class").setExecutor(new ClassCommandExecutor(classesManager));
          } else {
-             getLogger().severe("Command /stats not defined in plugin.yml");
+             getLogger().severe("Command /class not defined in plugin.yml");
          }
          
-         // Register the universal /reload command.
-         if (getCommand("reload") != null) {
-             getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
-         } else {
-             getLogger().severe("Command /reload not defined in plugin.yml");
-         }
-         
-         // Example event: welcome message on join.
+         // Register a simple welcome event listener.
          getServer().getPluginManager().registerEvents(new Listener() {
              @EventHandler
              public void onPlayerJoin(PlayerJoinEvent event) {
@@ -82,31 +78,11 @@ public class SandCoreMain extends JavaPlugin {
              }
          }, this);
          
-         // Initialize and register the casting system.
-         CastingManager castingManager = new CastingManager(classManager);
-         getServer().getPluginManager().registerEvents(new CastingListener(castingManager), this);
-         ServiceRegistry.registerCastingManager(castingManager);
-         
-         // Register the Stats GUI protection listener.
-         getServer().getPluginManager().registerEvents(new StatsGUIListener(), this);
-         
-         // Register the StatsManager in the ServiceRegistry.
-         ServiceRegistry.registerStatsManager(statsManager);
-         
-         // Generate or load classes.yml if not present
-         ClassesConfigLoader classesConfigLoader = new ClassesConfigLoader(this);
-         
-         // Optionally, if you have a ClassesManager that loads the config:
-         ClassesManager classesManager = new ClassesManager();
-         classesManager.loadClasses(this);  // Ensure that loadClasses() reads the file in the data folder
-         
-         getLogger().info("classes.yml configuration has been loaded.");
-         
-         getLogger().info("SandMMO Enabled!");
+         getLogger().info("SandCoreMain plugin enabled!");
     }
 
     @Override
     public void onDisable() {
-         getLogger().info("SandMMO Disabled!");
+         getLogger().info("SandCoreMain plugin disabled!");
     }
 } 
