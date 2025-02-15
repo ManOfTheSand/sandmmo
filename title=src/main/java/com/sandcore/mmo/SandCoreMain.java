@@ -17,6 +17,8 @@ import com.sandcore.mmo.casting.CastingListener;
 import com.sandcore.mmo.stats.StatsGUIListener;
 import org.bukkit.entity.Player;
 import java.io.File;
+import com.sandcore.mmo.manager.ClassesConfigLoader;
+import com.sandcore.mmo.manager.ClassesManager;
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -90,6 +92,15 @@ public class SandCoreMain extends JavaPlugin {
          
          // Register the StatsManager in the ServiceRegistry.
          ServiceRegistry.registerStatsManager(statsManager);
+         
+         // Generate or load classes.yml if not present
+         ClassesConfigLoader classesConfigLoader = new ClassesConfigLoader(this);
+         
+         // Optionally, if you have a ClassesManager that loads the config:
+         ClassesManager classesManager = new ClassesManager();
+         classesManager.loadClasses(this);  // Ensure that loadClasses() reads the file in the data folder
+         
+         getLogger().info("classes.yml configuration has been loaded.");
          
          getLogger().info("SandMMO Enabled!");
     }
