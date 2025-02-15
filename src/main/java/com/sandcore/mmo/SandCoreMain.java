@@ -10,7 +10,6 @@ import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.entity.Player;
 import com.sandcore.mmo.casting.CastingManager;
 import com.sandcore.mmo.casting.CastingListener;
-i
 
 public class SandCoreMain extends JavaPlugin {
 
@@ -32,7 +31,7 @@ public class SandCoreMain extends JavaPlugin {
          
          // Save default configuration files if they don't exist.
          saveDefaultConfig();
-         String[] configFiles = { "classes.yml", "stats.yml", "statsgui.yml", "gui.yml" };
+         String[] configFiles = { "classes.yml", "gui.yml" };
          for (String fileName : configFiles) {
              File configFile = new File(getDataFolder(), fileName);
              if (!configFile.exists()) {
@@ -79,19 +78,11 @@ public class SandCoreMain extends JavaPlugin {
          // Add to ServiceRegistry if needed
          ServiceRegistry.registerCastingManager(castingManager);
          
-         // Register the /resetstats command
-         getCommand("resetstats").setExecutor(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
-         getCommand("resetstats").setTabCompleter(new com.sandcore.mmo.command.ResetStatsCommandExecutor());
-         
-         // Register the stats GUI protection listener.
-         getServer().getPluginManager().registerEvents(new StatsGUIListener(), this);
-         
          // Register the universal /reload command.
          // Ensure your plugin.yml defines the "reload" command.
-         getCommand("reload").setExecutor(new ReloadCommand(this, statsManager, classesConfig));
+         getCommand("reload").setExecutor(new ReloadCommand(this, classesConfig));
          
          // Optionally, register these managers into your ServiceRegistry so they are accessible elsewhere.
-         ServiceRegistry.registerStatsManager(statsManager);
          // Also ensure that ServiceRegistry.getClassManager() returns a valid ClassManager instance.
          
          getLogger().info("SandCoreMain plugin enabled!");
