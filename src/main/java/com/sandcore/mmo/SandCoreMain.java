@@ -5,23 +5,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import net.kyori.adventure.text.Component;
-import com.sandcore.mmo.command.ClassCommandExecutor;
-import com.sandcore.mmo.command.StatsCommandExecutor;
-import com.sandcore.mmo.command.ReloadCommandExecutor;
 import java.io.File;
-import com.sandcore.mmo.manager.StatsManager;
 import com.sandcore.mmo.util.ServiceRegistry;
-import com.sandcore.mmo.manager.ClassManager;
 import org.bukkit.entity.Player;
-import com.sandcore.mmo.command.AdminStatsCommandExecutor;
-import com.sandcore.mmo.command.MainCommandExecutor;
-import com.sandcore.mmo.command.MainTabCompleter;
 import com.sandcore.mmo.casting.CastingManager;
 import com.sandcore.mmo.casting.CastingListener;
-import com.sandcore.mmo.stats.StatsGUIListener;
-import com.sandcore.mmo.stats.StatsCommands;
-import com.sandcore.mmo.stats.ReloadCommand;
-import com.sandcore.mmo.stats.ClassesConfig;
+i
 
 public class SandCoreMain extends JavaPlugin {
 
