@@ -3,15 +3,6 @@ classes:
     display-name: "Warrior"
     color: "#FF0000"
     description: "A courageous fighter with unmatched melee strength."
-    startingStats:
-      maxHealth: 20
-      maxMana: 0
-      healthRegen: 0.5
-      manaRegen: 0.2
-      strength: 5
-      dexterity: 2
-      defense: 3
-      magicDamage: 0
     keyCombos:
       LLL: "charge_attack"
       LLR: "shield_bash"
@@ -33,15 +24,6 @@ classes:
     display-name: "Arcane Mage"
     color: "#00BFFF"
     description: "A master of elemental magic and arcane knowledge."
-    startingStats:
-      maxHealth: 0
-      maxMana: 30
-      healthRegen: 0.2
-      manaRegen: 1
-      strength: 0
-      dexterity: 0
-      defense: 0
-      magicDamage: 10
     keyCombos:
       LLL: "fire_blast"
       LLR: "ice_nova"
@@ -63,15 +45,6 @@ classes:
     display-name: "Rogue"
     color: "#00FF00"
     description: "A nimble assassin that relies on agility and stealth."
-    startingStats:
-      maxHealth: 10
-      maxMana: 10
-      healthRegen: 0.3
-      manaRegen: 0.3
-      strength: 3
-      dexterity: 5
-      defense: 2
-      magicDamage: 0
     keyCombos:
       LLL: "backstab"
       LLR: "dodge"
@@ -93,15 +66,6 @@ classes:
     display-name: "Cleric"
     color: "#FFFFFF"
     description: "A devoted healer with divine powers."
-    startingStats:
-      maxHealth: 0
-      maxMana: 0
-      healthRegen: 0
-      manaRegen: 0
-      strength: 0
-      dexterity: 0
-      defense: 0
-      magicDamage: 0
     keyCombos:
       LLL: "heal"
       LLR: "blessing"
