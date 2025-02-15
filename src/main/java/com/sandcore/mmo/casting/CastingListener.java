@@ -1,6 +1,5 @@
 package com.sandcore.mmo.casting;
 
-import com.sandcore.mmo.manager.ClassManager;
 import com.sandcore.mmo.util.ServiceRegistry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
