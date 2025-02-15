@@ -46,7 +46,7 @@ public class SandCoreMain extends JavaPlugin {
              }
          }
          
-         // Register managers.
+         // Initialize and register managers.
          ClassManager classManager = new ClassManager(getDataFolder());
          ServiceRegistry.registerClassManager(classManager);
          StatsManager statsManager = new StatsManager();
